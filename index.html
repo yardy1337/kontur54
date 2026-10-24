@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Витрина Контур-54</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: холодный «морозный» фон, 3D-сцена справа от заголовка, ниже полосы на всю ширину с внутренней колонкой 1200px */
+:root {
+  --bg: #edf1f3;
+  --surface: #f8fafb;
+  --ink: #121c22;
+  --muted: #56656d;
+  --line: #d2dbe0;
+  --accent: #a95a17;
+  --accent-ink: #ffffff;
+  --accent-soft: #f3e4d5;
+  --scene-sky: #e9eff2;
+  --scene-fog: #dbe3e8;
+  --scene-flake: #8ea2ad;
+  --scene-glow: 0.55;
+  --scene-hemi: 0.9;
+  --scene-sun: 0.95;
+  --f-display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --f-body: "Golos Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1317; --surface: #131d22; --ink: #e5ecef; --muted: #93a3ab; --line: #24323a;
+    --accent: #e48c3e; --accent-ink: #1a0f05; --accent-soft: #2b1d12;
+    --scene-sky: #0b1418; --scene-fog: #0f191e; --scene-flake: #dce6ec;
+    --scene-glow: 1.35; --scene-hemi: 0.38; --scene-sun: 0.45;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1317; --surface: #131d22; --ink: #e5ecef; --muted: #93a3ab; --line: #24323a;
+  --accent: #e48c3e; --accent-ink: #1a0f05; --accent-soft: #2b1d12;
+  --scene-sky: #0b1418; --scene-fog: #0f191e; --scene-flake: #dce6ec;
+  --scene-glow: 1.35; --scene-hemi: 0.38; --scene-sun: 0.45;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--f-body); font-size: 16px; line-height: 1.55; }
+a { color: inherit; }
+.in { max-width: 1200px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2 { font-family: var(--f-display); font-weight: 700; line-height: 1.08; text-wrap: balance; margin: 0; letter-spacing: -0.01em; }
+h2 { font-size: clamp(24px, 3vw, 36px); }
+h3 { font-size: 18px; font-weight: 600; margin: 0; line-height: 1.3; }
+p { margin: 0; }
+.label { font-family: var(--f-mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+.demo-bar { background: var(--ink); color: var(--bg); font-size: 13px; }
+.demo-bar .in { padding-block: 7px; }
+
+.top .in { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 18px; flex-wrap: wrap; }
+.logo { display: flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 700; font-size: 18px; text-decoration: none; }
+.logo svg { width: 28px; height: 28px; color: var(--accent); }
+.nav { display: flex; gap: 22px; flex-wrap: wrap; font-size: 15px; }
+.nav a { text-decoration: none; color: var(--muted); }
+.nav a:hover { color: var(--ink); }
+.phone { font-family: var(--f-mono); font-size: 14px; user-select: all; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 22px; border-radius: 4px; font: 600 15px/1 var(--f-body); text-decoration: none; border: 1.5px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; transition: background .2s, color .2s, transform .2s; }
+.btn:hover { transform: translateY(-1px); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+/* Hero */
+.hero .in { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr); gap: 40px; align-items: center; padding-block: 24px 56px; }
+.hero-text { display: grid; gap: 22px; min-width: 0; }
+.hero h1 { font-size: clamp(30px, 4.4vw, 56px); }
+.hero h1 em { font-style: normal; color: var(--accent); white-space: nowrap; }
+.hero .lead { font-size: 18px; color: var(--muted); max-width: 34em; }
+.cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.cities { display: flex; flex-wrap: wrap; gap: 6px 16px; }
+
+.stage-wrap { display: grid; gap: 14px; min-width: 0; }
+.scene { position: relative; height: clamp(320px, 44vw, 560px); border-radius: 6px; overflow: hidden; background: linear-gradient(to bottom, var(--scene-sky), var(--scene-fog)); border: 1px solid var(--line); }
+.scene canvas { display: block; width: 100%; height: 100%; touch-action: pan-y; cursor: grab; }
+.scene canvas:active { cursor: grabbing; }
+.scene .hint { position: absolute; left: 14px; top: 12px; pointer-events: none; }
+.scene .replay { position: absolute; right: 12px; top: 10px; padding: 8px 12px; font: 500 12px/1 var(--f-mono); letter-spacing: .04em; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 4px; cursor: pointer; }
+.scene.no3d canvas, .scene.no3d .hint, .scene.no3d .replay { display: none; }
+.scene .fallback { display: none; position: absolute; inset: 0; place-items: center; color: var(--muted); padding: 24px; text-align: center; }
+.scene.no3d .fallback { display: grid; }
+
+.stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.stage-btn { display: grid; gap: 8px; text-align: left; padding: 0 0 4px; background: none; border: 0; color: var(--muted); cursor: pointer; font: 500 12px/1.2 var(--f-mono); letter-spacing: .03em; min-width: 0; }
+.stage-btn .bar { height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.stage-btn .fill { display: block; height: 100%; width: 0; background: var(--accent); }
+.stage-btn span.t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.stage-btn[aria-pressed="true"] { color: var(--ink); }
+.stage-info { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 20px; align-items: baseline; padding: 14px 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; min-height: 92px; }
+.stage-info h3 { grid-column: 1; }
+.stage-info .term { grid-column: 2; grid-row: 1; font-family: var(--f-mono); font-size: 13px; color: var(--accent); white-space: nowrap; }
+.stage-info p { grid-column: 1 / -1; color: var(--muted); font-size: 15px; }
+
+/* Факты */
+.facts { border-block: 1px solid var(--line); background: var(--surface); }
+.facts .in { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; padding-block: 28px; }
+.fact { display: grid; gap: 6px; align-content: start; }
+.fact b { font-family: var(--f-display); font-weight: 500; font-size: clamp(22px, 2.4vw, 30px); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.fact span { color: var(--muted); font-size: 14px; }
+
+section.block .in { padding-block: 72px; display: grid; gap: 32px; }
+.head { display: grid; gap: 10px; max-width: 46em; }
+.head p { color: var(--muted); font-size: 17px; }
+
+/* Направления */
+.services { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.svc { background: var(--bg); padding: 24px; display: grid; gap: 10px; align-content: start; transition: background .2s; }
+.svc:hover { background: var(--surface); }
+.svc p { color: var(--muted); font-size: 15px; }
+.svc .price { font-family: var(--f-mono); font-size: 14px; color: var(--accent); margin-top: 6px; }
+
+/* Калькулятор */
+.calc { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: 28px; align-items: start; }
+.controls { display: grid; gap: 26px; }
+fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: 10px; min-width: 0; }
+legend { padding: 0; margin-bottom: 10px; }
+.seg { display: flex; flex-wrap: wrap; gap: 8px; }
+.seg input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.seg label { padding: 11px 16px; border: 1px solid var(--line); border-radius: 4px; cursor: pointer; font-size: 15px; background: var(--surface); }
+.seg input:checked + label { border-color: var(--ink); background: var(--ink); color: var(--bg); }
+.seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+.range-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.range-row output { font-family: var(--f-mono); font-size: 20px; font-variant-numeric: tabular-nums; }
+input[type="range"] { width: 100%; accent-color: var(--accent); }
+.result { background: var(--ink); color: var(--bg); border-radius: 6px; padding: 28px; display: grid; gap: 18px; }
+.result .label { color: inherit; opacity: .7; }
+.result .sum { font-family: var(--f-display); font-weight: 700; font-size: clamp(28px, 3.4vw, 42px); font-variant-numeric: tabular-nums; line-height: 1; }
+.result dl { display: grid; grid-template-columns: auto auto; justify-content: space-between; gap: 8px 16px; margin: 0; font-size: 15px; }
+.result dt { opacity: .7; }
+.result dd { margin: 0; text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.result ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: 15px; }
+.result .note { font-size: 13px; opacity: .65; }
+.result .btn { border-color: var(--accent); }
+
+/* Объекты */
+.works { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.work { display: grid; gap: 14px; align-content: start; }
+.work .pic { aspect-ratio: 4 / 3; max-width: 100%; border-radius: 6px; background: linear-gradient(to bottom, var(--scene-sky), var(--scene-fog)); border: 1px solid var(--line); display: grid; place-items: center; color: var(--ink); position: relative; }
+.work .pic svg { width: 78%; height: auto; }
+.work .pic .label { position: absolute; left: 12px; top: 10px; }
+.work dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; margin: 0; font-size: 14px; }
+.work dt { color: var(--muted); }
+.work dd { margin: 0; font-family: var(--f-mono); font-size: 13px; }
+
+/* Заявка */
+.lead-band { background: var(--accent-soft); }
+.lead-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 40px; align-items: start; }
+.lead-grid .head ul { margin: 6px 0 0; padding-left: 18px; color: var(--muted); display: grid; gap: 6px; }
+form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field.wide { grid-column: 1 / -1; }
+.field label { font-size: 14px; font-weight: 500; }
+.field input, .field select, .field textarea { width: 100%; padding: 13px 14px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface); color: var(--ink); font: 400 16px/1.3 var(--f-body); }
+.field textarea { resize: vertical; min-height: 84px; }
+form .btn { grid-column: 1 / -1; justify-self: start; }
+.form-status { grid-column: 1 / -1; font-size: 15px; min-height: 1.5em; }
+.form-status.ok { color: var(--ink); }
+.form-status.err { color: var(--accent); }
+
+footer .in { padding-block: 32px 40px; display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: space-between; color: var(--muted); font-size: 14px; }
+
+@media (max-width: 900px) {
+  .hero .in { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .stage-wrap { order: -1; }
+  .facts .in { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .services, .works { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .calc, .lead-grid { grid-template-columns: minmax(0, 1fr); }
+  .nav { display: none; }
+}
+@media (max-width: 560px) {
+  .services, .works { grid-template-columns: minmax(0, 1fr); }
+  form { grid-template-columns: minmax(0, 1fr); }
+  .stage-btn span.t { font-size: 10px; }
+  section.block .in { padding-block: 52px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn, .svc { transition: none; }
+  .btn:hover { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="demo-bar"><div class="in">Демо-шаблон 3D-сайта для строительной компании. Название, цены и объекты вымышлены.</div></div>
+
+<header class="top">
+  <div class="in">
+    <a class="logo" href="#top" id="top">
+      <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M3 13 14 4l11 9"/><path d="M6 11v13h16V11"/><path d="M11 24v-7h6v7"/></svg>
+      Контур-54
+    </a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#services">Что строим</a>
+      <a href="#calc">Калькулятор</a>
+      <a href="#works">Объекты</a>
+      <a href="#lead">Заявка</a>
+    </nav>
+    <span class="phone">+7 (383) 000-00-00</span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="in">
+    <div class="hero-text">
+      <span class="label">Строительная компания · с 2012 года</span>
+      <h1>Дома, которые держат тепло при <em>−40 °C</em></h1>
+      <p class="lead">Строим каркасные, брусовые и газобетонные дома, бани, склады и делаем ремонт под ключ. Фиксируем смету в договоре и работаем круглый год, в том числе в сибирские морозы.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="#calc">Рассчитать стоимость</a>
+        <a class="btn" href="#lead">Вызвать инженера</a>
+      </div>
+      <div class="cities label"><span>Новосибирск</span><span>Бердск</span><span>Томск</span><span>Барнаул</span><span>Красноярск</span></div>
+    </div>
+
+    <div class="stage-wrap">
+      <div class="scene" id="scene">
+        <canvas id="c" aria-label="3D-модель дома, который собирается по этапам строительства"></canvas>
+        <span class="hint label">Потяните, чтобы повернуть</span>
+        <button class="replay" id="replay" type="button">Собрать заново</button>
+        <div class="fallback">3D-модель не поддерживается этим браузером. Этапы стройки описаны ниже.</div>
+      </div>
+      <div class="stages" role="group" aria-label="Этапы строительства">
+        <button class="stage-btn" type="button" data-stage="0" aria-pressed="true"><span class="bar"><span class="fill"></span></span><span class="t">1 Фундамент</span></button>
+        <button class="stage-btn" type="button" data-stage="1" aria-pressed="false"><span class="bar"><span class="fill"></span></span><span class="t">2 Каркас</span></button>
+        <button class="stage-btn" type="button" data-stage="2" aria-pressed="false"><span class="bar"><span class="fill"></span></span><span class="t">3 Стены</span></button>
+        <button class="stage-btn" type="button" data-stage="3" aria-pressed="false"><span class="bar"><span class="fill"></span></span><span class="t">4 Кровля</span></button>
+        <button class="stage-btn" type="button" data-stage="4" aria-pressed="false"><span class="bar"><span class="fill"></span></span><span class="t">5 Под ключ</span></button>
+      </div>
+      <div class="stage-info" aria-live="polite">
+        <h3 id="st-title">Фундамент: утеплённая шведская плита</h3>
+        <span class="term" id="st-term">2 недели</span>
+        <p id="st-text">Под плитой 300 мм пенополистирола, внутри тёплый пол. Грунт не промерзает под домом, и пучение ему не страшно.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="facts" aria-label="Цифры">
+  <div class="in">
+    <div class="fact"><b>R = 5,2</b><span>сопротивление теплопередаче стены. Норма для Новосибирска по СП 50.13330 — 3,71 м²·°С/Вт</span></div>
+    <div class="fact"><b>340+</b><span>объектов сдано в Новосибирской, Томской областях и Алтайском крае</span></div>
+    <div class="fact"><b>10 лет</b><span>гарантии на фундамент и несущие конструкции</span></div>
+    <div class="fact"><b>0 ₽</b><span>доплат сверх сметы: цена зафиксирована в договоре</span></div>
+  </div>
+</section>
+
+<section class="block" id="services">
+  <div class="in">
+    <div class="head">
+      <span class="label">Что строим</span>
+      <h2>Частные дома, коммерческие здания и ремонт</h2>
+      <p>Одна бригада ведёт объект от проекта до сдачи. Каждую неделю присылаем фотоотчёт со стройки.</p>
+    </div>
+    <div class="services">
+      <article class="svc"><h3>Дома под ключ</h3><p>Каркас, клееный брус или газобетон. Отделка, инженерные системы, тёплый пол.</p><span class="price">от 58 000 ₽/м²</span></article>
+      <article class="svc"><h3>Бани и гостевые дома</h3><p>Из бруса и бревна, с печью на дровах или электрокаменкой, с террасой.</p><span class="price">от 1,2 млн ₽</span></article>
+      <article class="svc"><h3>Ремонт квартир</h3><p>Новостройки и вторичное жильё. Дизайн-проект, черновые и чистовые работы.</p><span class="price">от 12 000 ₽/м²</span></article>
+      <article class="svc"><h3>Склады и ангары</h3><p>Быстровозводимые здания из ЛСТК и металлокаркаса с сэндвич-панелями.</p><span class="price">от 14 000 ₽/м²</span></article>
+      <article class="svc"><h3>Фундаменты и кровля</h3><p>УШП, свайно-винтовые и ленточные фундаменты. Кровля из металла и мягкой черепицы.</p><span class="price">от 6 500 ₽/м²</span></article>
+      <article class="svc"><h3>Проектирование</h3><p>Архитектурный и конструктивный разделы, теплотехнический расчёт, смета.</p><span class="price">от 900 ₽/м²</span></article>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="calc" style="background: var(--surface); border-block: 1px solid var(--line);">
+  <div class="in">
+    <div class="head">
+      <span class="label">Калькулятор</span>
+      <h2>Сколько стоит ваш дом</h2>
+      <p>Ориентировочная цена для типового проекта. Точную смету инженер составит после выезда на участок.</p>
+    </div>
+    <div class="calc">
+      <div class="controls">
+        <fieldset>
+          <legend class="label">Технология</legend>
+          <div class="seg">
+            <input type="radio" name="mat" id="mat-frame" value="frame" checked><label for="mat-frame">Каркас</label>
+            <input type="radio" name="mat" id="mat-timber" value="timber"><label for="mat-timber">Клееный брус</label>
+            <input type="radio" name="mat" id="mat-gas" value="gas"><label for="mat-gas">Газобетон</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="label">Комплектация</legend>
+          <div class="seg">
+            <input type="radio" name="kit" id="kit-shell" value="shell"><label for="kit-shell">Тёплый контур</label>
+            <input type="radio" name="kit" id="kit-turn" value="turn" checked><label for="kit-turn">Под ключ</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend class="label">Этажность</legend>
+          <div class="seg">
+            <input type="radio" name="fl" id="fl-1" value="1" checked><label for="fl-1">1 этаж</label>
+            <input type="radio" name="fl" id="fl-2" value="2"><label for="fl-2">2 этажа</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <div class="range-row"><label class="label" for="area">Площадь дома</label><output id="area-out" for="area">140 м²</output></div>
+          <input type="range" id="area" min="60" max="300" step="5" value="140">
+        </fieldset>
+      </div>
+      <div class="result" aria-live="polite">
+        <span class="label">Примерная стоимость</span>
+        <div class="sum" id="sum">8 120 000 ₽</div>
+        <dl>
+          <dt>Цена за м²</dt><dd id="per-m">58 000 ₽</dd>
+          <dt>Срок строительства</dt><dd id="weeks">24 недели</dd>
+        </dl>
+        <ul id="incl"></ul>
+        <a class="btn primary" href="#lead">Получить точную смету</a>
+        <p class="note">Цены в демо-шаблоне примерные. На сайте клиента здесь будут его расценки.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="works">
+  <div class="in">
+    <div class="head">
+      <span class="label">Объекты</span>
+      <h2>Сданные объекты</h2>
+      <p>В рабочей версии здесь будут фотографии и видео с объектов компании.</p>
+    </div>
+    <div class="works">
+      <article class="work">
+        <div class="pic"><span class="label">Пример</span>
+          <svg viewBox="0 0 240 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 130h220"/><path d="M40 130V70l60-40 60 40v60"/><path d="M160 130V82h50v48"/><path d="M155 82h60"/><path d="M60 80h30v30H60zM110 85h30v45h-30z"/><path d="M75 80v30M60 95h30"/><path d="M172 95h26v20h-26z"/></svg>
+        </div>
+        <h3>Каркасный дом в Бердске</h3>
+        <dl><dt>Площадь</dt><dd>146 м²</dd><dt>Срок</dt><dd>4,5 месяца</dd><dt>Стоимость</dt><dd>8,4 млн ₽</dd></dl>
+      </article>
+      <article class="work">
+        <div class="pic"><span class="label">Пример</span>
+          <svg viewBox="0 0 240 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 130h220"/><path d="M50 130V75l70-35 70 35v55"/><path d="M50 85h140M50 95h140M50 105h140M50 115h140"/><path d="M100 130V100h28v30"/><path d="M150 55v-22h14v29"/><path d="M190 130v-25h30v25"/></svg>
+        </div>
+        <h3>Баня из клееного бруса, Томск</h3>
+        <dl><dt>Площадь</dt><dd>48 м²</dd><dt>Срок</dt><dd>2 месяца</dd><dt>Стоимость</dt><dd>2,9 млн ₽</dd></dl>
+      </article>
+      <article class="work">
+        <div class="pic"><span class="label">Пример</span>
+          <svg viewBox="0 0 240 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 130h220"/><path d="M25 130V60q95-40 190 0v70"/><path d="M25 60h190"/><path d="M60 60v70M100 60v70M140 60v70M180 60v70"/><path d="M85 130V95h70v35"/><path d="M85 105h70M85 115h70"/></svg>
+        </div>
+        <h3>Склад из ЛСТК, Барнаул</h3>
+        <dl><dt>Площадь</dt><dd>1 200 м²</dd><dt>Срок</dt><dd>3 месяца</dd><dt>Стоимость</dt><dd>19 млн ₽</dd></dl>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="block lead-band" id="lead">
+  <div class="in lead-grid">
+    <div class="head">
+      <span class="label">Заявка</span>
+      <h2>Инженер приедет на участок бесплатно</h2>
+      <p>Перезвоним в течение 15 минут в рабочее время и договоримся о выезде.</p>
+      <ul>
+        <li>Осмотр участка и грунта</li>
+        <li>Подбор технологии под бюджет</li>
+        <li>Смета с фиксированной ценой за 3 дня</li>
+      </ul>
+    </div>
+    <form id="lead-form" novalidate>
+      <div class="field"><label for="f-name">Имя</label><input id="f-name" name="name" autocomplete="name" placeholder="Андрей"></div>
+      <div class="field"><label for="f-phone">Телефон</label><input id="f-phone" name="phone" type="tel" autocomplete="tel" placeholder="+7 900 000-00-00"></div>
+      <div class="field wide"><label for="f-type">Что строим</label>
+        <select id="f-type" name="type">
+          <option>Дом под ключ</option><option>Баня или гостевой дом</option><option>Ремонт квартиры</option><option>Склад или коммерческое здание</option><option>Фундамент или кровля</option>
+        </select>
+      </div>
+      <div class="field wide"><label for="f-msg">Комментарий</label><textarea id="f-msg" name="msg" placeholder="Участок 10 соток в Бердске, хотим дом до 150 м²"></textarea></div>
+      <button class="btn primary" type="submit">Отправить заявку</button>
+      <p class="form-status" id="f-status" role="status"></p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="in">
+    <span>Контур-54 · Новосибирск, Томск, Барнаул, Красноярск</span>
+    <span>Демо-шаблон. Данные вымышлены.</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ---------- Этапы ---------- */
+const STAGES = [
+  { t: "Фундамент: утеплённая шведская плита", term: "2 недели", p: "Под плитой 300 мм пенополистирола, внутри тёплый пол. Грунт не промерзает под домом, и пучение ему не страшно." },
+  { t: "Каркас из сухой доски", term: "3 недели", p: "Доска камерной сушки 50×200 мм, шаг стоек 600 мм. Влажность древесины не выше 18%, поэтому стены не ведёт." },
+  { t: "Утепление, обшивка и окна", term: "3 недели", p: "250 мм минеральной ваты с перекрёстным слоем, ветрозащита и пароизоляция. Окна с двухкамерным энергосберегающим стеклопакетом." },
+  { t: "Кровля", term: "2 недели", p: "Фальцевая кровля из стали с полимерным покрытием, утепление 300 мм. Снеговая нагрузка рассчитана для Сибири: 240 кг/м²." },
+  { t: "Под ключ: отделка и инженерия", term: "6–8 недель", p: "Фасад из лиственницы, отопление, вода, электрика и отделка. Заезжаете с чемоданом." }
+];
+
+(function () {
+  const wrap = document.getElementById("scene");
+  const canvas = document.getElementById("c");
+  const btns = [...document.querySelectorAll(".stage-btn")];
+  const fills = btns.map(b => b.querySelector(".fill"));
+  const stTitle = document.getElementById("st-title");
+  const stTerm = document.getElementById("st-term");
+  const stText = document.getElementById("st-text");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let shown = -1;
+  function showStage(k) {
+    if (k === shown) return;
+    shown = k;
+    btns.forEach((b, i) => b.setAttribute("aria-pressed", i === k ? "true" : "false"));
+    stTitle.textContent = STAGES[k].t;
+    stTerm.textContent = STAGES[k].term;
+    stText.textContent = STAGES[k].p;
+  }
+
+  let renderer = null;
+  if (window.THREE) {
+    try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true }); } catch (e) { renderer = null; }
+  }
+  if (!renderer) {
+    wrap.classList.add("no3d");
+    btns.forEach((b, i) => { fills[i].style.width = "100%"; b.addEventListener("click", () => showStage(i)); });
+    showStage(0);
+    return;
+  }
+
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0xdbe3e8, 30, 80);
+  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 200);
+  const look = new THREE.Vector3(0, 2.4, 0.4);
+
+  const hemi = new THREE.HemisphereLight(0xe6eef8, 0x8a7d6c, 0.9);
+  scene.add(hemi);
+  const sun = new THREE.DirectionalLight(0xfff0d8, 0.95);
+  sun.position.set(14, 20, 10);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(1024, 1024);
+  Object.assign(sun.shadow.camera, { left: -15, right: 15, top: 15, bottom: -15, near: 1, far: 60 });
+  sun.shadow.bias = -0.0008;
+  scene.add(sun);
+
+  const M = (c, o) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.85, metalness: 0 }, o || {}));
+  const mat = {
+    eps: M(0xc7d3da), concrete: M(0x98a1a6), pine: M(0xd9b07a), wall: M(0x3a454b),
+    larch: M(0xb4733a, { roughness: 0.7 }), door: M(0x6b4426), roof: M(0x252c31, { roughness: 0.45, metalness: 0.35 }),
+    glass: M(0x23323b, { roughness: 0.12, metalness: 0.3, emissive: 0xffb15a, emissiveIntensity: 0 }),
+    snow: M(0xf2f5f7, { roughness: 1 }), trunk: M(0x5b4231), needles: M(0x2c4638)
+  };
+
+  const box = (w, h, d, m, x, y, z) => {
+    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
+    mesh.position.set(x, y, z);
+    mesh.castShadow = true; mesh.receiveShadow = true;
+    return mesh;
+  };
+
+  const house = new THREE.Group();
+  scene.add(house);
+  const items = [];
+  function add(mesh, start, dur, mode) {
+    mesh.userData.baseY = mesh.position.y;
+    items.push({ mesh, start, dur: dur || 0.4, mode: mode || "drop" });
+    house.add(mesh);
+    return mesh;
+  }
+
+  // Земля и деревья
+  const ground = new THREE.Mesh(new THREE.CircleGeometry(48, 56), mat.snow);
+  ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true;
+  scene.add(ground);
+  function pine(x, z, s) {
+    const g = new THREE.Group();
+    const tr = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.24, 1.6, 8), mat.trunk);
+    tr.position.y = 0.8; g.add(tr);
+    [[2.6, 2.4, 2.2], [2.0, 2.2, 3.5], [1.3, 2.0, 4.7]].forEach(([r, h, y]) => {
+      const c = new THREE.Mesh(new THREE.ConeGeometry(r, h, 9), mat.needles);
+      c.position.y = y; g.add(c);
+    });
+    g.traverse(o => { o.castShadow = true; });
+    g.position.set(x, 0, z); g.scale.setScalar(s);
+    scene.add(g);
+  }
+  [[-13, -9, 1.3], [-16, 2, 1.1], [-11, -15, 1.5], [12, -12, 1.4], [16, -3, 1.2], [9, -17, 1.6],
+   [-18, -6, 1.0], [18, 7, 1.1], [-15, 11, 0.9], [3, -19, 1.3]].forEach(a => pine(...a));
+
+  // 1. Фундамент
+  const y0 = 0.5, H = 2.8, W = 10, D = 8;
+  add(box(W + 1.0, 0.3, D + 1.0, mat.eps, 0, 0.15, 0), 0, 0.5, "grow");
+  add(box(W + 0.6, 0.22, D + 0.6, mat.concrete, 0, 0.39, 0), 0.35, 0.5, "grow");
+
+  // 2. Каркас
+  const studGeo = new THREE.BoxGeometry(0.06, H, 0.18);
+  const studs = [];
+  const stud = (x, z, rot) => {
+    const m = new THREE.Mesh(studGeo, mat.pine);
+    m.position.set(x, y0 + H / 2, z); if (rot) m.rotation.y = Math.PI / 2;
+    m.castShadow = true; m.receiveShadow = true; studs.push(m);
+  };
+  for (let x = -W / 2 + 0.05; x <= W / 2; x += 0.6) { stud(x, D / 2 - 0.1); stud(x, -D / 2 + 0.1); }
+  for (let z = -D / 2 + 0.6; z < D / 2 - 0.2; z += 0.6) { stud(W / 2 - 0.05, z, true); stud(-W / 2 + 0.05, z, true); }
+  studs.forEach((m, i) => add(m, 1.0 + 0.62 * (i / studs.length), 0.28));
+  [[W, D / 2 - 0.1, false], [W, -D / 2 + 0.1, false], [D, W / 2 - 0.05, true], [D, -W / 2 + 0.05, true]].forEach(([len, off, side], i) => {
+    const top = side ? box(0.18, 0.08, len, mat.pine, off, y0 + H, 0) : box(len, 0.08, 0.18, mat.pine, 0, y0 + H, off);
+    add(top, 1.62 + i * 0.07, 0.3);
+  });
+
+  // 3. Стены и окна
+  const wz = D / 2 + 0.11, wx = W / 2 + 0.11;
+  for (let i = 0; i < 4; i++) {
+    const x = -W / 2 - 0.22 + 2.66 * i + 1.33;
+    add(box(2.66, H, 0.22, mat.wall, x, y0 + H / 2, wz), 2.0 + i * 0.1, 0.35);
+    add(box(2.66, H, 0.22, mat.wall, x, y0 + H / 2, -wz), 2.05 + i * 0.1, 0.35);
+  }
+  for (let i = 0; i < 2; i++) {
+    const z = -D / 2 + D / 4 + (D / 2) * i;
+    add(box(0.22, H, D / 2, mat.wall, wx, y0 + H / 2, z), 2.3 + i * 0.1, 0.35);
+    add(box(0.22, H, D / 2, mat.wall, -wx, y0 + H / 2, z), 2.35 + i * 0.1, 0.35);
+  }
+  const win = (x, y, z, w, h, axis, st) => {
+    const fw = axis === "x" ? [w + 0.2, h + 0.2, 0.05] : [0.05, h + 0.2, w + 0.2];
+    const gw = axis === "x" ? [w, h, 0.04] : [0.04, h, w];
+    const n = axis === "x" ? [0, 0, Math.sign(z)] : [Math.sign(x), 0, 0];
+    add(box(...fw, mat.larch, x + n[0] * 0.13, y, z + n[2] * 0.13), st, 0.3);
+    add(box(...gw, mat.glass, x + n[0] * 0.16, y, z + n[2] * 0.16), st + 0.05, 0.3);
+  };
+  win(-2.4, y0 + 1.45, wz, 3.4, 2.1, "x", 2.6);
+  win(3.1, y0 + 1.6, wz + 0.04, 1.2, 1.4, "x", 2.65);
+  win(-2.2, y0 + 1.6, -wz, 1.6, 1.3, "x", 2.7);
+  win(2.6, y0 + 1.6, -wz, 1.6, 1.3, "x", 2.72);
+  win(wx, y0 + 1.6, -1.5, 1.4, 1.4, "z", 2.75);
+  win(-wx, y0 + 1.6, 1.4, 1.4, 1.4, "z", 2.78);
+
+  // 4. Кровля
+  const rise = 2.4, half = D / 2;
+  const th = Math.atan2(rise, half);
+  const L = Math.hypot(half, rise) + 0.75;
+  const ridgeY = y0 + H + rise + 0.09;
+  const gable = new THREE.Shape();
+  gable.moveTo(-half - 0.11, 0); gable.lineTo(half + 0.11, 0); gable.lineTo(0, rise + 0.07); gable.closePath();
+  const gGeo = new THREE.ExtrudeGeometry(gable, { depth: 0.22, bevelEnabled: false });
+  gGeo.translate(0, 0, -0.11); gGeo.rotateY(Math.PI / 2);
+  [wx, -wx].forEach((x, i) => {
+    const g = new THREE.Mesh(gGeo, mat.wall); g.position.set(x, y0 + H, 0);
+    g.castShadow = true; g.receiveShadow = true;
+    add(g, 3.0 + i * 0.1, 0.35);
+  });
+  win(wx, y0 + H + 0.95, 0, 0.8, 0.8, "z", 3.25);
+  [1, -1].forEach((s, i) => {
+    const r = box(W + 1.2, 0.14, L, mat.roof, 0, ridgeY - Math.sin(th) * L / 2, s * Math.cos(th) * L / 2);
+    r.rotation.x = s * th;
+    add(r, 3.3 + i * 0.18, 0.4);
+  });
+  add(box(0.65, 2.3, 0.65, mat.concrete, -2.6, 5.55, -1.5), 3.75, 0.3);
+
+  // 5. Под ключ
+  add(box(3.0, H - 0.1, 0.04, mat.larch, 3.1, y0 + H / 2, wz + 0.13), 4.0, 0.35);
+  add(box(1.0, 2.2, 0.06, mat.door, 0.6, y0 + 1.1, wz + 0.14), 4.15, 0.3);
+  add(box(6.0, 0.18, 2.6, mat.larch, -1.7, 0.36, D / 2 + 1.6), 4.25, 0.35, "grow");
+  [-4.4, -1.7, 1.0].forEach((x, i) => add(box(0.14, 2.6, 0.14, mat.larch, x, 1.75, D / 2 + 2.75), 4.4 + i * 0.05, 0.3));
+  [1, -1].forEach((s, i) => {
+    const r = box(W + 0.8, 0.08, L - 0.5, mat.snow, 0, 0, 0);
+    r.position.set(0, ridgeY - Math.sin(th) * L / 2 + Math.cos(th) * 0.11, s * Math.cos(th) * L / 2 + s * Math.sin(th) * 0.11);
+    r.rotation.x = s * th;
+    add(r, 4.55 + i * 0.1, 0.4);
+  });
+
+  // Снег
+  const FLAKES = 900;
+  const fPos = new Float32Array(FLAKES * 3);
+  const fSpd = new Float32Array(FLAKES);
+  for (let i = 0; i < FLAKES; i++) {
+    fPos[i * 3] = (Math.random() - 0.5) * 50;
+    fPos[i * 3 + 1] = Math.random() * 22;
+    fPos[i * 3 + 2] = (Math.random() - 0.5) * 50;
+    fSpd[i] = 0.6 + Math.random() * 0.9;
+  }
+  const fGeo = new THREE.BufferGeometry();
+  fGeo.setAttribute("position", new THREE.BufferAttribute(fPos, 3));
+  const fMat = new THREE.PointsMaterial({ color: 0x8ea2ad, size: 0.13, transparent: true, opacity: 0.9, depthWrite: false });
+  scene.add(new THREE.Points(fGeo, fMat));
+
+  // Тема
+  let glowMul = 0.55;
+  function readTheme() {
+    const cs = getComputedStyle(document.documentElement);
+    const v = n => cs.getPropertyValue(n).trim();
+    scene.fog.color.set(v("--scene-fog") || "#dbe3e8");
+    fMat.color.set(v("--scene-flake") || "#8ea2ad");
+    glowMul = parseFloat(v("--scene-glow")) || 0.55;
+    hemi.intensity = parseFloat(v("--scene-hemi")) || 0.9;
+    sun.intensity = parseFloat(v("--scene-sun")) || 0.95;
+  }
+  readTheme();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readTheme);
+  new MutationObserver(readTheme).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] });
+
+  // Управление
+  let p = reduce ? 5 : 0, target = 5, az = 0.7, dragging = false, lastX = 0, idle = 0, radius = 23, camY = 9.5;
+  btns.forEach((b, i) => b.addEventListener("click", () => { target = i + 1; if (reduce) p = target; }));
+  document.getElementById("replay").addEventListener("click", () => { p = 0; target = 5; if (reduce) p = 5; });
+  canvas.addEventListener("pointerdown", e => { dragging = true; lastX = e.clientX; canvas.setPointerCapture(e.pointerId); });
+  canvas.addEventListener("pointermove", e => { if (!dragging) return; az -= (e.clientX - lastX) * 0.008; lastX = e.clientX; idle = 0; });
+  const up = () => { dragging = false; };
+  canvas.addEventListener("pointerup", up);
+  canvas.addEventListener("pointercancel", up);
+
+  function resize() {
+    const w = wrap.clientWidth, h = wrap.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    radius = camera.aspect < 0.95 ? 33 : camera.aspect < 1.3 ? 27 : 23;
+    camY = camera.aspect < 0.95 ? 12 : 9.5;
+    camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(wrap);
+  resize();
+
+  let onscreen = true;
+  new IntersectionObserver(es => { onscreen = es[0].isIntersecting; }).observe(wrap);
+
+  const ease = t => 1 - Math.pow(1 - t, 3);
+  const clamp = t => Math.max(0, Math.min(1, t));
+
+  function apply() {
+    for (const it of items) {
+      const t = clamp((p - it.start) / it.dur);
+      const e = ease(t);
+      it.mesh.visible = t > 0.001;
+      if (it.mode === "grow") {
+        it.mesh.scale.y = Math.max(0.001, e);
+        it.mesh.position.y = it.mesh.userData.baseY * (0.5 + 0.5 * e);
+      } else {
+        it.mesh.position.y = it.mesh.userData.baseY + (1 - e) * 4;
+      }
+    }
+    mat.glass.emissiveIntensity = clamp((p - 4.3) / 0.6) * glowMul;
+    fills.forEach((f, i) => { f.style.width = (clamp(p - i) * 100).toFixed(1) + "%"; });
+    showStage(Math.min(4, Math.floor(Math.max(0, p - 0.001))));
+  }
+
+  let last = performance.now();
+  let started = false;
+  setTimeout(() => { started = true; }, reduce ? 0 : 500);
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    if (!onscreen || document.hidden) return;
+    if (started && !reduce) {
+      if (p < target) p = Math.min(target, p + dt * 0.95);
+      else if (p > target) p = Math.max(target, p - dt * 2.4);
+    }
+    if (!reduce) {
+      idle += dt;
+      if (!dragging && idle > 2) az += dt * 0.06;
+      for (let i = 0; i < FLAKES; i++) {
+        const k = i * 3;
+        fPos[k + 1] -= fSpd[i] * dt;
+        fPos[k] += Math.sin(now * 0.0006 + i) * dt * 0.25;
+        if (fPos[k + 1] < 0) fPos[k + 1] = 22;
+      }
+      fGeo.attributes.position.needsUpdate = true;
+    }
+    apply();
+    camera.position.set(look.x + Math.sin(az) * radius, camY, look.z + Math.cos(az) * radius);
+    camera.lookAt(look);
+    renderer.render(scene, camera);
+  }
+  apply();
+  requestAnimationFrame(frame);
+})();
+
+/* ---------- Калькулятор ---------- */
+(function () {
+  const PRICES = {
+    frame:  { shell: 32000, turn: 58000, base: [8, 14] },
+    timber: { shell: 46000, turn: 76000, base: [10, 18] },
+    gas:    { shell: 39000, turn: 66000, base: [12, 20] }
+  };
+  const INCL = {
+    shell: ["Фундамент УШП с тёплым полом", "Стены с утеплением", "Кровля", "Окна и входная дверь"],
+    turn: ["Всё из «тёплого контура»", "Фасад и внутренняя отделка", "Отопление, вода, канализация", "Электрика и освещение"]
+  };
+  const fmt = n => new Intl.NumberFormat("ru-RU").format(n) + " ₽";
+  const weeksWord = n => { const m10 = n % 10, m100 = n % 100; return m10 === 1 && m100 !== 11 ? "неделя" : m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14) ? "недели" : "недель"; };
+  const area = document.getElementById("area");
+  const get = name => document.querySelector(`input[name="${name}"]:checked`).value;
+  function calc() {
+    const a = +area.value, m = get("mat"), k = get("kit"), fl = get("fl");
+    const per = Math.round(PRICES[m][k] * (fl === "2" ? 0.94 : 1) / 100) * 100;
+    const total = Math.round(per * a / 10000) * 10000;
+    const w = Math.round(PRICES[m].base[k === "turn" ? 1 : 0] + a / (k === "turn" ? 20 : 30));
+    document.getElementById("area-out").textContent = a + " м²";
+    document.getElementById("sum").textContent = fmt(total);
+    document.getElementById("per-m").textContent = fmt(per);
+    document.getElementById("weeks").textContent = w + " " + weeksWord(w);
+    document.getElementById("incl").innerHTML = INCL[k].map(s => "<li>" + s + "</li>").join("");
+  }
+  document.querySelectorAll(".controls input").forEach(i => i.addEventListener("input", calc));
+  calc();
+})();
+
+/* ---------- Заявка ---------- */
+document.getElementById("lead-form").addEventListener("submit", e => {
+  e.preventDefault();
+  const phone = document.getElementById("f-phone").value.replace(/\D/g, "");
+  const st = document.getElementById("f-status");
+  if (phone.length < 10) {
+    st.className = "form-status err";
+    st.textContent = "Укажите телефон полностью, например +7 900 000-00-00.";
+    document.getElementById("f-phone").focus();
+    return;
+  }
+  st.className = "form-status ok";
+  st.textContent = "Заявка принята. Это демо-версия, поэтому заявка никуда не отправлена. На сайте клиента она придёт в Telegram и на почту.";
+  e.target.reset();
+});
+</script>
+</body>
+</html>
