@@ -1,25 +1,30 @@
 /*
-  3D-дом, который собирается по пяти этапам строительства.
+  3D-дом: сборка «от чертежа к дому» в пять этапов.
+
+  Сценарий:
+  1. Фундамент — на снегу чертится план с осями и размерными линиями, весь дом
+     виден призрачным контуром; плита вырастает из земли.
+  2. Каркас — стойки поднимаются волной по периметру, сверху ложится обвязка.
+  3. Стены — обшивка «заполняется» снизу вверх (плоскость отсечения), окна въезжают снаружи.
+  4. Кровля — фронтоны заполняются, скаты закрываются как крышка, растёт труба.
+  5. Под ключ — фасад, дверь, терраса, снег на кровле; контур растворяется, в окнах загорается тепло.
 
   Устройство:
-  - build*()  — создают объекты этапа и регистрируют их в timeline:
-                { start, dur, mode } — когда и как объект появляется.
-                Повторяющиеся детали (стойки, фальцы, ели) — InstancedMesh.
-  - progress  — p ∈ [0..5] плавно идёт к target; apply(p) расставляет объекты.
-  - камера    — орбита yaw/pitch/dist с инерцией, пресеты ракурсов для этапов.
-  - рендер    — кадр рисуется только когда что-то меняется; тени
-                пересчитываются только во время сборки; снег считает GPU.
+  - timeline: { start, dur, update(e, t) } — каждый объект сам знает, как появляется.
+  - p ∈ [0..5] плавно идёт к target; apply() прогоняет timeline.
+  - цвета — только из CSS-токенов страницы (--scene-*, --house-*), см. engine/site.css.
+  - рендер по требованию, тени пересчитываются только во время сборки, снег считает GPU.
 
-  API: House3D.mount(sceneEl, { colors, onProgress(p), onState(s), onInteract() })
+  API: House3D.mount(sceneEl, { onProgress(p), onState(s), onInteract() })
        → { goTo(k), toggle(), resetView() } или null, если WebGL недоступен.
 */
 (function () {
   const STAGES = 5;
   const LOOK = { x: 0, y: 2.3, z: 0.4 };
-  const HOME = { yaw: 0.62, pitch: 0.34, dist: 24 };
-  // Лучший ракурс для каждого этапа: фундамент сверху, кровля с другой стороны и т. д.
+  const HOME = { yaw: 0.62, pitch: 0.36, dist: 24 };
+  // Лучший ракурс для каждого этапа
   const VIEWS = [
-    { yaw: 0.5, pitch: 0.72, dist: 25 },
+    { yaw: 0.45, pitch: 0.78, dist: 26 },
     { yaw: 0.9, pitch: 0.5, dist: 22 },
     { yaw: 0.3, pitch: 0.3, dist: 22 },
     { yaw: -0.75, pitch: 0.5, dist: 25 },
@@ -29,6 +34,7 @@
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const clamp01 = t => clamp(t, 0, 1);
   const ease = t => 1 - Math.pow(1 - t, 3);
+  const span = (p, a, b) => clamp01((p - a) / (b - a));
 
   function mount(wrap, opts) {
     if (!window.THREE) return null;
@@ -48,10 +54,11 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = T.PCFSoftShadowMap;
     renderer.shadowMap.autoUpdate = false;
+    renderer.localClippingEnabled = true;
 
-    const lin = hex => new T.Color(hex).convertSRGBToLinear();
+    const lin = css => new T.Color(css).convertSRGBToLinear();
     const scene = new T.Scene();
-    scene.fog = new T.Fog(0xdbe3e8, 30, 110);
+    scene.fog = new T.Fog(0xffffff, 30, 110);
     const camera = new T.PerspectiveCamera(34, 1, 0.1, 400);
 
     /* ---------- Небо, окружение, свет ---------- */
@@ -86,9 +93,9 @@
       g.dispose();
     }
 
-    const hemi = new T.HemisphereLight(0xe6eef8, 0x8a7d6c, 0.5);
+    const hemi = new T.HemisphereLight(0xffffff, 0x888888, 0.5);
     scene.add(hemi);
-    const sun = new T.DirectionalLight(0xfff0d8, 2);
+    const sun = new T.DirectionalLight(0xffffff, 2);
     sun.position.set(15, 13, 9);
     sun.castShadow = true;
     sun.shadow.mapSize.set(coarse ? 1024 : 2048, coarse ? 1024 : 2048);
@@ -96,15 +103,18 @@
     sun.shadow.bias = -0.0005;
     sun.shadow.normalBias = 0.02;
     scene.add(sun);
-    const windowLight = new T.PointLight(0xffb35c, 0, 11, 2);
+    const windowLight = new T.PointLight(0xffffff, 0, 11, 2);
     windowLight.position.set(-1.6, 2.2, 5.6);
     scene.add(windowLight);
 
-    /* ---------- Материалы ---------- */
-    const colors = Object.assign({ wall: "#3a454b", roof: "#252c31", trim: "#b4733a", door: "#6b4426" }, opts.colors || {});
-    const M = (hex, o) => new T.MeshStandardMaterial(Object.assign({ color: lin(hex), roughness: 0.85, metalness: 0 }, o || {}));
-
-    // Вертикальная доска (планкен): генерируется на canvas, без файлов.
+    /* ---------- Материалы: цвет каждого берётся из CSS-токена ---------- */
+    const tokenMats = []; // [material, имя токена, свойство]
+    function M(token, o) {
+      const m = new T.MeshStandardMaterial(Object.assign({ roughness: 0.85, metalness: 0 }, o || {}));
+      tokenMats.push([m, token, "color"]);
+      return m;
+    }
+    // Вертикальная доска (планкен): яркость генерируется на canvas, цвет даёт токен.
     const boards = (() => {
       const cv = document.createElement("canvas");
       cv.width = cv.height = 256;
@@ -120,10 +130,8 @@
       }
       return cv;
     })();
-    const boardTex = {};
-    function boardsMat(hex, rx, ry) {
-      const key = hex + rx.toFixed(3) + ry.toFixed(3);
-      if (boardTex[key]) return boardTex[key];
+    const BOARD = 1.6; // ширина тайла текстуры, м (8 досок по 20 см)
+    function boardsMat(token, rx, ry, clip) {
       const t = new T.CanvasTexture(boards);
       t.encoding = T.sRGBEncoding;
       t.wrapS = t.wrapT = T.RepeatWrapping;
@@ -132,41 +140,58 @@
       const b = t.clone();
       b.encoding = T.LinearEncoding;
       b.needsUpdate = true;
-      return (boardTex[key] = M(hex, { map: t, bumpMap: b, bumpScale: 0.015, roughness: 0.8 }));
+      return M(token, { map: t, bumpMap: b, bumpScale: 0.015, roughness: 0.8, clippingPlanes: clip ? [clip] : null, clipShadows: !!clip });
     }
-    const BOARD = 1.6; // ширина тайла текстуры в метрах (8 досок по 20 см)
-
     const mat = {
-      eps: M("#b4c6d3", { roughness: 0.95 }),
-      concrete: M("#8a9399", { roughness: 0.95 }),
-      pine: M("#d9b07a", { roughness: 0.75 }),
-      trimPlain: M(colors.trim, { roughness: 0.6 }),
-      door: M(colors.door, { roughness: 0.6 }),
-      roof: M(colors.roof, { roughness: 0.38, metalness: 0.55 }),
-      glass: M("#1b2830", { roughness: 0.04, metalness: 0.9, envMapIntensity: 1.5, emissive: lin("#ffb35c"), emissiveIntensity: 0 }),
-      snow: M("#f3f6f8", { roughness: 1 }),
-      trunk: M("#5b4231"),
-      needles: M("#2c4638", { roughness: 0.9, flatShading: true })
+      insulation: M("--house-insulation", { roughness: 0.95 }),
+      slab: M("--house-slab", { roughness: 0.95 }),
+      frame: M("--house-frame", { roughness: 0.75 }),
+      trim: M("--house-trim", { roughness: 0.6 }),
+      door: M("--house-door", { roughness: 0.5 }),
+      roof: M("--house-roof", { roughness: 0.38, metalness: 0.55 }),
+      glass: M("--house-glass", { roughness: 0.04, metalness: 0.9, envMapIntensity: 1.5, emissiveIntensity: 0 }),
+      snow: M("--scene-snow", { roughness: 1 }),
+      trunk: M("--house-trunk"),
+      needles: M("--house-needles", { roughness: 0.9, flatShading: true })
+    };
+    tokenMats.push([mat.glass, "--house-glow", "emissive"]);
+    const lineMat = (opacity) => {
+      const m = new T.LineBasicMaterial({ transparent: true, opacity, depthWrite: false });
+      tokenMats.push([m, "--scene-ghost", "color"]);
+      return m;
     };
 
     /* ---------- Timeline ---------- */
     const house = new T.Group();
     scene.add(house);
-    const items = [];      // обычные меши
-    const inst = [];       // экземпляры InstancedMesh
+    const timeline = [];
     const dummy = new T.Object3D();
-
-    function shadowy(o) { o.castShadow = true; o.receiveShadow = true; return o; }
-    function box(w, h, d, m, x, y, z) {
-      const o = shadowy(new T.Mesh(new T.BoxGeometry(w, h, d), m));
+    const shadowy = o => { o.castShadow = true; o.receiveShadow = true; return o; };
+    // Коробка с точкой привязки: "center" | "bottom" (растёт вверх) | "back" (растёт по +z)
+    function box(w, h, d, m, x, y, z, anchor) {
+      const g = new T.BoxGeometry(w, h, d);
+      if (anchor === "bottom") g.translate(0, h / 2, 0);
+      if (anchor === "back") g.translate(0, 0, d / 2);
+      const o = shadowy(new T.Mesh(g, m));
       o.position.set(x, y, z);
       return o;
     }
-    function add(o, start, dur, mode) {
-      o.userData.baseY = o.position.y;
-      items.push({ o, start, dur: dur || 0.4, mode: mode || "drop" });
+    function on(start, dur, update) { timeline.push({ start, dur, update }); }
+    function show(o, t) { o.visible = t > 0.001; }
+    // готовые сценарии появления
+    function grow(o, axis, start, dur) {
       house.add(o);
-      return o;
+      on(start, dur, (e, t) => { show(o, t); o.scale[axis] = Math.max(0.001, e); });
+    }
+    function drop(o, height, start, dur) {
+      house.add(o);
+      const y = o.position.y;
+      on(start, dur, (e, t) => { show(o, t); o.position.y = y + (1 - e) * height; });
+    }
+    function slide(o, dx, dz, start, dur) {
+      house.add(o);
+      const { x, z } = o.position;
+      on(start, dur, (e, t) => { show(o, t); o.position.x = x + (1 - e) * dx; o.position.z = z + (1 - e) * dz; });
     }
 
     /* ---------- Окружение: земля, сугробы, ели ---------- */
@@ -185,9 +210,8 @@
 
     const PINES = [[-13, -9, 1.3], [-16, 2, 1.1], [-11, -15, 1.5], [12, -12, 1.4], [16, -3, 1.2], [9, -17, 1.6],
       [-18, -6, 1.0], [18, 7, 1.1], [-15, 11, 0.9], [3, -19, 1.3], [-6, -18, 1.2], [20, -10, 1.4]];
-    const tiers = [[0.2, 1.6, 0.8, mat.trunk, "cyl"], [2.6, 2.4, 2.2], [2.0, 2.2, 3.5], [1.3, 2.0, 4.7], [0.7, 1.4, 5.7]];
-    tiers.forEach(([r, h, y, m, kind]) => {
-      const geo = kind === "cyl" ? new T.CylinderGeometry(r * 0.8, r, h, 8) : new T.ConeGeometry(r, h, 9);
+    [[0.2, 1.6, 0.8, mat.trunk, true], [2.6, 2.4, 2.2], [2.0, 2.2, 3.5], [1.3, 2.0, 4.7], [0.7, 1.4, 5.7]].forEach(([r, h, y, m, trunk]) => {
+      const geo = trunk ? new T.CylinderGeometry(r * 0.8, r, h, 8) : new T.ConeGeometry(r, h, 9);
       const im = shadowy(new T.InstancedMesh(geo, m || mat.needles, PINES.length));
       PINES.forEach(([x, z, s], i) => {
         dummy.position.set(x, y * s, z); dummy.rotation.set(0, i * 1.7, 0); dummy.scale.setScalar(s);
@@ -196,96 +220,154 @@
       scene.add(im);
     });
 
-    /* ---------- Этап 1. Фундамент ---------- */
+    /* ---------- Размеры дома ---------- */
     const y0 = 0.5, H = 2.8, W = 10, D = 8;
-    add(box(W + 1.0, 0.3, D + 1.0, mat.eps, 0, 0.15, 0), 0, 0.5, "grow");
-    add(box(W + 0.6, 0.22, D + 0.6, mat.concrete, 0, 0.39, 0), 0.35, 0.5, "grow");
-
-    /* ---------- Этап 2. Каркас ---------- */
-    const studPos = [];
-    for (let x = -W / 2 + 0.05; x <= W / 2; x += 0.6) { studPos.push([x, D / 2 - 0.1, 0], [x, -D / 2 + 0.1, 0]); }
-    for (let z = -D / 2 + 0.6; z < D / 2 - 0.2; z += 0.6) { studPos.push([W / 2 - 0.05, z, 1], [-W / 2 + 0.05, z, 1]); }
-    const studs = shadowy(new T.InstancedMesh(new T.BoxGeometry(0.06, H, 0.18), mat.pine, studPos.length));
-    studs.instanceMatrix.setUsage(T.DynamicDrawUsage);
-    studPos.forEach(([x, z, rot], i) => inst.push({ im: studs, i, x, y: y0 + H / 2, z, ry: rot ? Math.PI / 2 : 0, start: 1.0 + 0.62 * (i / studPos.length), dur: 0.28 }));
-    house.add(studs);
-    [[W, D / 2 - 0.1, false], [W, -D / 2 + 0.1, false], [D, W / 2 - 0.05, true], [D, -W / 2 + 0.05, true]].forEach(([len, off, side], i) => {
-      const top = side ? box(0.18, 0.08, len, mat.pine, off, y0 + H, 0) : box(len, 0.08, 0.18, mat.pine, 0, y0 + H, off);
-      add(top, 1.62 + i * 0.07, 0.3);
-    });
-
-    /* ---------- Этап 3. Стены и окна ---------- */
     const wz = D / 2 + 0.11, wx = W / 2 + 0.11;
-    const panelW = (W + 0.44) / 4;
-    for (let i = 0; i < 4; i++) {
-      const x = -W / 2 - 0.22 + panelW * i + panelW / 2;
-      const m = boardsMat(colors.wall, panelW / BOARD, 1);
-      add(box(panelW, H, 0.22, m, x, y0 + H / 2, wz), 2.0 + i * 0.1, 0.35);
-      add(box(panelW, H, 0.22, m, x, y0 + H / 2, -wz), 2.05 + i * 0.1, 0.35);
-    }
-    for (let i = 0; i < 2; i++) {
-      const z = -D / 2 + D / 4 + (D / 2) * i;
-      const m = boardsMat(colors.wall, (D / 2) / BOARD, 1);
-      add(box(0.22, H, D / 2, m, wx, y0 + H / 2, z), 2.3 + i * 0.1, 0.35);
-      add(box(0.22, H, D / 2, m, -wx, y0 + H / 2, z), 2.35 + i * 0.1, 0.35);
-    }
-    function win(x, y, z, w, h, axis, st) {
-      const fw = axis === "x" ? [w + 0.2, h + 0.2, 0.05] : [0.05, h + 0.2, w + 0.2];
-      const gw = axis === "x" ? [w, h, 0.04] : [0.04, h, w];
-      const n = axis === "x" ? [0, 0, Math.sign(z)] : [Math.sign(x), 0, 0];
-      add(box(...fw, mat.trimPlain, x + n[0] * 0.13, y, z + n[2] * 0.13), st, 0.3);
-      add(box(...gw, mat.glass, x + n[0] * 0.16, y, z + n[2] * 0.16), st + 0.05, 0.3);
-    }
-    win(-2.4, y0 + 1.45, wz, 3.4, 2.1, "x", 2.6);
-    win(3.1, y0 + 1.6, wz + 0.04, 1.2, 1.4, "x", 2.65);
-    win(-2.2, y0 + 1.6, -wz, 1.6, 1.3, "x", 2.7);
-    win(2.6, y0 + 1.6, -wz, 1.6, 1.3, "x", 2.72);
-    win(wx, y0 + 1.6, -1.5, 1.4, 1.4, "z", 2.75);
-    win(-wx, y0 + 1.6, 1.4, 1.4, 1.4, "z", 2.78);
-
-    /* ---------- Этап 4. Кровля ---------- */
     const rise = 2.4, half = D / 2;
     const th = Math.atan2(rise, half);
     const L = Math.hypot(half, rise) + 0.75;
     const ridgeY = y0 + H + rise + 0.09;
+    const roofW = W + 1.2;
+
+    /* ---------- Чертёж на снегу и призрачный контур дома ---------- */
+    const seg = [];
+    const ln = (a, b) => seg.push(...a, ...b);
+    const gy = 0.03;
+    const ox = W / 2 + 0.3, oz = D / 2 + 0.3;
+    ln([-ox, gy, -oz], [ox, gy, -oz]); ln([ox, gy, -oz], [ox, gy, oz]); ln([ox, gy, oz], [-ox, gy, oz]); ln([-ox, gy, oz], [-ox, gy, -oz]);
+    for (let x = -W / 2; x <= W / 2 + 0.01; x += W / 4) ln([x, gy, -oz - 1.2], [x, gy, oz + 1.2]); // оси
+    for (let z = -D / 2; z <= D / 2 + 0.01; z += D / 4) ln([-ox - 1.2, gy, z], [ox + 1.2, gy, z]);
+    const dz = oz + 2.2, dx = ox + 2.2, tk = 0.25; // размерные линии с засечками
+    ln([-ox, gy, dz], [ox, gy, dz]); ln([-ox - tk, gy, dz + tk], [-ox + tk, gy, dz - tk]); ln([ox - tk, gy, dz + tk], [ox + tk, gy, dz - tk]);
+    ln([-ox, gy, oz], [-ox, gy, dz + 0.4]); ln([ox, gy, oz], [ox, gy, dz + 0.4]);
+    ln([dx, gy, -oz], [dx, gy, oz]); ln([dx - tk, gy, -oz - tk], [dx + tk, gy, -oz + tk]); ln([dx - tk, gy, oz - tk], [dx + tk, gy, oz + tk]);
+    ln([ox, gy, -oz], [dx + 0.4, gy, -oz]); ln([ox, gy, oz], [dx + 0.4, gy, oz]);
+    const planGeo = new T.BufferGeometry();
+    planGeo.setAttribute("position", new T.Float32BufferAttribute(seg, 3));
+    const planMat = lineMat(0.9);
+    const plan = new T.LineSegments(planGeo, planMat);
+    scene.add(plan);
+    const planCount = seg.length / 3;
+
+    const gs = [];
+    const gl = (a, b) => gs.push(...a, ...b);
+    const bx = W / 2 + 0.22, bz = D / 2 + 0.22, top = y0 + H;
+    [[-bx, -bz], [bx, -bz], [bx, bz], [-bx, bz]].forEach(([x, z], i, a) => {
+      const [nx, nz] = a[(i + 1) % 4];
+      gl([x, y0, z], [nx, y0, nz]); gl([x, top, z], [nx, top, nz]); gl([x, y0, z], [x, top, z]);
+    });
+    [-bx, bx].forEach(x => { gl([x, top, -bz], [x, top + rise, 0]); gl([x, top, bz], [x, top + rise, 0]); });
+    const ey = ridgeY - Math.sin(th) * L, ez = Math.cos(th) * L, rx2 = roofW / 2;
+    gl([-rx2, ridgeY, 0], [rx2, ridgeY, 0]);
+    [1, -1].forEach(s => { gl([-rx2, ey, s * ez], [rx2, ey, s * ez]); gl([-rx2, ridgeY, 0], [-rx2, ey, s * ez]); gl([rx2, ridgeY, 0], [rx2, ey, s * ez]); });
+    const ghostGeo = new T.BufferGeometry();
+    ghostGeo.setAttribute("position", new T.Float32BufferAttribute(gs, 3));
+    const ghostMat = lineMat(0.35);
+    const ghost = new T.LineSegments(ghostGeo, ghostMat);
+    scene.add(ghost);
+    on(0, 5, () => {}); // чертёж и контур обновляются в apply() по общему p
+
+    /* ---------- Этап 1. Фундамент: плита вырастает из земли ---------- */
+    grow(box(W + 1.0, 0.3, D + 1.0, mat.insulation, 0, 0, 0, "bottom"), "y", 0.3, 0.35);
+    grow(box(W + 0.6, 0.22, D + 0.6, mat.slab, 0, 0.28, 0, "bottom"), "y", 0.55, 0.4);
+
+    /* ---------- Этап 2. Каркас: стойки поднимаются волной по периметру ---------- */
+    [[W, 0, D / 2 - 0.1, "x"], [W, 0, -D / 2 + 0.1, "x"], [D, W / 2 - 0.05, 0, "z"], [D, -W / 2 + 0.05, 0, "z"]].forEach(([len, x, z, ax], i) => {
+      const o = ax === "x" ? box(len, 0.08, 0.18, mat.frame, x, y0 + 0.04, z) : box(0.18, 0.08, len, mat.frame, x, y0 + 0.04, z);
+      grow(o, ax, 1.0 + i * 0.04, 0.2);
+    });
+    const studPos = [];
+    for (let x = -W / 2 + 0.05; x <= W / 2; x += 0.6) studPos.push([x, D / 2 - 0.1, 0], [x, -D / 2 + 0.1, 0]);
+    for (let z = -D / 2 + 0.6; z < D / 2 - 0.2; z += 0.6) studPos.push([W / 2 - 0.05, z, 1], [-W / 2 + 0.05, z, 1]);
+    studPos.sort((a, b) => Math.atan2(a[1], a[0]) - Math.atan2(b[1], b[0])); // порядок обхода по кругу
+    const studGeo = new T.BoxGeometry(0.06, H, 0.18);
+    studGeo.translate(0, H / 2, 0);
+    const studs = shadowy(new T.InstancedMesh(studGeo, mat.frame, studPos.length));
+    studs.instanceMatrix.setUsage(T.DynamicDrawUsage);
+    house.add(studs);
+    studPos.forEach(([x, z, rot], i) => {
+      on(1.15 + 0.55 * (i / studPos.length), 0.22, (e, t) => {
+        dummy.position.set(x, y0 + 0.08, z);
+        dummy.rotation.set(0, rot ? Math.PI / 2 : 0, 0);
+        if (t > 0.001) dummy.scale.set(1, Math.max(0.001, e), 1); else dummy.scale.setScalar(0);
+        dummy.updateMatrix();
+        studs.setMatrixAt(i, dummy.matrix);
+        studs.instanceMatrix.needsUpdate = true;
+      });
+    });
+    [[W, 0, D / 2 - 0.1, false], [W, 0, -D / 2 + 0.1, false], [D, W / 2 - 0.05, 0, true], [D, -W / 2 + 0.05, 0, true]].forEach(([len, x, z, side], i) => {
+      const o = side ? box(0.18, 0.08, len, mat.frame, x, y0 + H, z) : box(len, 0.08, 0.18, mat.frame, x, y0 + H, z);
+      drop(o, 0.8, 1.72 + i * 0.05, 0.22);
+    });
+
+    /* ---------- Этап 3. Стены заполняются снизу вверх, окна въезжают снаружи ---------- */
+    const wallClip = new T.Plane(new T.Vector3(0, -1, 0), y0);
+    const wallFront = boardsMat("--house-wall", (W + 0.44) / BOARD, 1, wallClip);
+    const wallSide = boardsMat("--house-wall", D / BOARD, 1, wallClip);
+    const walls = [
+      box(W + 0.44, H, 0.22, wallFront, 0, y0 + H / 2, wz), box(W + 0.44, H, 0.22, wallFront, 0, y0 + H / 2, -wz),
+      box(0.22, H, D, wallSide, wx, y0 + H / 2, 0), box(0.22, H, D, wallSide, -wx, y0 + H / 2, 0)
+    ];
+    walls.forEach(w => house.add(w));
+    on(2.0, 0.7, (e, t) => { walls.forEach(w => show(w, t)); wallClip.constant = y0 + H * e + 0.001; });
+
+    function win(x, y, z, w, h, axis, st) {
+      const g = new T.Group();
+      const n = axis === "x" ? [0, Math.sign(z)] : [Math.sign(x), 0];
+      g.add(box(...(axis === "x" ? [w + 0.2, h + 0.2, 0.05] : [0.05, h + 0.2, w + 0.2]), mat.trim, n[0] * 0.13, 0, n[1] * 0.13));
+      g.add(box(...(axis === "x" ? [w, h, 0.04] : [0.04, h, w]), mat.glass, n[0] * 0.16, 0, n[1] * 0.16));
+      g.position.set(x, y, z);
+      slide(g, n[0] * 1.6, n[1] * 1.6, st, 0.3);
+    }
+    win(-2.4, y0 + 1.45, wz, 3.4, 2.1, "x", 2.55);
+    win(3.1, y0 + 1.6, wz + 0.04, 1.2, 1.4, "x", 2.62);
+    win(-2.2, y0 + 1.6, -wz, 1.6, 1.3, "x", 2.68);
+    win(2.6, y0 + 1.6, -wz, 1.6, 1.3, "x", 2.72);
+    win(wx, y0 + 1.6, -1.5, 1.4, 1.4, "z", 2.76);
+    win(-wx, y0 + 1.6, 1.4, 1.4, 1.4, "z", 2.8);
+
+    /* ---------- Этап 4. Фронтоны заполняются, скаты закрываются как крышка ---------- */
+    const gableClip = new T.Plane(new T.Vector3(0, -1, 0), top);
     const gable = new T.Shape();
     gable.moveTo(-half - 0.11, 0); gable.lineTo(half + 0.11, 0); gable.lineTo(0, rise + 0.07); gable.closePath();
     const gGeo = new T.ExtrudeGeometry(gable, { depth: 0.22, bevelEnabled: false });
     gGeo.translate(0, 0, -0.11); gGeo.rotateY(Math.PI / 2);
-    const gMat = boardsMat(colors.wall, 1 / BOARD, 1 / H); // у ExtrudeGeometry UV в метрах
-    [wx, -wx].forEach((x, i) => {
-      const g = shadowy(new T.Mesh(gGeo, gMat));
-      g.position.set(x, y0 + H, 0);
-      add(g, 3.0 + i * 0.1, 0.35);
-    });
-    win(wx, y0 + H + 0.95, 0, 0.8, 0.8, "z", 3.25);
-    const roofW = W + 1.2;
+    const gMat = boardsMat("--house-wall", 1 / BOARD, 1 / H, gableClip); // у ExtrudeGeometry UV в метрах
+    const gables = [wx, -wx].map(x => { const g = shadowy(new T.Mesh(gGeo, gMat)); g.position.set(x, top, 0); house.add(g); return g; });
+    on(3.0, 0.35, (e, t) => { gables.forEach(g => show(g, t)); gableClip.constant = top + (rise + 0.1) * e + 0.001; });
+    win(wx, top + 0.95, 0, 0.8, 0.8, "z", 3.3);
+
     const seamGeo = new T.BoxGeometry(0.035, 0.045, L);
     const seamCount = Math.floor(roofW / 0.5);
     [1, -1].forEach((s, i) => {
-      const r = box(roofW, 0.14, L, mat.roof, 0, ridgeY - Math.sin(th) * L / 2, s * Math.cos(th) * L / 2);
-      r.rotation.x = s * th;
-      // фальцы — дочерние объекты ската, падают вместе с ним
-      const seams = shadowy(new T.InstancedMesh(seamGeo, mat.roof, seamCount));
+      const fx = { y: ridgeY - Math.sin(th) * L / 2, z: s * Math.cos(th) * L / 2 };
+      const r = box(roofW, 0.14, L, mat.roof, 0, fx.y, fx.z);
+      const seams = shadowy(new T.InstancedMesh(seamGeo, mat.roof, seamCount)); // фальцы
       for (let k = 0; k < seamCount; k++) {
         dummy.position.set(-roofW / 2 + 0.25 + k * 0.5, 0.09, 0); dummy.rotation.set(0, 0, 0); dummy.scale.setScalar(1);
         dummy.updateMatrix(); seams.setMatrixAt(k, dummy.matrix);
       }
       r.add(seams);
-      add(r, 3.3 + i * 0.18, 0.4);
+      house.add(r);
+      on(3.35 + i * 0.15, 0.45, (e, t) => {
+        show(r, t);
+        r.rotation.x = s * th * (0.15 + 0.85 * e);  // из почти горизонтали в уклон
+        r.position.y = fx.y + (1 - e) * 2.4;
+        r.position.z = fx.z * (0.4 + 0.6 * e);
+      });
     });
-    add(box(0.65, 2.3, 0.65, mat.concrete, -2.6, 5.55, -1.5), 3.75, 0.3);
+    grow(box(0.65, 2.3, 0.65, mat.slab, -2.6, 4.3, -1.5, "bottom"), "y", 3.85, 0.2);
 
     /* ---------- Этап 5. Под ключ ---------- */
-    add(box(3.0, H - 0.1, 0.04, boardsMat(colors.trim, 3.0 / BOARD, 1), 3.1, y0 + H / 2, wz + 0.13), 4.0, 0.35);
-    add(box(1.0, 2.2, 0.06, mat.door, 0.6, y0 + 1.1, wz + 0.14), 4.15, 0.3);
-    add(box(6.0, 0.18, 2.6, boardsMat(colors.trim, 6.0 / BOARD, 1), -1.7, 0.36, D / 2 + 1.6), 4.25, 0.35, "grow");
-    [-4.4, -1.7, 1.0].forEach((x, i) => add(box(0.14, 2.6, 0.14, mat.trimPlain, x, 1.75, D / 2 + 2.75), 4.4 + i * 0.05, 0.3));
+    grow(box(3.0, H - 0.1, 0.04, boardsMat("--house-trim", 3.0 / BOARD, 1), 3.1, y0 + 0.05, wz + 0.13, "bottom"), "y", 4.0, 0.3);
+    slide(box(1.0, 2.2, 0.06, mat.door, 0.6, y0 + 1.1, wz + 0.14), 1.1, 0, 4.1, 0.25);
+    grow(box(6.0, 0.18, 2.6, boardsMat("--house-trim", 6.0 / BOARD, 1), -1.7, 0.36, D / 2 + 0.3, "back"), "z", 4.2, 0.3);
+    [-4.4, -1.7, 1.0].forEach((x, i) => grow(box(0.14, 2.6, 0.14, mat.trim, x, 0.45, D / 2 + 2.75, "bottom"), "y", 4.4 + i * 0.05, 0.2));
     [1, -1].forEach((s, i) => {
       const r = box(roofW - 0.4, 0.1, L - 0.5, mat.snow, 0, 0, 0);
       r.position.set(0, ridgeY - Math.sin(th) * L / 2 + Math.cos(th) * 0.14, s * Math.cos(th) * L / 2 + s * Math.sin(th) * 0.14);
       r.rotation.x = s * th;
-      add(r, 4.55 + i * 0.1, 0.4);
+      drop(r, 1.0, 4.55 + i * 0.1, 0.35);
     });
 
     /* ---------- Снег (считает GPU) ---------- */
@@ -317,22 +399,28 @@
     snow.frustumCulled = false;
     scene.add(snow);
 
-    /* ---------- Тема (цвета берутся из CSS-переменных страницы) ---------- */
-    let glowMul = 0.2, night = false;
+    /* ---------- Тема: все цвета сцены — из CSS-токенов ---------- */
+    let glowMul = 0.25, night = false;
     function readTheme() {
       const cs = getComputedStyle(document.documentElement);
-      const v = (n, d) => cs.getPropertyValue(n).trim() || d;
-      const sky = lin(v("--scene-sky", "#e9eff2")), fog = lin(v("--scene-fog", "#dbe3e8"));
+      const tok = n => cs.getPropertyValue(n).trim();
+      const col = n => lin(tok(n) || "#808080");
+      const sky = col("--scene-sky"), fog = col("--scene-fog");
       night = fog.r + fog.g + fog.b < 0.1;
       scene.fog.color.copy(fog);
       skyMat.uniforms.top.value.copy(sky);
       skyMat.uniforms.bottom.value.copy(fog);
-      snowMat.uniforms.uColor.value.copy(lin(v("--scene-flake", "#8ea2ad")));
-      glowMul = parseFloat(v("--scene-glow", "0.2"));
-      hemi.intensity = parseFloat(v("--scene-hemi", "0.9")) * 0.6;
-      sun.intensity = parseFloat(v("--scene-sun", "0.95")) * (night ? 1.1 : 2.3);
-      sun.color.set(night ? 0x9fb6d8 : 0xfff0d8);
-      buildEnv(sky, fog, night ? lin("#1a2228") : lin("#d9dfe3"));
+      snowMat.uniforms.uColor.value.copy(col("--scene-flake"));
+      for (const [m, token, prop] of tokenMats) m[prop].copy(col(token));
+      const glowC = col("--house-glow");
+      windowLight.color.copy(glowC);
+      glowMul = parseFloat(tok("--scene-glow")) || 0.25;
+      hemi.color.copy(sky); hemi.groundColor.copy(col("--scene-snow")).multiplyScalar(0.5);
+      hemi.intensity = (parseFloat(tok("--scene-hemi")) || 0.9) * 0.6;
+      sun.intensity = (parseFloat(tok("--scene-sun")) || 0.95) * (night ? 1.1 : 2.3);
+      // солнце — тёплый оттенок свечения окон, луна — холодный оттенок неба
+      sun.color.copy(night ? col("--scene-ghost") : glowC.clone().lerp(new T.Color(1, 1, 1), 0.85));
+      buildEnv(sky, fog, col("--scene-snow").multiplyScalar(night ? 0.08 : 0.8));
       dirty = true;
     }
 
@@ -447,26 +535,19 @@
 
     /* ---------- Расстановка объектов по прогрессу ---------- */
     function apply() {
-      for (const it of items) {
-        const t = clamp01((p - it.start) / it.dur), e = ease(t);
-        it.o.visible = t > 0.001;
-        if (it.mode === "grow") {
-          it.o.scale.y = Math.max(0.001, e);
-          it.o.position.y = it.o.userData.baseY * (0.5 + 0.5 * e);
-        } else {
-          it.o.position.y = it.o.userData.baseY + (1 - e) * 4;
-        }
+      for (const it of timeline) {
+        const t = clamp01((p - it.start) / it.dur);
+        it.update(ease(t), t);
       }
-      for (const s of inst) {
-        const t = clamp01((p - s.start) / s.dur), e = ease(t);
-        dummy.position.set(s.x, s.y + (1 - e) * 4, s.z);
-        dummy.rotation.set(0, s.ry, 0);
-        dummy.scale.setScalar(t > 0.001 ? 1 : 0);
-        dummy.updateMatrix();
-        s.im.setMatrixAt(s.i, dummy.matrix);
-      }
-      studs.instanceMatrix.needsUpdate = true;
-      const glow = clamp01((p - 4.3) / 0.6);
+      // чертёж: рисуется линия за линией, потом бледнеет; на финале чертёж и контур растворяются
+      const fade = 1 - span(p, 4.0, 4.6);
+      const drawn = Math.floor(span(p, 0, 0.45) * planCount / 2) * 2;
+      planGeo.setDrawRange(0, Math.max(0, drawn));
+      planMat.opacity = (0.9 - 0.5 * span(p, 0.9, 1.4)) * fade;
+      ghostMat.opacity = 0.35 * span(p, 0.05, 0.35) * fade;
+      plan.visible = planMat.opacity > 0.01;
+      ghost.visible = ghostMat.opacity > 0.01;
+      const glow = span(p, 4.3, 4.9);
       mat.glass.emissiveIntensity = glow * glowMul;
       windowLight.intensity = glow * (night ? 2.2 : 0.3);
       opts.onProgress && opts.onProgress(p);

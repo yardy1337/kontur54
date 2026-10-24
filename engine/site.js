@@ -10,15 +10,10 @@
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const phoneHref = p => "tel:" + p.replace(/[^\d+]/g, "");
 
-  /* ---------- Цвет акцента из конфига ---------- */
-  if (S.theme) {
-    const st = document.createElement("style");
-    const { accent, accentDark } = S.theme;
-    st.textContent =
-      `:root{--accent:${accent}}` +
-      `@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--accent:${accentDark || accent}}}` +
-      `:root[data-theme="dark"]{--accent:${accentDark || accent}}`;
-    document.head.appendChild(st);
+  /* ---------- Цвета дома из конфига (необязательно) → CSS-токены ---------- */
+  // Все цвета живут в engine/site.css. Конфиг может только переопределить отделку дома.
+  if (S.house) {
+    for (const [k, v] of Object.entries(S.house)) document.documentElement.style.setProperty("--house-" + k, v);
   }
 
   const ICONS = {
@@ -57,7 +52,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
 <section class="hero">
   <div class="in">
     <div class="hero-text">
-      <span class="label">${esc(c.tagline)}</span>
+      <span class="dim">${esc(c.tagline)}</span>
       <h1>${h.title}</h1>
       <p class="lead">${esc(h.lead)}</p>
       <div class="cta-row">
@@ -92,27 +87,27 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
 
 <section class="facts" aria-label="Цифры">
   <div class="in">
-    ${S.facts.map(f => `<div class="fact"><b>${esc(f.value)}</b><span>${esc(f.text)}</span></div>`).join("")}
+    ${S.facts.map(f => `<div class="fact"><span class="dim" aria-hidden="true"></span><b>${esc(f.value)}</b><span>${esc(f.text)}</span></div>`).join("")}
   </div>
 </section>
 
 <section class="block" id="services">
   <div class="in">
     <div class="head">
-      <span class="label">${esc(S.services.label)}</span>
+      <span class="dim">${esc(S.services.label)}</span>
       <h2>${esc(S.services.title)}</h2>
       <p>${esc(S.services.lead)}</p>
     </div>
-    <div class="services">
-      ${S.services.items.map(s => `<article class="svc"><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p><span class="price">${esc(s.price)}</span></article>`).join("")}
-    </div>
+    <ul class="price-list">
+      ${S.services.items.map(s => `<li><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p><span class="price">${esc(s.price)}</span></li>`).join("")}
+    </ul>
   </div>
 </section>
 
 <section class="block calc-band" id="calc">
   <div class="in">
     <div class="head">
-      <span class="label">Калькулятор</span>
+      <span class="dim">Калькулятор</span>
       <h2>${esc(S.calc.title)}</h2>
       <p>${esc(S.calc.lead)}</p>
     </div>
@@ -161,7 +156,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
 <section class="block" id="works">
   <div class="in">
     <div class="head">
-      <span class="label">Объекты</span>
+      <span class="dim">Объекты</span>
       <h2>${esc(S.works.title)}</h2>
       <p>${esc(S.works.lead)}</p>
     </div>
@@ -181,14 +176,14 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
 <section class="block lead-band" id="lead">
   <div class="in lead-grid">
     <div class="head">
-      <span class="label">Заявка</span>
+      <span class="dim">Заявка</span>
       <h2>${esc(S.lead.title)}</h2>
       <p>${esc(S.lead.lead)}</p>
       <ul>${S.lead.bullets.map(b => `<li>${esc(b)}</li>`).join("")}</ul>
     </div>
     <form id="lead-form" novalidate>
       <div class="field"><label for="f-name">Имя</label><input id="f-name" name="name" autocomplete="name" placeholder="Андрей"></div>
-      <div class="field"><label for="f-phone">Телефон</label><input id="f-phone" name="phone" type="tel" autocomplete="tel" placeholder="+7 900 000-00-00"></div>
+      <div class="field"><label for="f-phone">Телефон</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (900) 000-00-00" aria-describedby="f-phone-err"><span class="err" id="f-phone-err"></span></div>
       <div class="field wide"><label for="f-type">Что строим</label>
         <select id="f-type" name="type">${S.lead.types.map(t => `<option>${esc(t)}</option>`).join("")}</select>
       </div>
@@ -204,7 +199,11 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
     <span>${esc(c.name)} · ${c.cities.map(esc).join(", ")}</span>
     ${c.demoNote ? "<span>Демо-шаблон. Данные вымышлены.</span>" : ""}
   </div>
-</footer>`;
+</footer>
+<div class="mbar">
+  <a class="btn primary" href="${esc(h.primary.href)}">${esc(h.primary.short || h.primary.text)}</a>
+  <a class="btn" href="${phoneHref(c.phone)}">Позвонить</a>
+</div>`;
 
   /* ---------- Этапы и 3D ---------- */
   const btns = [...app.querySelectorAll(".stage-btn")];
@@ -237,7 +236,6 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
   }
 
   const house = window.House3D && window.House3D.mount(document.getElementById("scene"), {
-    colors: S.house,
     onProgress(p) {
       fills.forEach((f, i) => { f.style.width = (Math.max(0, Math.min(1, p - i)) * 100).toFixed(1) + "%"; });
       showStage(Math.min(4, Math.floor(Math.max(0, p - 0.001))));
@@ -277,18 +275,48 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
   calc();
 
   /* ---------- Заявка ---------- */
-  document.getElementById("lead-form").addEventListener("submit", e => {
+  const form = document.getElementById("lead-form");
+  const phone = document.getElementById("f-phone");
+  const phoneErr = document.getElementById("f-phone-err");
+  const status = document.getElementById("f-status");
+  // Маска: +7 (913) 866-19-13
+  function formatPhone(v) {
+    let d = v.replace(/\D/g, "");
+    if (d[0] === "8") d = "7" + d.slice(1);
+    if (d && d[0] !== "7") d = "7" + d;
+    d = d.slice(0, 11);
+    const p = [d.slice(1, 4), d.slice(4, 7), d.slice(7, 9), d.slice(9, 11)];
+    let out = d ? "+7" : "";
+    if (p[0]) out += " (" + p[0] + (p[0].length === 3 ? ")" : "");
+    if (p[1]) out += " " + p[1];
+    if (p[2]) out += "-" + p[2];
+    if (p[3]) out += "-" + p[3];
+    return out;
+  }
+  const phoneOk = () => phone.value.replace(/\D/g, "").length === 11;
+  function showPhoneError(on) {
+    phone.setAttribute("aria-invalid", String(on));
+    phoneErr.textContent = on ? "Укажите номер полностью: +7 (900) 000-00-00" : "";
+  }
+  phone.addEventListener("input", () => {
+    phone.value = formatPhone(phone.value);
+    if (phone.getAttribute("aria-invalid") === "true" && phoneOk()) showPhoneError(false);
+  });
+  phone.addEventListener("blur", () => { if (phone.value) showPhoneError(!phoneOk()); });
+  form.addEventListener("submit", e => {
     e.preventDefault();
-    const phone = document.getElementById("f-phone");
-    const st = document.getElementById("f-status");
-    if (phone.value.replace(/\D/g, "").length < 10) {
-      st.className = "form-status err";
-      st.textContent = "Укажите телефон полностью, например +7 900 000-00-00.";
-      phone.focus();
-      return;
-    }
-    st.className = "form-status ok";
-    st.textContent = S.lead.success;
-    e.target.reset();
+    if (!phoneOk()) { showPhoneError(true); phone.focus(); return; }
+    const btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    btn.textContent = "Отправляем…";
+    status.className = "form-status";
+    status.textContent = "";
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.textContent = "Отправить заявку";
+      status.className = "form-status ok";
+      status.textContent = S.lead.success;
+      form.reset();
+    }, 700);
   });
 })();
