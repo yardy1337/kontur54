@@ -114,19 +114,19 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
     <div class="calc">
       <div class="controls">
         <fieldset>
-          <legend class="label">Технология</legend>
+          <legend class="label">${esc(S.calc.typeLabel || "Технология")}</legend>
           <div class="seg">
             ${S.calc.materials.map((m, i) => `<input type="radio" name="mat" id="mat-${esc(m.id)}" value="${esc(m.id)}"${i === 0 ? " checked" : ""}><label for="mat-${esc(m.id)}">${esc(m.name)}</label>`).join("")}
           </div>
         </fieldset>
         <fieldset>
-          <legend class="label">Комплектация</legend>
+          <legend class="label">${esc(S.calc.kitLabel || "Комплектация")}</legend>
           <div class="seg">
-            <input type="radio" name="kit" id="kit-shell" value="shell"><label for="kit-shell">Тёплый контур</label>
-            <input type="radio" name="kit" id="kit-turn" value="turn" checked><label for="kit-turn">Под ключ</label>
+            <input type="radio" name="kit" id="kit-shell" value="shell"><label for="kit-shell">${esc((S.calc.kits || [])[0] || "Тёплый контур")}</label>
+            <input type="radio" name="kit" id="kit-turn" value="turn" checked><label for="kit-turn">${esc((S.calc.kits || [])[1] || "Под ключ")}</label>
           </div>
         </fieldset>
-        <fieldset>
+        <fieldset${S.calc.floors === false ? " hidden" : ""}>
           <legend class="label">Этажность</legend>
           <div class="seg">
             <input type="radio" name="fl" id="fl-1" value="1" checked><label for="fl-1">1 этаж</label>
@@ -134,7 +134,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
           </div>
         </fieldset>
         <fieldset>
-          <div class="range-row"><label class="label" for="area">Площадь дома</label><output id="area-out" for="area"></output></div>
+          <div class="range-row"><label class="label" for="area">${esc(S.calc.areaLabel || "Площадь дома")}</label><output id="area-out" for="area"></output></div>
           <input type="range" id="area" min="${S.calc.area.min}" max="${S.calc.area.max}" step="${S.calc.area.step}" value="${S.calc.area.value}">
         </fieldset>
       </div>
@@ -143,7 +143,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
         <div class="sum" id="sum"></div>
         <dl>
           <dt>Цена за м²</dt><dd id="per-m"></dd>
-          <dt>Срок строительства</dt><dd id="weeks"></dd>
+          <dt>${esc(S.calc.termLabel || "Срок строительства")}</dt><dd id="weeks"></dd>
         </dl>
         <ul id="incl"></ul>
         <a class="btn primary" href="#lead">Получить точную смету</a>
@@ -197,7 +197,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
 <footer>
   <div class="in">
     <span>${esc(c.name)} · ${c.cities.map(esc).join(", ")}</span>
-    ${c.demoNote ? "<span>Демо-шаблон. Данные вымышлены.</span>" : ""}
+    ${c.demoNote ? `<span>${esc(c.footerNote || "Демо-шаблон. Данные вымышлены.")}</span>` : ""}
   </div>
 </footer>
 <div class="mbar">
@@ -264,7 +264,8 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
     const a = +area.value, m = C.materials.find(x => x.id === picked("mat")), k = picked("kit"), two = picked("fl") === "2";
     const per = Math.round(m[k] * (two ? 1 - C.twoFloorDiscount : 1) / 100) * 100;
     const total = Math.round(per * a / 10000) * 10000;
-    const w = Math.round(m.weeks[k === "turn" ? 1 : 0] + a / (k === "turn" ? 20 : 30));
+    const div = C.weeksDiv || [30, 20]; // сколько м² в неделю: [контур, под ключ]
+    const w = Math.max(1, Math.round(m.weeks[k === "turn" ? 1 : 0] + a / div[k === "turn" ? 1 : 0]));
     document.getElementById("area-out").textContent = a + " м²";
     document.getElementById("sum").textContent = fmt(total);
     document.getElementById("per-m").textContent = fmt(per);

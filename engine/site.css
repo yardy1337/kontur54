@@ -176,7 +176,7 @@ h3 { font-size: var(--fs-lg); font-weight: 500; line-height: var(--lh-snug); }
 .hero .in { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr); gap: var(--s-7); align-items: center; padding-block: var(--s-6) var(--s-8); }
 .hero-text { display: grid; gap: var(--s-5); min-width: 0; }
 .hero h1 { font-size: var(--fs-4xl); }
-.hero h1 em { font-style: normal; color: var(--c-accent); white-space: nowrap; }
+.hero h1 em { font-style: normal; color: var(--c-accent); }
 .hero .lead { font-size: 18px; color: var(--c-text-2); max-width: 34em; }
 .cta-row { display: flex; gap: var(--s-3); flex-wrap: wrap; }
 .cities { display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-4); }
