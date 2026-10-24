@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Академия Ремонта» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1179586476086657024/f2efb360-38bb-4f83-9c60-dcbfa0a50379/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1179586476086657024/f2efb360-38bb-4f83-9c60-dcbfa0a50379/1/ru/image.png",
+    "photos": [
+      "https://i3.photo.2gis.com/main/branch/3/70000001080762913/common",
+      "https://ams2-cdn.2gis.com/previews/1179586476086657024/f2efb360-38bb-4f83-9c60-dcbfa0a50379/3/ru/"
+    ]
   },
   "hero": {
     "title": "Ремонт квартир в Томске <em>под ключ</em>",
@@ -260,6 +264,7 @@ window.SITE = {
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
   },
+  "configurator": false,
   "theme": {
     "light": {
       "--c-accent": "#706f00",
@@ -277,5 +282,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#2e2d00"
     }
+  },
+  "about": {
+    "title": "Академия Ремонта",
+    "text": "Ремонтируем квартиры и дома в Томске по дизайн-проекту.",
+    "points": [
+      "5 ★ в 2ГИС, 45 отзывов",
+      "Работаем в Томске и Томской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

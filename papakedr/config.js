@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Папа-Кедр» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1234667150795341824/27988f1e-5b67-46f4-9085-5eebaffdccc3/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1234667150795341824/27988f1e-5b67-46f4-9085-5eebaffdccc3/1/ru/image.png",
+    "photos": [
+      "https://i6.photo.2gis.com/main/branch/1/70000001080218055/common"
+    ]
   },
   "hero": {
     "title": "Кедровые бани в Новосибирске <em>под ключ</em>",
@@ -244,6 +247,17 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#2d1803"
     }
+  },
+  "about": {
+    "title": "Папа-Кедр",
+    "text": "Строим в Новосибирске и Новосибирской области. Парная, мойка и комната отдыха — по вашему проекту.",
+    "points": [
+      "5 ★ в 2ГИС, 25 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "В 2ГИС с 2023 года",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

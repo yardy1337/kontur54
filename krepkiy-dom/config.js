@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Крепкий дом» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1245701861529354243/8c988cdb-aaf1-4445-9d75-c3b8b6f7e3fa/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1245701861529354243/8c988cdb-aaf1-4445-9d75-c3b8b6f7e3fa/1/ru/image.png",
+    "photos": [
+      "https://i1.photo.2gis.com/main/branch/3/70000001029346969/common",
+      "https://ams2-cdn.2gis.com/previews/1245701861529354243/8c988cdb-aaf1-4445-9d75-c3b8b6f7e3fa/3/ru/"
+    ]
   },
   "hero": {
     "title": "Строим дома в Томске <em>под ключ</em>",
@@ -249,5 +253,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#001900"
     }
+  },
+  "about": {
+    "title": "Крепкий дом",
+    "text": "Построим дом Вашей мечты. Гарантия - 10 лет.",
+    "points": [
+      "5 ★ в 2ГИС, 118 отзывов",
+      "Работаем в Томске и Томской области",
+      "В 2ГИС с 2017 года",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

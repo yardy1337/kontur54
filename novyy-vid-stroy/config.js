@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Новый вид строй» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1053849068352045246/1bc8d996-1412-4ac6-ae6d-27fe6e53a2c3/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1053849068352045246/1bc8d996-1412-4ac6-ae6d-27fe6e53a2c3/1/ru/image.png",
+    "photos": [
+      "https://i4.photo.2gis.com/main/branch/2/282003258973185/common",
+      "https://ams2-cdn.2gis.com/previews/1053849068352045246/1bc8d996-1412-4ac6-ae6d-27fe6e53a2c3/3/ru/"
+    ]
   },
   "hero": {
     "title": "Строим дома в Омске <em>под ключ</em>",
@@ -254,5 +258,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#182328"
     }
+  },
+  "about": {
+    "title": "Новый вид строй",
+    "text": "Строительство домов и бань из дерева и камня.",
+    "points": [
+      "4,8 ★ в 2ГИС, 62 отзывов",
+      "Работаем в Омске и Омской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

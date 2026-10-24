@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «НОРТХАУС» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1139678268849389571/7f257e9e-5afe-4850-af07-9bcf55fce653/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1139678268849389571/7f257e9e-5afe-4850-af07-9bcf55fce653/1/ru/image.png",
+    "photos": [
+      "https://i9.photo.2gis.com/main/branch/1/70000001117028906/common",
+      "https://ams2-cdn.2gis.com/previews/1139678268849389571/7f257e9e-5afe-4850-af07-9bcf55fce653/3/ru/"
+    ]
   },
   "hero": {
     "title": "Деревянные дома и бани в Новосибирске <em>под ключ</em>",
@@ -222,5 +226,14 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "about": {
+    "title": "НОРТХАУС",
+    "text": "Строительство деревянных каркасных домов с 2011 г., гарантия до 10 лет.",
+    "points": [
+      "Работаем в Новосибирске и Новосибирской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

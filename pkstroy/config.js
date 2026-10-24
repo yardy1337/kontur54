@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Пк-Строй» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1128497527197270016/cd2f6304-b8c7-49b9-b35c-587e4dc211fa/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1128497527197270016/cd2f6304-b8c7-49b9-b35c-587e4dc211fa/1/ru/image.png",
+    "photos": [
+      "https://i4.photo.2gis.com/main/branch/1/70000001033131183/common",
+      "https://ams2-cdn.2gis.com/previews/1128497527197270016/cd2f6304-b8c7-49b9-b35c-587e4dc211fa/3/ru/"
+    ]
   },
   "hero": {
     "title": "Дома и бани из бруса в Новосибирске <em>под ключ</em>",
@@ -239,6 +243,17 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#251802"
     }
+  },
+  "about": {
+    "title": "Пк-Строй",
+    "text": "Собственное производство сухого профилированного, клеёного, мини-бруса.",
+    "points": [
+      "4,8 ★ в 2ГИС, 99 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "В 2ГИС с 2018 года",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#7a5232",

@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Дача 38» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1201684530163875843/055387f4-6c36-46fc-9cb1-e8471cf956fd/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1201684530163875843/055387f4-6c36-46fc-9cb1-e8471cf956fd/1/ru/image.png",
+    "photos": [
+      "https://i8.photo.2gis.com/main/branch/11/70000001091415012/common",
+      "https://ams2-cdn.2gis.com/previews/1201684530163875843/055387f4-6c36-46fc-9cb1-e8471cf956fd/3/ru/"
+    ]
   },
   "hero": {
     "title": "Строим дома в Иркутске <em>под ключ</em>",
@@ -239,5 +243,14 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#010d03"
     }
+  },
+  "about": {
+    "title": "Дача 38",
+    "text": "Строим дома круглогодичные и дачные по каркасной технологии под ключ.",
+    "points": [
+      "5 ★ в 2ГИС, 37 отзывов",
+      "Работаем в Иркутске и Иркутской области"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

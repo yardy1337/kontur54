@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Стройка Нск» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1188501188497113091/25cbb1a3-1ff8-44d5-8845-ac2251f8f945/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1188501188497113091/25cbb1a3-1ff8-44d5-8845-ac2251f8f945/1/ru/image.png",
+    "photos": [
+      "https://i3.photo.2gis.com/main/branch/1/70000001067876341/common"
+    ]
   },
   "hero": {
     "title": "Строим дома в Новосибирске <em>под ключ</em>",
@@ -249,5 +252,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#230707"
     }
+  },
+  "about": {
+    "title": "Стройка Нск",
+    "text": "Строим дома, бани, коттеджи, беседки, туалеты, хозяйственные блоки.",
+    "points": [
+      "4,6 ★ в 2ГИС, 43 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

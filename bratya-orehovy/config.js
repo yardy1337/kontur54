@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Братья Ореховы» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1122277708751962115/6ef384a9-5251-4740-8c30-2770ca7f6c83/1/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1122277708751962115/6ef384a9-5251-4740-8c30-2770ca7f6c83/1/image.png",
+    "photos": [
+      "https://i4.photo.2gis.com/main/branch/3/70000001022356407/common",
+      "https://ams2-cdn.2gis.com/previews/1122277708751962115/6ef384a9-5251-4740-8c30-2770ca7f6c83/3/"
+    ]
   },
   "hero": {
     "title": "Дома и бани из бруса в Томске <em>под ключ</em>",
@@ -239,6 +243,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#0b0702"
     }
+  },
+  "about": {
+    "title": "Братья Ореховы",
+    "text": "Производство деревянных домов, бань из профилированного бруса.",
+    "points": [
+      "5 ★ в 2ГИС, 8 отзывов",
+      "Работаем в Томске и Томской области",
+      "В 2ГИС с 2016 года"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#7a5232",

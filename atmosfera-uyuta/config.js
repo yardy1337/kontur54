@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Атмосфера уюта» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1198140963965370371/c5f4ad04-d900-4ae0-a0dd-a4787b9e0c5f/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1198140963965370371/c5f4ad04-d900-4ae0-a0dd-a4787b9e0c5f/1/ru/image.png",
+    "photos": [
+      "https://i2.photo.2gis.com/main/branch/1/70000001022960435/common"
+    ]
   },
   "hero": {
     "title": "Строим дома в Новосибирске <em>под ключ</em>",
@@ -249,5 +252,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#050325"
     }
+  },
+  "about": {
+    "title": "Атмосфера уюта",
+    "text": "Качество, проверенное временем.",
+    "points": [
+      "5 ★ в 2ГИС, 55 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "В 2ГИС с 2016 года",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Лайтвуд» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1254448101607866368/a78b8680-e929-4c11-823c-f2c512b1b0d3/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1254448101607866368/a78b8680-e929-4c11-823c-f2c512b1b0d3/1/ru/image.png",
+    "photos": [
+      "https://i2.photo.2gis.com/main/branch/1/70000001057625352/common"
+    ]
   },
   "hero": {
     "title": "Дома и бани из бруса в Новосибирске <em>под ключ</em>",
@@ -234,6 +237,17 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#28240f"
     }
+  },
+  "about": {
+    "title": "Лайтвуд",
+    "text": "Строим деревянные дома по технологии «двойной брус» и \"минибрус\".",
+    "points": [
+      "5 ★ в 2ГИС, 17 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "В 2ГИС с 2021 года",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#7a5232",

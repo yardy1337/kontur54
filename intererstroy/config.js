@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Интерьер-строй» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1247822961830789123/61862166-809f-4702-bd0d-f8e3bb090d84/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1247822961830789123/61862166-809f-4702-bd0d-f8e3bb090d84/1/ru/image.png",
+    "photos": [
+      "https://i7.photo.2gis.com/main/branch/3/70000001102826454/common"
+    ]
   },
   "hero": {
     "title": "Строим дома в Томске <em>под ключ</em>",
@@ -249,5 +252,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#1c022a"
     }
+  },
+  "about": {
+    "title": "Интерьер-строй",
+    "text": "Дача под ключ в Томске — уют начинается с проекта.",
+    "points": [
+      "4,7 ★ в 2ГИС, 7 отзывов",
+      "Работаем в Томске и Томской области",
+      "В 2ГИС с 2021 года",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

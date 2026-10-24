@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Дома бани Нск» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1243306666691133440/da0b7d8c-0870-49d1-8d42-5d80a21b5d5c/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1243306666691133440/da0b7d8c-0870-49d1-8d42-5d80a21b5d5c/1/ru/image.png",
+    "photos": [
+      "https://i3.photo.2gis.com/main/branch/1/70000001047497560/common"
+    ]
   },
   "hero": {
     "title": "Дома и бани из бруса в Новосибирске <em>под ключ</em>",
@@ -239,6 +242,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#180707"
     }
+  },
+  "about": {
+    "title": "Дома бани Нск",
+    "text": "Строим дома, бани из простого и профилированного бруса. Беседки.",
+    "points": [
+      "4,8 ★ в 2ГИС, 32 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#7a5232",

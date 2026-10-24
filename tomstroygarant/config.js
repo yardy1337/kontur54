@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «ТомСтройГарант» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1115456930236596227/412c36a9-09fe-45dd-88f4-313636104db8/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1115456930236596227/412c36a9-09fe-45dd-88f4-313636104db8/1/ru/image.png",
+    "photos": [
+      "https://i6.photo.2gis.com/main/branch/3/70000001030918277/common",
+      "https://ams2-cdn.2gis.com/previews/1115456930236596227/412c36a9-09fe-45dd-88f4-313636104db8/3/ru/"
+    ]
   },
   "hero": {
     "title": "Строим дома в Томске <em>под ключ</em>",
@@ -249,5 +253,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#0d0e1f"
     }
+  },
+  "about": {
+    "title": "ТомСтройГарант",
+    "text": "Строительство домов, коттеджей. Монтаж фундамента любой сложности.",
+    "points": [
+      "5 ★ в 2ГИС, 28 отзывов",
+      "Работаем в Томске и Томской области",
+      "В 2ГИС с 2018 года",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

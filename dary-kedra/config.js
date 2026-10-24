@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Дары Кедра» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1203956716836749315/01009482-0d6d-4377-ace8-85acbe6cfed6/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1203956716836749315/01009482-0d6d-4377-ace8-85acbe6cfed6/1/ru/image.png",
+    "photos": [
+      "https://i3.photo.2gis.com/main/branch/1/70000001022693482/common"
+    ]
   },
   "hero": {
     "title": "Кедровые бани в Новосибирске <em>под ключ</em>",
@@ -244,6 +247,17 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#150e0b"
     }
+  },
+  "about": {
+    "title": "Дары Кедра",
+    "text": "Строим в Новосибирске и Новосибирской области. Парная, мойка и комната отдыха — по вашему проекту.",
+    "points": [
+      "4,7 ★ в 2ГИС, 368 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "В 2ГИС с 2016 года",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

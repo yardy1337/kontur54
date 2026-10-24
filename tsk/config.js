@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «ТСК» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1028650625711210626/40caf6a2-3cff-4ac0-beaf-646ca6f081bf/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1028650625711210626/40caf6a2-3cff-4ac0-beaf-646ca6f081bf/1/ru/image.png",
+    "photos": [
+      "https://i7.photo.2gis.com/main/branch/1/70000001006548829/common",
+      "https://ams2-cdn.2gis.com/previews/1028650625711210626/40caf6a2-3cff-4ac0-beaf-646ca6f081bf/3/ru/"
+    ]
   },
   "hero": {
     "title": "Ремонт квартир в Новосибирске <em>под ключ</em>",
@@ -255,6 +259,7 @@ window.SITE = {
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
   },
+  "configurator": false,
   "theme": {
     "light": {
       "--c-accent": "#046bbb",
@@ -272,5 +277,14 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#011322"
     }
+  },
+  "about": {
+    "title": "ТСК",
+    "text": "Ремонтируем квартиры и дома в Новосибирске. Смету фиксируем в договоре.",
+    "points": [
+      "5 ★ в 2ГИС, 185 отзывов",
+      "Работаем в Новосибирске и Новосибирской области"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

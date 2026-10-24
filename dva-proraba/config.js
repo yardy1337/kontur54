@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Два прораба» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1243663743896780803/e3d3de20-247c-4dc3-9cbe-24b69efb2241/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1243663743896780803/e3d3de20-247c-4dc3-9cbe-24b69efb2241/1/ru/image.png",
+    "photos": [
+      "https://i1.photo.2gis.com/main/branch/1/70000001092883174/common",
+      "https://ams2-cdn.2gis.com/previews/1243663743896780803/e3d3de20-247c-4dc3-9cbe-24b69efb2241/3/ru/"
+    ]
   },
   "hero": {
     "title": "Строим дома в Новосибирске <em>под ключ</em>",
@@ -244,5 +248,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#2c2e1a"
     }
+  },
+  "about": {
+    "title": "Два прораба",
+    "text": "Современные дома нового стандарта качества.",
+    "points": [
+      "Работаем в Новосибирске и Новосибирской области",
+      "В 2ГИС с 2015 года",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

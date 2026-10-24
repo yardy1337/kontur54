@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «ГК Метраж» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1135457325105020931/6d25dc1d-83e2-48ef-9e50-707ef46dbc6b/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1135457325105020931/6d25dc1d-83e2-48ef-9e50-707ef46dbc6b/1/ru/image.png",
+    "photos": [
+      "https://i1.photo.2gis.com/main/branch/1/141265771711254/common",
+      "https://ams2-cdn.2gis.com/previews/1135457325105020931/6d25dc1d-83e2-48ef-9e50-707ef46dbc6b/3/ru/"
+    ]
   },
   "hero": {
     "title": "Ремонт квартир в Новосибирске <em>под ключ</em>",
@@ -254,5 +258,16 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": false,
+  "about": {
+    "title": "ГК Метраж",
+    "text": "Ремонтируем квартиры и дома в Новосибирске по дизайн-проекту.",
+    "points": [
+      "4,8 ★ в 2ГИС, 57 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

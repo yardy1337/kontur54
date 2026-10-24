@@ -57,6 +57,9 @@
   --house-insulation: #b4c6d3;
   --house-glass: #1b2830;
   --house-glow: #ff8a3d;
+  --house-timber: #a8743f;
+  --house-gas: #e3e0d8;
+  --house-wool: #e8cf6a;
   --house-trunk: #5b4231;
   --house-needles: #2c4638;
 
@@ -212,6 +215,60 @@ h3 { font-size: var(--fs-lg); font-weight: 500; line-height: var(--lh-snug); }
 .stage-info .term { grid-column: 2; grid-row: 1; font: 500 13px/1.3 var(--font-mono); color: var(--c-secondary); white-space: nowrap; }
 .stage-info p { grid-column: 1 / -1; color: var(--c-text-2); font-size: 15px; }
 
+/* ---------- Реальные фото компании: вставки ---------- */
+.stage-wrap { position: relative; }
+.hero-photo { position: absolute; z-index: 2; left: -40px; top: 36px; width: clamp(150px, 13vw, 196px); margin: 0; padding: 6px 6px 8px; background: var(--c-surface); border-radius: var(--r-md); box-shadow: var(--shadow-2); transition: transform var(--dur-3) var(--ease); }
+.hero-photo:hover { transform: translateY(-3px); }
+.hero-photo img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-sm); background: var(--c-sunken); }
+.hero-photo figcaption { padding-top: 7px; font: 500 11px/1.2 var(--font-mono); letter-spacing: .04em; color: var(--c-text-muted); }
+
+.about .in.about-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: var(--s-8); align-items: center; padding-block: var(--s-9) var(--s-6); }
+.about.nophoto .about-grid { grid-template-columns: minmax(0, 1fr); }
+.about-photo { position: relative; margin: 0 0 var(--s-6); }
+.about-main { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-lg); box-shadow: var(--shadow-2); background: var(--c-sunken); }
+.about-inset { position: absolute; right: -28px; bottom: -32px; width: 40%; aspect-ratio: 1; object-fit: cover; border: 6px solid var(--c-surface); border-radius: var(--r-md); box-shadow: var(--shadow-2); background: var(--c-sunken); }
+.about-photo figcaption { position: absolute; left: var(--s-4); top: var(--s-4); padding: 6px 10px; border-radius: var(--r-sm); background: var(--c-surface); color: var(--c-text-2); font: 500 11px/1.2 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; }
+.about-text { display: grid; gap: var(--s-4); align-content: start; }
+.about-text p { color: var(--c-text-2); font-size: 18px; }
+.about-points { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--s-2); }
+.about-points li { position: relative; padding-left: 22px; }
+.about-points li::before { content: ""; position: absolute; left: 0; top: .62em; width: 12px; height: 1px; background: var(--c-accent); box-shadow: 0 -4px 0 -0px transparent; border-left: 1px solid var(--c-accent); }
+
+/* ---------- Конструктор дома ---------- */
+.config { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-lg); }
+.config summary { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-2); padding: 14px var(--s-4); cursor: pointer; list-style: none; }
+.config summary::-webkit-details-marker { display: none; }
+.config summary b { font-weight: 600; }
+.config summary .muted { color: var(--c-text-muted); font-size: var(--fs-sm); }
+.config summary::after { content: "+"; font: 500 18px/1 var(--font-mono); color: var(--c-secondary); }
+.config[open] summary::after { content: "−"; }
+.cfg-area { font: 500 13px/1.4 var(--font-mono); color: var(--c-secondary); margin-left: auto; }
+.cfg-body { display: grid; gap: var(--s-4); padding: 0 var(--s-4) var(--s-4); border-top: 1px solid var(--c-divider); padding-top: var(--s-4); }
+.cfg-row { display: grid; grid-template-columns: 110px minmax(0, 1fr) 56px; align-items: center; gap: var(--s-3); border: 0; margin: 0; padding: 0; min-width: 0; }
+fieldset.cfg-row { grid-template-columns: 110px minmax(0, 1fr); }
+fieldset.cfg-row legend { float: left; padding: 0; margin: 0; width: 110px; }
+.cfg-row output { font: 500 14px/1 var(--font-mono); text-align: right; font-variant-numeric: tabular-nums; }
+.cfg-row .seg label { min-height: 38px; padding: 0 var(--s-3); font-size: 14px; }
+.cfg-row[disabled] { opacity: .45; }
+.swatches { display: flex; gap: var(--s-2); }
+.swatches input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.swatches label { width: 30px; height: 30px; border-radius: 50%; background: var(--sw); border: 2px solid var(--c-surface); box-shadow: 0 0 0 1px var(--c-border-strong); cursor: pointer; transition: transform var(--dur-1); }
+.swatches label:hover { transform: scale(1.08); }
+.swatches input:checked + label { box-shadow: 0 0 0 2px var(--c-accent); }
+.swatches input:focus-visible + label { outline: 2px solid var(--c-focus); outline-offset: 3px; }
+.cfg-toggles { grid-template-columns: auto auto; justify-content: start; gap: var(--s-4); }
+.check { display: inline-flex; align-items: center; gap: var(--s-2); cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--c-accent-fill); }
+#cfg-cut[aria-pressed="true"] { background: var(--c-primary); border-color: var(--c-primary); color: var(--c-on-primary); }
+.cfg-go { grid-template-columns: minmax(0, 1fr) auto; padding-top: var(--s-2); border-top: 1px solid var(--c-divider); }
+.cfg-go span { font: 500 14px/1.4 var(--font-mono); color: var(--c-text-2); }
+@media (max-width: 560px) {
+  .cfg-row, fieldset.cfg-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .cfg-row > .label, fieldset.cfg-row legend { grid-column: 1 / -1; float: none; }
+  .cfg-row input[type="range"] { grid-column: 1; }
+  .cfg-go { grid-template-columns: minmax(0, 1fr); }
+}
+
 /* ---------- Цифры ---------- */
 .facts { border-block: 1px solid var(--c-divider); }
 .facts .in { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); padding-block: var(--s-7); }
@@ -300,6 +357,9 @@ footer .in { padding-block: var(--s-6) var(--s-7); display: flex; flex-wrap: wra
   .works { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .calc, .lead-grid { grid-template-columns: minmax(0, 1fr); }
   .result { position: static; }
+  .hero-photo { display: none; }
+  .about .in.about-grid { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); padding-top: var(--s-8); }
+  .about-inset { right: 12px; bottom: -24px; width: 36%; }
   .nav { display: none; }
   .price-list li { grid-template-columns: minmax(0, 1fr) auto; }
   .price-list p { grid-column: 1 / -1; grid-row: 2; }

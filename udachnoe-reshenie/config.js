@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Удачное решение» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1249170259458392067/f232aba7-e2bd-4925-a161-f17719ee1e06/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1249170259458392067/f232aba7-e2bd-4925-a161-f17719ee1e06/1/ru/image.png",
+    "photos": [
+      "https://i4.photo.2gis.com/main/branch/3/70000001112985933/common",
+      "https://ams2-cdn.2gis.com/previews/1249170259458392067/f232aba7-e2bd-4925-a161-f17719ee1e06/3/ru/"
+    ]
   },
   "hero": {
     "title": "Кедровые бани в Томске <em>под ключ</em>",
@@ -244,6 +248,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#2b1e02"
     }
+  },
+  "about": {
+    "title": "Удачное решение",
+    "text": "Кедровые бани и дома под ключ за 15 дней.",
+    "points": [
+      "5 ★ в 2ГИС, 13 отзывов",
+      "Работаем в Томске и Томской области",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

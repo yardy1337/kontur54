@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «НовоСтрой» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1035278806434185262/2ea3b169-0df9-4ab5-a494-52340e40e0b7/1/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1035278806434185262/2ea3b169-0df9-4ab5-a494-52340e40e0b7/1/image.png",
+    "photos": [
+      "https://i8.photo.2gis.com/main/branch/3/422740746135040/common"
+    ]
   },
   "hero": {
     "title": "Строим дома в Томске <em>под ключ</em>",
@@ -249,5 +252,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#051623"
     }
+  },
+  "about": {
+    "title": "НовоСтрой",
+    "text": "Строительство домов, коттеджей, дачных домиков! Отделка под ключ.",
+    "points": [
+      "5 ★ в 2ГИС, 16 отзывов",
+      "Работаем в Томске и Томской области",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

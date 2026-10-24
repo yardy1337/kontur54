@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Профсталь» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1064718168980717568/b1c5c8a4-32de-4ac1-8f71-34e971c6e50a/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1064718168980717568/b1c5c8a4-32de-4ac1-8f71-34e971c6e50a/1/ru/image.png",
+    "photos": [
+      "https://i2.photo.2gis.com/main/branch/11/70000001111679158/common"
+    ]
   },
   "hero": {
     "title": "Строим дома в Иркутске <em>под ключ</em>",
@@ -245,5 +248,14 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#2c1a02"
     }
+  },
+  "about": {
+    "title": "Профсталь",
+    "text": "Дом вашей мечты за 3 месяца и это не сказка.",
+    "points": [
+      "Работаем в Иркутске и Иркутской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

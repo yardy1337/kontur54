@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Империал Строй55» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1055467804867690632/28672183-55ef-4e55-ba29-6c5548b6325d/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1055467804867690632/28672183-55ef-4e55-ba29-6c5548b6325d/1/ru/image.png",
+    "photos": [
+      "https://i3.photo.2gis.com/main/branch/2/70000001020820578/common"
+    ]
   },
   "hero": {
     "title": "Ремонт квартир в Омске <em>под ключ</em>",
@@ -260,6 +263,7 @@ window.SITE = {
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
   },
+  "configurator": false,
   "theme": {
     "light": {
       "--c-accent": "#107e43",
@@ -277,5 +281,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#031c0f"
     }
+  },
+  "about": {
+    "title": "Империал Строй55",
+    "text": "Ремонт квартир: всё включено по дизайн-проекту с мебелью и декором.",
+    "points": [
+      "4,9 ★ в 2ГИС, 288 отзывов",
+      "Работаем в Омске и Омской области",
+      "В 2ГИС с 2014 года"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

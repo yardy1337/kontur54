@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «33 Коттеджа» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1028644435396657327/31db4865-7dcd-4a90-8265-52959e7bb94a/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1028644435396657327/31db4865-7dcd-4a90-8265-52959e7bb94a/1/ru/image.png",
+    "photos": [
+      "https://i6.photo.2gis.com/main/branch/2/70000001024900813/common",
+      "https://ams2-cdn.2gis.com/previews/1028644435396657327/31db4865-7dcd-4a90-8265-52959e7bb94a/3/ru/"
+    ]
   },
   "hero": {
     "title": "Строим дома в Омске <em>под ключ</em>",
@@ -244,5 +248,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#22090b"
     }
+  },
+  "about": {
+    "title": "33 Коттеджа",
+    "text": "Индивидуальный эскизный проект дома + подробная смета бесплатно.",
+    "points": [
+      "5 ★ в 2ГИС, 40 отзывов",
+      "Работаем в Омске и Омской области",
+      "В 2ГИС с 2013 года",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

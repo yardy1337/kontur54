@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «АбатСтрой» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1236981623988158467/1c3ec2cb-a206-4527-8089-62daf44a4ddb/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1236981623988158467/1c3ec2cb-a206-4527-8089-62daf44a4ddb/1/ru/image.png",
+    "photos": [
+      "https://i7.photo.2gis.com/main/branch/3/70000001043690406/common",
+      "https://ams2-cdn.2gis.com/previews/1236981623988158467/1c3ec2cb-a206-4527-8089-62daf44a4ddb/3/ru/"
+    ]
   },
   "hero": {
     "title": "Модульные бани в Томске <em>под ключ</em>",
@@ -249,6 +253,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#26090a"
     }
+  },
+  "about": {
+    "title": "АбатСтрой",
+    "text": "Модульные дома и бани под ключ в Томске.",
+    "points": [
+      "4,9 ★ в 2ГИС, 39 отзывов",
+      "Работаем в Томске и Томской области",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

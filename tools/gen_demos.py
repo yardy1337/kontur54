@@ -422,6 +422,8 @@ def build(seed, raw):
         "lead": dict(d["lead"], lead="Оставьте телефон — перезвоним и ответим на вопросы.",
                      success="Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."),
     }
+    if seg in ("Ремонт квартир", "Другое"):  # конструктор дома нужен тем, кто строит
+        cfg["configurator"] = False
     opts = (raw.get("ads") or {}).get("options") or {}
     logo = (opts.get("logo") or {}).get("img_url")
     if logo:
@@ -430,6 +432,21 @@ def build(seed, raw):
     if theme:
         cfg["theme"] = theme
     album = next((e for e in raw.get("external_content") or [] if e.get("type") == "photo_album" and e.get("main_photo_url")), None)
+    photos = [album["main_photo_url"]] if album else []
+    photos += [im.get("url") for im in (opts.get("images") or []) if im.get("url")][:1]
+    if photos:  # реальные фото: вставка на первом экране и блок «О компании»
+        cfg["company"]["photos"] = photos
+        created = ((raw.get("dates") or {}).get("created_at") or "")[:4]
+        points = []
+        if rating and reviews >= 3:
+            points.append(f"{str(rating).replace('.', ',')} ★ в 2ГИС, {reviews} отзывов")
+        points.append(f"Работаем в {c['in']} и {REGION[city]}")
+        if created and created < "2024":
+            points.append(f"В 2ГИС с {created} года")
+        if wa or tg:
+            points.append("Отвечаем в " + ("WhatsApp" if wa else "Telegram"))
+        cfg["about"] = {"title": name, "text": slogan or d["lead_tail"], "points": points,
+                        "caption": "Фото из карточки 2ГИС"}
     if album:  # реальное фото компании из 2ГИС — первой карточкой в «Наших работах»
         cfg["works"]["items"][0] = {"title": "Фото из карточки 2ГИС", "icon": d["works"][0][1], "tag": "Фото компании",
                                     "photo": album["main_photo_url"],

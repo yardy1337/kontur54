@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Новые строительные технологии» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1234666677216477184/fa2e832c-f2cd-43d6-a5f5-c11eb3afc8fe/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1234666677216477184/fa2e832c-f2cd-43d6-a5f5-c11eb3afc8fe/1/ru/image.png",
+    "photos": [
+      "https://i5.photo.2gis.com/main/branch/11/70000001066811413/common",
+      "https://ams2-cdn.2gis.com/previews/1234666677216477184/fa2e832c-f2cd-43d6-a5f5-c11eb3afc8fe/3/ru/"
+    ]
   },
   "hero": {
     "title": "Кедровые бани в Иркутске <em>под ключ</em>",
@@ -249,6 +253,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#020120"
     }
+  },
+  "about": {
+    "title": "Новые строительные технологии",
+    "text": "Бани-бочки из кедра — здоровье, стиль, тепло и быстрая установка.",
+    "points": [
+      "4,1 ★ в 2ГИС, 4 отзывов",
+      "Работаем в Иркутске и Иркутской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

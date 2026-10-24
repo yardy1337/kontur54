@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Строительная компания брусовых бань» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1243473642679959555/72809581-6b3a-4a8d-9edf-18b4c4a2ffbc/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1243473642679959555/72809581-6b3a-4a8d-9edf-18b4c4a2ffbc/1/ru/image.png",
+    "photos": [
+      "https://i6.photo.2gis.com/main/branch/2/70000001103859007/common"
+    ]
   },
   "hero": {
     "title": "Бани в Омске <em>для сибирской зимы</em>",
@@ -249,6 +252,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#271d0e"
     }
+  },
+  "about": {
+    "title": "Строительная компания брусовых бань",
+    "text": "Брусовые бани, большой выбор, работаем ежедневно.",
+    "points": [
+      "5 ★ в 2ГИС, 29 отзывов",
+      "Работаем в Омске и Омской области",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «StonWud» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1134136330737942528/fe69a9f6-35a6-4263-b1a8-a5eb372bc582/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1134136330737942528/fe69a9f6-35a6-4263-b1a8-a5eb372bc582/1/ru/image.png",
+    "photos": [
+      "https://i7.photo.2gis.com/main/branch/3/70000001087707632/common"
+    ]
   },
   "hero": {
     "title": "Бани в Томске <em>для сибирской зимы</em>",
@@ -244,6 +247,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#00002c"
     }
+  },
+  "about": {
+    "title": "StonWud",
+    "text": "Дома и бани из профилированного бруса! Проект. Строительство. Отделка.",
+    "points": [
+      "5 ★ в 2ГИС, 19 отзывов",
+      "Работаем в Томске и Томской области",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «ДОМ 55» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1095605813843591168/263b1ea2-92c1-44da-b0a3-15f67b2eb6b7/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1095605813843591168/263b1ea2-92c1-44da-b0a3-15f67b2eb6b7/1/ru/image.png",
+    "photos": [
+      "https://i2.photo.2gis.com/main/branch/2/70000001007152305/common",
+      "https://ams2-cdn.2gis.com/previews/1095605813843591168/263b1ea2-92c1-44da-b0a3-15f67b2eb6b7/3/ru/"
+    ]
   },
   "hero": {
     "title": "Строим дома в Омске <em>под ключ</em>",
@@ -231,5 +235,15 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "about": {
+    "title": "ДОМ 55",
+    "text": "Аккредитованный застройщик. Гарантия. Строим по ГОСТу.",
+    "points": [
+      "4,7 ★ в 2ГИС, 98 отзывов",
+      "Работаем в Омске и Омской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

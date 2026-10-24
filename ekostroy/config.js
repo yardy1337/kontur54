@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «ЭкоСтрой» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1247867182545633283/133ffc53-eabf-4bad-bc5b-65c953a929ab/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1247867182545633283/133ffc53-eabf-4bad-bc5b-65c953a929ab/1/ru/image.png",
+    "photos": [
+      "https://i3.photo.2gis.com/main/branch/1/70000001098980369/common"
+    ]
   },
   "hero": {
     "title": "Бани в Новосибирске <em>для сибирской зимы</em>",
@@ -249,6 +252,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#0c1605"
     }
+  },
+  "about": {
+    "title": "ЭкоСтрой",
+    "text": "Строим бани, хаммамы, беседки и дома: от проекта до монтажа под ключ.",
+    "points": [
+      "Работаем в Новосибирске и Новосибирской области",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

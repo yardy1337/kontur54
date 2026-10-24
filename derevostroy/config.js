@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «ДЕРЕВОСТРОЙ» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1128645877724872704/f084b1ab-0200-4ed1-a280-9265590acca6/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1128645877724872704/f084b1ab-0200-4ed1-a280-9265590acca6/1/ru/image.png",
+    "photos": [
+      "https://i6.photo.2gis.com/main/branch/2/282003258118539/common",
+      "https://ams2-cdn.2gis.com/previews/1128645877724872704/f084b1ab-0200-4ed1-a280-9265590acca6/3/ru/"
+    ]
   },
   "hero": {
     "title": "Бани в Омске <em>для сибирской зимы</em>",
@@ -231,6 +235,16 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "about": {
+    "title": "ДЕРЕВОСТРОЙ",
+    "text": "Дома, бани, коттеджи из профилированного бруса и бревна.",
+    "points": [
+      "4,5 ★ в 2ГИС, 8 отзывов",
+      "Работаем в Омске и Омской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

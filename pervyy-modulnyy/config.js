@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Первый Модульный» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1233084032065994752/444ec724-19ab-466d-bd04-63c433547e79/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1233084032065994752/444ec724-19ab-466d-bd04-63c433547e79/1/ru/image.png",
+    "photos": [
+      "https://i3.photo.2gis.com/main/branch/1/70000001105988751/common",
+      "https://ams2-cdn.2gis.com/previews/1233084032065994752/444ec724-19ab-466d-bd04-63c433547e79/3/ru/"
+    ]
   },
   "hero": {
     "title": "Модульные дома и бани в Новосибирске <em>под ключ</em>",
@@ -239,5 +243,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#0a1829"
     }
+  },
+  "about": {
+    "title": "Первый Модульный",
+    "text": "Модульные дома и модульные бани. Фундамент, проектирование.",
+    "points": [
+      "5 ★ в 2ГИС, 4 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

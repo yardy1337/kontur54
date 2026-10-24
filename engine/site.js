@@ -38,7 +38,10 @@
     view: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.5 14 5v6l-6 3.5L2 11V5z"/><path d="M2 5l6 3.5L14 5M8 8.5v6"/></svg>'
   };
 
+  // цвета фасада для конструктора: пустое значение — цвет шаблона
+  const FACADES = [["", "Графит"], ["#e9e6df", "Светлый"], ["#3f5b4c", "Хвойный"], ["#2f4a63", "Синий"], ["#7a3b32", "Кирпичный"]];
   const c = S.company, h = S.hero;
+  const P = c.photos || []; // реальные фото компании (из 2ГИС), первое — главное
   const touch = matchMedia("(pointer: coarse)").matches;
 
   app.innerHTML = `
@@ -74,6 +77,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
     </div>
 
     <div class="stage-wrap">
+      ${P[0] ? `<figure class="hero-photo"><img src="${esc(P[0])}" alt="Объект компании ${esc(c.name)}" referrerpolicy="no-referrer" onerror="this.closest('figure').remove()"><figcaption>Наш объект · ${esc(c.cities[0])}</figcaption></figure>` : ""}
       <div class="scene" id="scene">
         <canvas id="c" tabindex="0" role="img" aria-label="3D-модель дома, который собирается по этапам строительства" aria-describedby="scene-keys"></canvas>
         <p class="sr-only" id="scene-keys">Стрелки поворачивают модель, плюс и минус приближают, цифры от 1 до 5 переключают этапы, пробел ставит сборку на паузу.</p>
@@ -92,6 +96,30 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
         <span class="term" id="st-term"></span>
         <p id="st-text"></p>
       </div>
+      ${S.configurator === false ? "" : `
+      <details class="config" id="config">
+        <summary><span><b>Конструктор дома</b><span class="muted"> · поменяйте размеры и посмотрите конструкцию</span></span><span class="cfg-area" id="cfg-area"></span></summary>
+        <div class="cfg-body">
+          <div class="cfg-row"><label class="label" for="cfg-len">Длина</label><input type="range" id="cfg-len" min="6" max="14" step="0.5" value="10"><output id="cfg-len-out">10 м</output></div>
+          <div class="cfg-row"><label class="label" for="cfg-wid">Ширина</label><input type="range" id="cfg-wid" min="6" max="10" step="0.5" value="8"><output id="cfg-wid-out">8 м</output></div>
+          <fieldset class="cfg-row"><legend class="label">Кровля</legend><div class="seg">
+            <input type="radio" name="cfg-roof" id="cfg-roof-low" value="low"><label for="cfg-roof-low">Пологая</label>
+            <input type="radio" name="cfg-roof" id="cfg-roof-classic" value="classic" checked><label for="cfg-roof-classic">Классика</label>
+            <input type="radio" name="cfg-roof" id="cfg-roof-mansard" value="mansard"><label for="cfg-roof-mansard">Мансарда</label></div></fieldset>
+          <fieldset class="cfg-row"><legend class="label">Стены</legend><div class="seg">
+            <input type="radio" name="cfg-walls" id="cfg-walls-frame" value="frame" checked><label for="cfg-walls-frame">Каркас</label>
+            <input type="radio" name="cfg-walls" id="cfg-walls-timber" value="timber"><label for="cfg-walls-timber">Брус</label>
+            <input type="radio" name="cfg-walls" id="cfg-walls-gas" value="gas"><label for="cfg-walls-gas">Газобетон</label></div></fieldset>
+          <fieldset class="cfg-row" id="cfg-facade"><legend class="label">Цвет фасада</legend><div class="swatches">
+            ${FACADES.map(([v, n], i) => `<input type="radio" name="cfg-facade" id="cfg-f${i}" value="${v}"${i === 0 ? " checked" : ""}><label for="cfg-f${i}" title="${n}" style="--sw:${v || "var(--house-wall)"}"><span class="sr-only">${n}</span></label>`).join("")}
+          </div></fieldset>
+          <div class="cfg-row cfg-toggles">
+            <label class="check"><input type="checkbox" id="cfg-terrace" checked> Терраса</label>
+            <button class="btn" type="button" id="cfg-cut" aria-pressed="false">Показать стену в разрезе</button>
+          </div>
+          <div class="cfg-row cfg-go"><span id="cfg-sum"></span><a class="btn primary" href="#calc" id="cfg-calc">Посчитать этот дом</a></div>
+        </div>
+      </details>`}
     </div>
   </div>
 </section>
@@ -101,6 +129,25 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
     ${S.facts.map(f => `<div class="fact"><span class="dim" aria-hidden="true"></span><b>${esc(f.value)}</b><span>${esc(f.text)}</span></div>`).join("")}
   </div>
 </section>
+
+${S.about && P[0] ? `
+<section class="about" aria-labelledby="about-h">
+  <div class="in about-grid">
+    <figure class="about-photo">
+      <img class="about-main" src="${esc(P[0])}" alt="Фото компании ${esc(c.name)}" loading="lazy" referrerpolicy="no-referrer"
+        onerror="this.closest('.about').classList.add('nophoto');this.closest('figure').remove()">
+      ${P[1] ? `<img class="about-inset" src="${esc(P[1])}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
+      <figcaption>${esc(S.about.caption || "Фото компании")}</figcaption>
+    </figure>
+    <div class="about-text">
+      <span class="dim">О компании</span>
+      <h2 id="about-h">${esc(S.about.title)}</h2>
+      <p>${esc(S.about.text)}</p>
+      <ul class="about-points">${S.about.points.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
+      <div><a class="btn primary" href="#lead">Обсудить проект</a></div>
+    </div>
+  </div>
+</section>` : ""}
 
 <section class="block" id="services">
   <div class="in">
@@ -258,6 +305,49 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
 
   if (house) {
     btns.forEach((b, i) => b.addEventListener("click", () => house.goTo(i)));
+    /* ---------- Конструктор ---------- */
+    const cfg = document.getElementById("config");
+    if (cfg) {
+      const val = n => (cfg.querySelector(`input[name="${n}"]:checked`) || {}).value;
+      const len = document.getElementById("cfg-len"), wid = document.getElementById("cfg-wid");
+      const WALLS = { frame: "Каркас", timber: "Брус", gas: "Газобетон" };
+      let raf = 0;
+      function sync() {
+        const params = { length: +len.value, width: +wid.value, roof: val("cfg-roof"), walls: val("cfg-walls"),
+          facade: val("cfg-facade") || "", terrace: document.getElementById("cfg-terrace").checked };
+        document.getElementById("cfg-len-out").textContent = String(params.length).replace(".", ",") + " м";
+        document.getElementById("cfg-wid-out").textContent = String(params.width).replace(".", ",") + " м";
+        // у бруса свой цвет дерева, фасад красить не предлагаем
+        document.getElementById("cfg-facade").disabled = params.walls === "timber";
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          house.configure(params);
+          const pr = house.params();
+          const text = `≈ ${pr.area} м² · ${WALLS[pr.walls]}${pr.roof === "mansard" ? " · с мансардой" : ""}`;
+          document.getElementById("cfg-area").textContent = text;
+          document.getElementById("cfg-sum").textContent = `Площадь ${text}`;
+        });
+      }
+      cfg.addEventListener("input", sync);
+      const cut = document.getElementById("cfg-cut");
+      cut.addEventListener("click", () => {
+        const on = cut.getAttribute("aria-pressed") !== "true";
+        cut.setAttribute("aria-pressed", String(on));
+        cut.textContent = on ? "Скрыть разрез" : "Показать стену в разрезе";
+        house.setCut(on);
+      });
+      // «Посчитать этот дом»: переносим площадь и материал в калькулятор
+      document.getElementById("cfg-calc").addEventListener("click", () => {
+        const pr = house.params();
+        const ar = document.getElementById("area");
+        ar.value = Math.max(+ar.min, Math.min(+ar.max, pr.area));
+        const m = document.getElementById("mat-" + pr.walls);
+        if (m) m.checked = true;
+        ar.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+      if (matchMedia("(min-width: 901px)").matches) cfg.open = true;
+      sync();
+    }
     playBtn.addEventListener("click", () => house.toggle());
     document.getElementById("view-btn").addEventListener("click", () => house.resetView());
   } else {

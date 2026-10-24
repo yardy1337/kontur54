@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «ДомСпецСтрой» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1256796323554787328/b7c6b6cc-449b-4c01-993b-1868017e9175/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1256796323554787328/b7c6b6cc-449b-4c01-993b-1868017e9175/1/ru/image.png",
+    "photos": [
+      "https://i3.photo.2gis.com/main/branch/2/70000001085334799/common"
+    ]
   },
   "hero": {
     "title": "Строим дома в Омске <em>в ипотеку</em>",
@@ -251,5 +254,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#031221"
     }
+  },
+  "about": {
+    "title": "ДомСпецСтрой",
+    "text": "Строим дома по ипотеке, в Омске и Омской обл. Индивидуальные проекты.",
+    "points": [
+      "4,9 ★ в 2ГИС, 76 отзывов",
+      "Работаем в Омске и Омской области",
+      "В 2ГИС с 2023 года",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Тепло кедра» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1117273180629630976/b4cbaff6-7d75-44ee-ba94-c6c1f098d737/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1117273180629630976/b4cbaff6-7d75-44ee-ba94-c6c1f098d737/1/ru/image.png",
+    "photos": [
+      "https://i4.photo.2gis.com/main/branch/1/70000001051180455/common"
+    ]
   },
   "hero": {
     "title": "Кедровые бани в Новосибирске <em>под ключ</em>",
@@ -244,6 +247,17 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#07100a"
     }
+  },
+  "about": {
+    "title": "Тепло кедра",
+    "text": "Эко-бани-бочки под ключ. Алтайский кедр. Собственное производство.",
+    "points": [
+      "4,8 ★ в 2ГИС, 70 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "В 2ГИС с 2021 года",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

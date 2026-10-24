@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Хамам» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1150880691496419331/a2db9a11-7780-4c49-878e-c5ff7852e3b1/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1150880691496419331/a2db9a11-7780-4c49-878e-c5ff7852e3b1/1/ru/image.png",
+    "photos": [
+      "https://i5.photo.2gis.com/main/branch/1/141265770890383/common",
+      "https://ams2-cdn.2gis.com/previews/1150880691496419331/a2db9a11-7780-4c49-878e-c5ff7852e3b1/3/ru/"
+    ]
   },
   "hero": {
     "title": "Бани в Новосибирске <em>для сибирской зимы</em>",
@@ -249,6 +253,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#281300"
     }
+  },
+  "about": {
+    "title": "Хамам",
+    "text": "Строим в Новосибирске и Новосибирской области. Парная, мойка и комната отдыха — по вашему проекту.",
+    "points": [
+      "4,9 ★ в 2ГИС, 40 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

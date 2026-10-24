@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Модуль Строй» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1254483603539099651/85de9fb6-379b-4285-99d0-26539ec19a4f/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1254483603539099651/85de9fb6-379b-4285-99d0-26539ec19a4f/1/ru/image.png",
+    "photos": [
+      "https://i1.photo.2gis.com/main/branch/11/70000001078707326/common"
+    ]
   },
   "hero": {
     "title": "Модульные бани в Иркутске <em>под ключ</em>",
@@ -245,6 +248,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#202105"
     }
+  },
+  "about": {
+    "title": "Модуль Строй",
+    "text": "Модульные бани и дома: быстро, чисто, экономно. Нагрев до 90°C за час.",
+    "points": [
+      "Работаем в Иркутске и Иркутской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

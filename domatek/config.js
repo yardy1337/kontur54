@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Доматек» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1217124187995373571/a7e47814-f7cd-4a51-8af3-7e0deffb0db7/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1217124187995373571/a7e47814-f7cd-4a51-8af3-7e0deffb0db7/1/ru/image.png",
+    "photos": [
+      "https://i3.photo.2gis.com/main/branch/1/70000001101373300/common",
+      "https://ams2-cdn.2gis.com/previews/1217124187995373571/a7e47814-f7cd-4a51-8af3-7e0deffb0db7/3/ru/"
+    ]
   },
   "hero": {
     "title": "Модульные дома и бани в Новосибирске <em>под ключ</em>",
@@ -234,5 +238,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#021906"
     }
+  },
+  "about": {
+    "title": "Доматек",
+    "text": "Модульный дом под ключ за 60 дней. Установка 1 день. Гарантия 5 лет.",
+    "points": [
+      "4,9 ★ в 2ГИС, 36 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

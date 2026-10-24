@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Альянс Строй» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1044849444597530760/9b25ac7f-9109-4faf-a026-c53b9f35437d/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1044849444597530760/9b25ac7f-9109-4faf-a026-c53b9f35437d/1/ru/image.png",
+    "photos": [
+      "https://i7.photo.2gis.com/main/branch/3/70000001044216478/common",
+      "https://ams2-cdn.2gis.com/previews/1044849444597530760/9b25ac7f-9109-4faf-a026-c53b9f35437d/3/ru/"
+    ]
   },
   "hero": {
     "title": "Строим дома в Томске <em>под ключ</em>",
@@ -254,5 +258,14 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#2b0404"
     }
+  },
+  "about": {
+    "title": "Альянс Строй",
+    "text": "От проекта до реализации в одном месте. Замеры и смета — бесплатно.",
+    "points": [
+      "4,7 ★ в 2ГИС, 82 отзывов",
+      "Работаем в Томске и Томской области"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

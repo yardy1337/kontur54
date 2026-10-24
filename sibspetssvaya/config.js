@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «СибСпецСвая» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1113358059746361344/778e8fee-6697-43fd-99f5-a21530ffebd1/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1113358059746361344/778e8fee-6697-43fd-99f5-a21530ffebd1/1/ru/image.png",
+    "photos": [
+      "https://i4.photo.2gis.com/main/branch/11/70000001031816758/common"
+    ]
   },
   "hero": {
     "title": "Фундаменты в Иркутске <em>на любом грунте</em>",
@@ -265,5 +268,14 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#011913"
     }
+  },
+  "about": {
+    "title": "СибСпецСвая",
+    "text": "Готовый фундамент за 1-2 дня. По ГОСТу. На любом типе грунта.",
+    "points": [
+      "5 ★ в 2ГИС, 106 отзывов",
+      "Работаем в Иркутске и Иркутской области"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

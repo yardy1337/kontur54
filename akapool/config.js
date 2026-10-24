@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «akapool» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1129375377198678019/68ee8850-bb52-4377-9078-f95fdf64c814/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1129375377198678019/68ee8850-bb52-4377-9078-f95fdf64c814/1/ru/image.png",
+    "photos": [
+      "https://i1.photo.2gis.com/main/branch/2/70000001055481656/common",
+      "https://ams2-cdn.2gis.com/previews/1129375377198678019/68ee8850-bb52-4377-9078-f95fdf64c814/3/ru/"
+    ]
   },
   "hero": {
     "title": "Бани в Омске <em>для сибирской зимы</em>",
@@ -249,6 +253,17 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#092828"
     }
+  },
+  "about": {
+    "title": "akapool",
+    "text": "Бесплатный замер, консультация, строительство по дизайн-проекту.",
+    "points": [
+      "5 ★ в 2ГИС, 5 отзывов",
+      "Работаем в Омске и Омской области",
+      "В 2ГИС с 2019 года",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

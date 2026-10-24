@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Евростиль» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1067171019619303427/3d662523-755e-43de-bf86-c7d2a5612d85/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1067171019619303427/3d662523-755e-43de-bf86-c7d2a5612d85/1/ru/image.png",
+    "photos": [
+      "https://i1.photo.2gis.com/main/branch/2/70000001061183425/common"
+    ]
   },
   "hero": {
     "title": "Строим дома в Омске <em>в ипотеку</em>",
@@ -246,5 +249,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#012509"
     }
+  },
+  "about": {
+    "title": "Евростиль",
+    "text": "Строим дома по сельской и семейной ипотеке быстро, от 3 мес. Звоните.",
+    "points": [
+      "5 ★ в 2ГИС, 375 отзывов",
+      "Работаем в Омске и Омской области",
+      "В 2ГИС с 2022 года",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

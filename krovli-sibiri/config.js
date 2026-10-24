@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Кровли Сибири» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1084736212633124867/0fed401d-7a50-474b-bbb3-edf2c9eabff7/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1084736212633124867/0fed401d-7a50-474b-bbb3-edf2c9eabff7/1/ru/image.png",
+    "photos": [
+      "https://i5.photo.2gis.com/main/branch/1/70000001027109838/common"
+    ]
   },
   "hero": {
     "title": "Бани в Новосибирске <em>для сибирской зимы</em>",
@@ -236,6 +239,16 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "about": {
+    "title": "Кровли Сибири",
+    "text": "Строим бани, сауны и хозпостройки из бруса, на каркасе.",
+    "points": [
+      "4,1 ★ в 2ГИС, 27 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "В 2ГИС с 2017 года"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

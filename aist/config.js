@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Аист» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1190455315443744768/d58df931-5290-459e-89c8-6f99bfda54fc/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1190455315443744768/d58df931-5290-459e-89c8-6f99bfda54fc/1/ru/image.png",
+    "photos": [
+      "https://i4.photo.2gis.com/main/branch/2/70000001027279521/common"
+    ]
   },
   "hero": {
     "title": "Строим дома в Омске <em>в ипотеку</em>",
@@ -251,5 +254,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#2e1c00"
     }
+  },
+  "about": {
+    "title": "Аист",
+    "text": "Строительство домов под ключ в ипотеку с гос. поддержкой.",
+    "points": [
+      "4,8 ★ в 2ГИС, 76 отзывов",
+      "Работаем в Омске и Омской области",
+      "В 2ГИС с 2017 года",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

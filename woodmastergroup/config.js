@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «WoodMasterGroup» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1145610691772678147/237952fc-0faa-439e-bf32-fd31cad4549d/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1145610691772678147/237952fc-0faa-439e-bf32-fd31cad4549d/1/ru/image.png",
+    "photos": [
+      "https://i9.photo.2gis.com/main/branch/3/70000001006397715/common",
+      "https://ams2-cdn.2gis.com/previews/1145610691772678147/237952fc-0faa-439e-bf32-fd31cad4549d/3/ru/"
+    ]
   },
   "hero": {
     "title": "Бани в Томске <em>для сибирской зимы</em>",
@@ -249,6 +253,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#251203"
     }
+  },
+  "about": {
+    "title": "WoodMasterGroup",
+    "text": "Строим в Томске и Томской области. Парная, мойка и комната отдыха — по вашему проекту.",
+    "points": [
+      "5 ★ в 2ГИС, 20 отзывов",
+      "Работаем в Томске и Томской области",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

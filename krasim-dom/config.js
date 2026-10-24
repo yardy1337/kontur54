@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Красим дом» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1216715333591629824/9125d096-846c-4b4e-b407-af9f77f4868d/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1216715333591629824/9125d096-846c-4b4e-b407-af9f77f4868d/1/ru/image.png",
+    "photos": [
+      "https://i8.photo.2gis.com/main/branch/1/70000001021269753/common",
+      "https://ams2-cdn.2gis.com/previews/1216715333591629824/9125d096-846c-4b4e-b407-af9f77f4868d/3/ru/"
+    ]
   },
   "hero": {
     "title": "Покраска домов и бань в Новосибирске <em>под ключ</em>",
@@ -237,6 +241,7 @@ window.SITE = {
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
   },
+  "configurator": false,
   "theme": {
     "light": {
       "--c-accent": "#8e6709",
@@ -254,5 +259,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#2b2004"
     }
+  },
+  "about": {
+    "title": "Красим дом",
+    "text": "Мы создаем стиль, уют и надежную защиту вашего дома.",
+    "points": [
+      "4,5 ★ в 2ГИС, 27 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "В 2ГИС с 2015 года",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

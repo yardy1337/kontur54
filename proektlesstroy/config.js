@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Проект-лесстрой» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1249900949309227008/0e35c977-bb6b-4b64-8c6d-ebb4b8d942c4/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1249900949309227008/0e35c977-bb6b-4b64-8c6d-ebb4b8d942c4/1/ru/image.png",
+    "photos": [
+      "https://i9.photo.2gis.com/main/branch/3/422740746105035/common"
+    ]
   },
   "hero": {
     "title": "Строим дома в Томске <em>под ключ</em>",
@@ -234,5 +237,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#100c04"
     }
+  },
+  "about": {
+    "title": "Проект-лесстрой",
+    "text": "Индивидуальное проектирование. Строительство под ключ.",
+    "points": [
+      "4,6 ★ в 2ГИС, 12 отзывов",
+      "Работаем в Томске и Томской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

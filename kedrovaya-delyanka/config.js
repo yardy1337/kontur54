@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Кедровая Делянка» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1252365305410224131/3a3a1cef-b3e6-4637-8301-c14deb33e65d/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1252365305410224131/3a3a1cef-b3e6-4637-8301-c14deb33e65d/1/ru/image.png",
+    "photos": [
+      "https://i2.photo.2gis.com/main/branch/1/70000001007270911/common",
+      "https://ams2-cdn.2gis.com/previews/1252365305410224131/3a3a1cef-b3e6-4637-8301-c14deb33e65d/3/ru/"
+    ]
   },
   "hero": {
     "title": "Кедровые бани в Новосибирске <em>под ключ</em>",
@@ -226,6 +230,16 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "about": {
+    "title": "Кедровая Делянка",
+    "text": "Производство модульных бань из кедра (бани-бочки, викинг, парус).",
+    "points": [
+      "5 ★ в 2ГИС, 80 отзывов",
+      "Работаем в Новосибирске и Новосибирской области",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

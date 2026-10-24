@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Компания Ю-Три Центр» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1135041453840400387/bb9125de-ba7f-43fb-9c41-d703db9556a1/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1135041453840400387/bb9125de-ba7f-43fb-9c41-d703db9556a1/1/ru/image.png",
+    "photos": [
+      "https://i3.photo.2gis.com/main/branch/2/70000001019824507/common"
+    ]
   },
   "hero": {
     "title": "Дачные домики, бани и хозблоки в Омске",
@@ -249,5 +252,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#1d0404"
     }
+  },
+  "about": {
+    "title": "Компания Ю-Три Центр",
+    "text": "Бытовки, беседки, хоз.блоки, дачные деревянные домики, дачные туалеты.",
+    "points": [
+      "4,8 ★ в 2ГИС, 110 отзывов",
+      "Работаем в Омске и Омской области",
+      "В 2ГИС с 2015 года",
+      "Отвечаем в WhatsApp"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };

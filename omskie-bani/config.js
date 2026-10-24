@@ -11,7 +11,10 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Омские Бани» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1193071322704379907/cfef7977-8acb-43a3-9359-4fa8a6997bdb/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1193071322704379907/cfef7977-8acb-43a3-9359-4fa8a6997bdb/1/ru/image.png",
+    "photos": [
+      "https://i6.photo.2gis.com/main/branch/2/70000001083685940/common"
+    ]
   },
   "hero": {
     "title": "Модульные бани в Омске <em>под ключ</em>",
@@ -249,6 +252,16 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#201111"
     }
+  },
+  "about": {
+    "title": "Омские Бани",
+    "text": "Готовые омские бани для суровых сибирских зим. Модульные дома.",
+    "points": [
+      "5 ★ в 2ГИС, 8 отзывов",
+      "Работаем в Омске и Омской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   },
   "house": {
     "wall": "#9a6a3e",

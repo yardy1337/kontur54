@@ -11,7 +11,11 @@ window.SITE = {
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
     "demoNote": "Концепт сайта для «Компания Фролова» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
-    "logo": "https://ams2-cdn.2gis.com/previews/1223464313214205952/6e031aca-1e5b-4dbb-b504-0352422b8dd3/1/ru/image.png"
+    "logo": "https://ams2-cdn.2gis.com/previews/1223464313214205952/6e031aca-1e5b-4dbb-b504-0352422b8dd3/1/ru/image.png",
+    "photos": [
+      "https://i0.photo.2gis.com/main/branch/11/70000001102241465/common",
+      "https://ams2-cdn.2gis.com/previews/1223464313214205952/6e031aca-1e5b-4dbb-b504-0352422b8dd3/3/ru/"
+    ]
   },
   "hero": {
     "title": "Строительство и ремонт помещений в Иркутске",
@@ -255,6 +259,7 @@ window.SITE = {
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
   },
+  "configurator": false,
   "theme": {
     "light": {
       "--c-accent": "#6c7019",
@@ -272,5 +277,15 @@ window.SITE = {
       "--c-on-accent": "#111111",
       "--c-accent-tint": "#26270f"
     }
+  },
+  "about": {
+    "title": "Компания Фролова",
+    "text": "Строительство: от павильона до торгового центра.",
+    "points": [
+      "5 ★ в 2ГИС, 3 отзывов",
+      "Работаем в Иркутске и Иркутской области",
+      "Отвечаем в Telegram"
+    ],
+    "caption": "Фото из карточки 2ГИС"
   }
 };
