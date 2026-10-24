@@ -10,7 +10,8 @@ window.SITE = {
       "Омская область"
     ],
     "footerNote": "Концепт сайта от Yardy Project · yardyproject.ru",
-    "demoNote": "Концепт сайта для «akapool» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами."
+    "demoNote": "Концепт сайта для «akapool» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
+    "logo": "https://ams2-cdn.2gis.com/previews/1129375377198678019/68ee8850-bb52-4377-9078-f95fdf64c814/1/ru/image.png"
   },
   "hero": {
     "title": "Бани в Омске <em>для сибирской зимы</em>",
@@ -152,24 +153,25 @@ window.SITE = {
   },
   "works": {
     "title": "Наши работы",
-    "lead": "Здесь будут фото ваших объектов — из 2ГИС, соцсетей или со стройки.",
+    "lead": "Первое фото — из вашей карточки в 2ГИС. Остальные места — под ваши объекты.",
     "items": [
       {
-        "title": "Баня",
+        "title": "Фото из карточки 2ГИС",
         "icon": "bath",
-        "tag": "Ваше фото",
+        "tag": "Фото компании",
+        "photo": "https://i1.photo.2gis.com/main/branch/2/70000001055481656/common",
         "specs": [
           [
             "Город",
             "Омск"
           ],
           [
-            "Срок",
-            "—"
+            "Фото в 2ГИС",
+            "29"
           ],
           [
-            "Площадь",
-            "—"
+            "Рейтинг",
+            "5 ★"
           ]
         ]
       },
@@ -229,6 +231,24 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "theme": {
+    "light": {
+      "--c-accent": "#137b7b",
+      "--c-accent-fill": "#32e0e0",
+      "--c-accent-hover": "#4de4e4",
+      "--c-accent-active": "#67e8e8",
+      "--c-on-accent": "#111111",
+      "--c-accent-tint": "#eafcfc"
+    },
+    "dark": {
+      "--c-accent": "#32e0e0",
+      "--c-accent-fill": "#32e0e0",
+      "--c-accent-hover": "#4de4e4",
+      "--c-accent-active": "#20d3d3",
+      "--c-on-accent": "#111111",
+      "--c-accent-tint": "#092828"
+    }
   },
   "house": {
     "wall": "#9a6a3e",

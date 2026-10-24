@@ -59,6 +59,77 @@ def clean_slogan(t):
     return t[0].upper() + t[1:] + "."
 
 
+# ---------- Фирменный цвет: подгоняем под контраст WCAG AA ----------
+import colorsys
+
+
+def _lum(rgb):
+    c = [x / 255 for x in rgb]
+    c = [x / 12.92 if x <= 0.03928 else ((x + 0.055) / 1.055) ** 2.4 for x in c]
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
+
+
+def _cr(a, b):
+    la, lb = _lum(a), _lum(b)
+    return (max(la, lb) + 0.05) / (min(la, lb) + 0.05)
+
+
+def _hex(rgb):
+    return "#%02x%02x%02x" % tuple(int(round(max(0, min(255, v)))) for v in rgb)
+
+
+def _rgb(h):
+    h = h.lstrip("#")
+    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def _shift(rgb, dl):
+    h, l, s_ = colorsys.rgb_to_hls(*[x / 255 for x in rgb])
+    return tuple(v * 255 for v in colorsys.hls_to_rgb(h, max(0, min(1, l + dl)), s_))
+
+
+def _until(rgb, bg, target, step):
+    for _ in range(60):
+        if _cr(rgb, bg) >= target:
+            return rgb
+        rgb = _shift(rgb, step)
+    return rgb
+
+
+def brand_theme(color):
+    """Фирменный цвет из 2ГИС → токены светлой и тёмной темы. Серые/чёрные/белые не берём."""
+    if not color or not re.match(r"^#[0-9a-fA-F]{6}$", color):
+        return None
+    rgb = _rgb(color)
+    h, l, sat = colorsys.rgb_to_hls(*[x / 255 for x in rgb])
+    if sat < 0.3 or l < 0.12 or l > 0.92:
+        return None
+    WHITE, INK = (255, 255, 255), (17, 17, 17)
+    BG_L, BG_D, EL_D = _rgb("#f4f6f7"), _rgb("#0b1216"), _rgb("#19242b")
+    # светлая тема: кнопка — фирменный цвет с белым или тёмным текстом
+    if _cr(WHITE, rgb) >= 4.5:
+        fill, on = rgb, WHITE
+    elif _cr(INK, rgb) >= 4.5:
+        fill, on = rgb, INK
+    else:
+        fill, on = _until(rgb, WHITE, 4.5, -0.02), WHITE
+    dark_on = on == INK
+    light = {"--c-accent": _hex(_until(rgb, BG_L, 4.6, -0.02)),
+             "--c-accent-fill": _hex(fill),
+             "--c-accent-hover": _hex(_shift(fill, 0.06 if dark_on else -0.06)),
+             "--c-accent-active": _hex(_shift(fill, 0.12 if dark_on else -0.12)),
+             "--c-on-accent": _hex(on),
+             "--c-accent-tint": _hex(tuple(255 - (255 - v) * 0.1 for v in rgb))}
+    # тёмная тема: светлее, тёмный текст на кнопке
+    dfill = _until(rgb, BG_D, 4.5, 0.02)
+    don = INK if _cr(INK, dfill) >= 4.5 else WHITE
+    acc_d = _until(rgb, EL_D, 4.6, 0.02)
+    dark = {"--c-accent": _hex(acc_d), "--c-accent-fill": _hex(dfill),
+            "--c-accent-hover": _hex(_shift(dfill, 0.06)), "--c-accent-active": _hex(_shift(dfill, -0.06)),
+            "--c-on-accent": _hex(don), "--c-accent-tint": _hex(tuple(v * 0.18 for v in rgb))}
+    return {"light": light, "dark": dark}
+
+
 # ---------- Сегменты ----------
 
 def house_materials(text, k):
@@ -351,6 +422,21 @@ def build(seed, raw):
         "lead": dict(d["lead"], lead="Оставьте телефон — перезвоним и ответим на вопросы.",
                      success="Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."),
     }
+    opts = (raw.get("ads") or {}).get("options") or {}
+    logo = (opts.get("logo") or {}).get("img_url")
+    if logo:
+        cfg["company"]["logo"] = logo
+    theme = brand_theme(opts.get("color"))
+    if theme:
+        cfg["theme"] = theme
+    album = next((e for e in raw.get("external_content") or [] if e.get("type") == "photo_album" and e.get("main_photo_url")), None)
+    if album:  # реальное фото компании из 2ГИС — первой карточкой в «Наших работах»
+        cfg["works"]["items"][0] = {"title": "Фото из карточки 2ГИС", "icon": d["works"][0][1], "tag": "Фото компании",
+                                    "photo": album["main_photo_url"],
+                                    "specs": [["Город", city], ["Фото в 2ГИС", str(album.get("count") or "—")], ["Рейтинг", f"{rating or '—'} ★"]]}
+        cfg["works"]["lead"] = "Первое фото — из вашей карточки в 2ГИС. Остальные места — под ваши объекты."
+    a, = [album["main_photo_url"] if album else ""]
+    cfg["_og_image"] = a
     if d.get("house"):
         cfg["house"] = d["house"]
     page_title = f"{name} — {re.sub('<[^>]+>', '', d['title'])}"
@@ -380,6 +466,9 @@ def main():
         html = re.sub(r"<title>.*?</title>", f"<title>{title}</title>", html)
         html = re.sub(r'<meta name="description" content="[^"]*">', f'<meta name="description" content="{desc.replace(chr(34), "")}">', html)
         html = re.sub(r'<meta property="og:title" content="[^"]*">', f'<meta property="og:title" content="{title.replace(chr(34), "")}">', html)
+        og = cfg.pop("_og_image", "")
+        if og:
+            html = re.sub(r'<meta property="og:image" content="[^"]*">', f'<meta property="og:image" content="{og}">', html)
         html = re.sub(r'<meta property="og:description" content="[^"]*">', '<meta property="og:description" content="Концепт сайта от Yardy Project: 3D-сборка, калькулятор стоимости, заявки в мессенджер.">', html)
         # концепты не должны попадать в поиск по названию чужой компании
         html = html.replace("<title>", '<meta name="robots" content="noindex, nofollow">\n<title>', 1)

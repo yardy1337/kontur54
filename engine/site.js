@@ -10,6 +10,16 @@
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const phoneHref = p => "tel:" + p.replace(/[^\d+]/g, "");
 
+  /* ---------- Фирменный цвет компании (необязательно) → CSS-токены ---------- */
+  // theme: { light: {"--c-accent": "#…", …}, dark: {…} } — значения уже проверены на контраст генератором
+  if (S.theme && S.theme.light) {
+    const decl = o => Object.entries(o).map(([k, v]) => `${k}:${v}`).join(";");
+    const st = document.createElement("style");
+    st.textContent = `:root{${decl(S.theme.light)}}` +
+      (S.theme.dark ? `@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){${decl(S.theme.dark)}}}:root[data-theme="dark"]{${decl(S.theme.dark)}}` : "");
+    document.head.appendChild(st);
+  }
+
   /* ---------- Цвета дома из конфига (необязательно) → CSS-токены ---------- */
   // Все цвета живут в engine/site.css. Конфиг может только переопределить отделку дома.
   if (S.house) {
@@ -36,7 +46,8 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
 <header class="top">
   <div class="in">
     <a class="logo" href="#top" id="top">
-      <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M3 13 14 4l11 9"/><path d="M6 11v13h16V11"/><path d="M11 24v-7h6v7"/></svg>
+      ${c.logo ? `<img class="logo-img" src="${esc(c.logo)}" alt="" referrerpolicy="no-referrer" onerror="this.nextElementSibling.removeAttribute('hidden');this.remove()">` : ""}
+      <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"${c.logo ? " hidden" : ""}><path d="M3 13 14 4l11 9"/><path d="M6 11v13h16V11"/><path d="M11 24v-7h6v7"/></svg>
       ${esc(c.name)}
     </a>
     <nav class="nav" aria-label="Разделы">
@@ -164,7 +175,8 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
       ${S.works.items.map(w => `
       <article class="work">
         <div class="pic">${w.tag ? `<span class="label">${esc(w.tag)}</span>` : ""}
-          ${w.photo ? `<img src="${esc(w.photo)}" alt="${esc(w.title)}" loading="lazy">` : `<svg viewBox="0 0 240 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${ICONS[w.icon] || ICONS.house}</svg>`}
+          <svg viewBox="0 0 240 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${ICONS[w.icon] || ICONS.house}</svg>
+          ${w.photo ? `<img src="${esc(w.photo)}" alt="${esc(w.title)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
         </div>
         <h3>${esc(w.title)}</h3>
         <dl>${w.specs.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
