@@ -353,7 +353,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
       const setVal = (n, v) => { const el = cfg.querySelector(`input[name="cfg-${n}"][value="${v}"]`); if (el) el.checked = true; };
       const len = document.getElementById("cfg-len"), wid = document.getElementById("cfg-wid");
       const WALLS = { frame: "каркас", timber: "брус", gas: "газобетон" };
-      const RANGE = { house: [6, 14], barrel: [3, 6] };
+      const RANGE = { house: [3, 14], barrel: [3, 6] }; // от маленькой бани 3×4 до большого дома
       let raf = 0, type = "house";
       function applyPreset(i) {
         const pr = Object.assign({ type: "house", roof: "gable", floors: "one", walls: "frame", facade: "", roofColor: "", trim: "", wood: "natural", panoramic: false, terrace: true }, CFG.presets[i].params);

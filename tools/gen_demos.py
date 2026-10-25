@@ -416,7 +416,7 @@ def build(seed, raw):
     c = {"city": city, "in": CITY_IN.get(city, city)}
     rubrics = [r["name"] for r in raw.get("rubrics", [])]
     slogan_raw = (raw.get("ads") or {}).get("text") or ""
-    text = " ".join([seed["name"], slogan_raw, " ".join(rubrics), seed.get("note", "")]).lower()
+    text = " ".join([seed["name"], raw.get("name", ""), slogan_raw, " ".join(rubrics), seed.get("note", "")]).lower()
     k = PRICE_K.get(city, 1.0)
     seg = seed["segment"] if seed["segment"] in SEGMENTS else "Дома под ключ"
     d = SEGMENTS[seg](c, text, k)
@@ -451,7 +451,7 @@ def build(seed, raw):
         lead = (slogan + " " + tail).strip()
     else:
         lead = d["lead_tail"]
-    name = seed["name"]
+    name = seed.get("brand") or seed["name"]  # короткое имя для сайта, если в 2ГИС длинное описание
     tg = next((ct.get("url") for g in raw.get("contact_groups") or [] for ct in g.get("contacts", [])
                if (ct.get("url") or "").startswith("http://t.me") or (ct.get("url") or "").startswith("https://t.me")), "")
     secondary = ({"text": "Написать в WhatsApp", "href": wa} if wa else
@@ -530,7 +530,7 @@ def main():
     for f in sorted(glob.glob(seeds_glob)):
         seed = json.load(open(f, encoding="utf-8"))
         cfg, title, desc = build(seed, raw[seed["gisId"]])
-        slug = slugify(seed["name"])
+        slug = slugify(seed.get("brand") or seed["name"])
         while slug in used or slug in ("kontur54", "engine", "assets"):
             slug += "-" + seed["city"][:3].lower().translate(str.maketrans(dict(zip("томскнвиркуь", "tomsknvirku-"))))
         used.add(slug)
