@@ -417,7 +417,8 @@
         g.add(box(...(axis === "x" ? [w + 0.2, h + 0.2, 0.05] : [0.05, h + 0.2, w + 0.2]), trimMat, n[0] * 0.13, 0, n[1] * 0.13));
         g.add(box(...(axis === "x" ? [w, h, 0.04] : [0.04, h, w]), mat.glass, n[0] * 0.16, 0, n[1] * 0.16));
         g.position.set(x, y, z);
-        slide(g, n[0] * 1.6, n[1] * 1.6, st, 0.3);
+        // встаёт в проём, когда обшивка уже дошла до верха стены
+        slide(g, n[0] * 0.45, n[1] * 0.45, st + 0.3, 0.25);
       }
       const doorX = W * 0.06;
       if (P.panoramic) {
@@ -485,7 +486,18 @@
         const tw = Math.min(6, W * 0.6), tx = -W / 2 + tw / 2 + 0.3;
         const deck = tag(boardsMat("--house-trim", tw / BOARD, 1), "wood");
         grow(box(tw, 0.18, 2.4, deck, tx, 0.36, D / 2 + 0.3, "back"), "z", 4.2, 0.3);
-        [tx - tw / 2 + 0.3, tx, tx + tw / 2 - 0.3].forEach((x, i) => grow(box(0.14, 2.5, 0.14, trimMat, x, 0.45, D / 2 + 2.55, "bottom"), "y", 4.4 + i * 0.05, 0.2));
+        const fz = D / 2 + 2.62, bz = D / 2 + 0.42, x0 = tx - tw / 2 + 0.07, x1 = tx + tw / 2 - 0.07, dy = 0.45, rh = 0.9;
+        const gc = Math.min(x1 - 0.9, Math.max(x0 + 0.9, doorX)), g0 = gc - 0.6, g1 = gc + 0.6;
+        const posts = [[x0, fz], [g0, fz], [g1, fz], [x1, fz], [x0, bz], [x1, bz], [x0, (fz + bz) / 2], [x1, (fz + bz) / 2]];
+        if (g0 - x0 > 2.4) posts.push([(x0 + g0) / 2, fz]);
+        if (x1 - g1 > 2.4) posts.push([(g1 + x1) / 2, fz]);
+        posts.forEach(([x, z], i) => grow(box(0.09, rh, 0.09, trimMat, x, dy, z, "bottom"), "y", 4.35 + i * 0.02, 0.2));
+        [rh, rh * 0.5].forEach((h, k) => {
+          const y = dy + h - 0.03, st = 4.5 + k * 0.05;
+          [[x0, g0], [g1, x1]].forEach(([a, b]) => { if (b - a > 0.2) grow(box(b - a, 0.06, 0.07, trimMat, (a + b) / 2, y, fz), "x", st, 0.2); });
+          [x0, x1].forEach(x => grow(box(0.07, 0.06, fz - bz, trimMat, x, y, (fz + bz) / 2), "z", st, 0.2));
+        });
+        grow(box(1.2, 0.18, 0.42, deck, gc, 0.2, fz + 0.1, "back"), "z", 4.45, 0.2);
       }
     }
 
@@ -552,8 +564,8 @@
       winGeo.rotateZ(Math.PI / 2);
       const rw = new T.Mesh(winGeo, mat.glass);
       rw.position.set(-Lb / 2 - 0.02, cy + 0.15, 0);
-      slide(rw, -1.2, 0, 3.4, 0.25);
-      if (P.panoramic) { const pw = box(0.06, 1.5, 1.4, mat.glass, Lb / 2 + 0.02, cy - 0.05, -0.45); slide(pw, 1.2, 0, 3.45, 0.25); }
+      slide(rw, -0.4, 0, 3.4, 0.25);
+      if (P.panoramic) { const pw = box(0.06, 1.5, 1.4, mat.glass, Lb / 2 + 0.02, cy - 0.05, -0.45); slide(pw, 0.4, 0, 3.45, 0.25); }
       const pipe = shadowy(new T.Mesh(new T.CylinderGeometry(0.09, 0.09, 1.3, 16), hoopMat));
       pipe.position.set(-Lb / 4, cy + R + 0.3, 0);
       drop(pipe, 1.5, 3.8, 0.2);
