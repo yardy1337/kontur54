@@ -166,7 +166,8 @@ h3 { font-size: var(--fs-lg); font-weight: 500; line-height: var(--lh-snug); }
 .studio-link { display: inline-flex; align-items: center; gap: var(--s-2); min-height: 34px; padding: 0 12px 0 6px; border-radius: var(--r-md); border: 1px solid color-mix(in srgb, var(--c-on-primary-muted) 45%, transparent); color: var(--c-on-primary); font: 600 13px/1 var(--font-body); text-decoration: none; white-space: nowrap; transition: background var(--dur-1), border-color var(--dur-1); }
 .studio-link:hover { background: color-mix(in srgb, var(--c-on-primary) 12%, transparent); border-color: var(--c-on-primary-muted); }
 .studio-link svg { width: 22px; height: 22px; flex: none; }
-.studio-foot { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.studio-foot { display: inline-flex; align-items: center; gap: var(--s-2); color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.studio-foot svg { width: 20px; height: 20px; flex: none; }
 .studio-foot:hover { color: var(--c-accent); }
 .top { border-bottom: 1px solid var(--c-divider); }
 .top .in { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); min-height: 68px; flex-wrap: wrap; }
