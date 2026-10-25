@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Yardy Project</title>
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <meta name="description" content="Студия веб-разработки: сайты, лендинги и веб-приложения с 3D-графикой. От 10 000 ₽, демо бесплатно за 24 часа.">
 <meta property="og:title" content="Yardy Project — сайты и веб-разработка">
 <meta property="og:description" content="Сайты с 3D-графикой, которые продают. От 10 000 ₽, демо бесплатно за 24 часа.">
@@ -47,7 +50,7 @@ p { margin: 0; }
 
 .top .in { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 20px; }
 .logo { font-family: var(--f-display); font-weight: 700; font-size: 20px; letter-spacing: .04em; text-decoration: none; display: flex; align-items: center; gap: 10px; }
-.logo i { width: 12px; height: 12px; background: var(--accent); display: inline-block; transform: rotate(45deg); }
+.logo svg { width: 34px; height: 34px; flex: none; }
 .nav { display: flex; gap: 26px; font-size: 15px; }
 .nav a { text-decoration: none; color: var(--muted); }
 .nav a:hover { color: var(--ink); }
@@ -129,7 +132,7 @@ footer .in { padding-block: 28px 36px; display: flex; flex-wrap: wrap; justify-c
 
 <header class="top">
   <div class="in">
-    <a class="logo" href="#"><i></i>YARDY PROJECT</a>
+    <a class="logo" href="#" aria-label="Yardy Project — на главную"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="13" fill="#f2a33a"/><path d="M17 14 L32 31 L47 14 M32 31 V51" fill="none" stroke="#0a1626" stroke-width="7.5" stroke-linecap="square"/><circle cx="32" cy="31" r="3.2" fill="#f2a33a"/></svg>YARDY PROJECT</a>
     <nav class="nav" aria-label="Разделы">
       <a href="#works">Работы</a>
       <a href="#how">Как работаем</a>

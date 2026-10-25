@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Y как узел каркаса: два раскоса сходятся на стойке; засечки — как на чертеже -->
+  <path d="M14 11 L32 31 L50 11 M32 31 V54" stroke="#f2a33a" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M8.5 15.5 L19.5 6.5 M44.5 6.5 L55.5 15.5 M25 57 H39" stroke="#e9eef5" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="32" cy="31" r="4.5" fill="#0a1626" stroke="#e9eef5" stroke-width="2"/>
+</svg>
