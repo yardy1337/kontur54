@@ -14,7 +14,8 @@ window.SITE = {
     "logo": "https://ams2-cdn.2gis.com/previews/1243306666691133440/da0b7d8c-0870-49d1-8d42-5d80a21b5d5c/1/ru/image.png",
     "photos": [
       "https://i3.photo.2gis.com/main/branch/1/70000001047497560/common"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 4,8 ★ · 32 отзывов"
   },
   "hero": {
     "title": "Дома и бани из бруса в Новосибирске <em>под ключ</em>",
@@ -224,6 +225,58 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор дома",
+    "presets": [
+      {
+        "name": "Дом из бруса",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 8,
+          "roof": "gable",
+          "walls": "timber",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Дом с мансардой",
+        "params": {
+          "type": "house",
+          "length": 9,
+          "width": 8,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "timber",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Барнхаус",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 7,
+          "roof": "barn",
+          "walls": "frame",
+          "panoramic": true,
+          "roofColor": "#2b2f33",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 4,
+          "roof": "gable",
+          "walls": "timber",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

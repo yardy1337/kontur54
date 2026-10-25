@@ -14,7 +14,8 @@ window.SITE = {
     "logo": "https://ams2-cdn.2gis.com/previews/1198140963965370371/c5f4ad04-d900-4ae0-a0dd-a4787b9e0c5f/1/ru/image.png",
     "photos": [
       "https://i2.photo.2gis.com/main/branch/1/70000001022960435/common"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 5 ★ · 55 отзывов"
   },
   "hero": {
     "title": "Строим дома в Новосибирске <em>под ключ</em>",
@@ -234,6 +235,58 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор дома",
+    "presets": [
+      {
+        "name": "Каркасный дом",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 8,
+          "roof": "gable",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Дом с мансардой",
+        "params": {
+          "type": "house",
+          "length": 9,
+          "width": 8,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Барнхаус",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 7,
+          "roof": "barn",
+          "walls": "frame",
+          "panoramic": true,
+          "roofColor": "#2b2f33",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 4,
+          "roof": "gable",
+          "walls": "timber",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

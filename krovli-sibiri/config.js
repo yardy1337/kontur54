@@ -14,7 +14,8 @@ window.SITE = {
     "logo": "https://ams2-cdn.2gis.com/previews/1084736212633124867/0fed401d-7a50-474b-bbb3-edf2c9eabff7/1/ru/image.png",
     "photos": [
       "https://i5.photo.2gis.com/main/branch/1/70000001027109838/common"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 4,1 ★ · 27 отзывов"
   },
   "hero": {
     "title": "Бани в Новосибирске <em>для сибирской зимы</em>",
@@ -239,6 +240,54 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор бани",
+    "presets": [
+      {
+        "name": "Баня из бруса",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 4,
+          "roof": "gable",
+          "walls": "timber",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Каркасная баня",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 4,
+          "roof": "gable",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня с комнатой отдыха",
+        "params": {
+          "type": "house",
+          "length": 8,
+          "width": 5,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "timber",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня-бочка",
+        "params": {
+          "type": "barrel",
+          "length": 4,
+          "wood": "natural",
+          "terrace": true
+        }
+      }
+    ]
   },
   "about": {
     "title": "Кровли Сибири",

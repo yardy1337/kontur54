@@ -14,7 +14,8 @@ window.SITE = {
     "logo": "https://ams2-cdn.2gis.com/previews/1243473642679959555/72809581-6b3a-4a8d-9edf-18b4c4a2ffbc/1/ru/image.png",
     "photos": [
       "https://i6.photo.2gis.com/main/branch/2/70000001103859007/common"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 5 ★ · 29 отзывов"
   },
   "hero": {
     "title": "Бани в Омске <em>для сибирской зимы</em>",
@@ -234,6 +235,43 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор бани",
+    "presets": [
+      {
+        "name": "Баня из бруса",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 4,
+          "roof": "gable",
+          "walls": "timber",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня с комнатой отдыха",
+        "params": {
+          "type": "house",
+          "length": 8,
+          "width": 5,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "timber",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня-бочка",
+        "params": {
+          "type": "barrel",
+          "length": 4,
+          "wood": "natural",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

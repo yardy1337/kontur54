@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i4.photo.2gis.com/main/branch/3/70000001112985933/common",
       "https://ams2-cdn.2gis.com/previews/1249170259458392067/f232aba7-e2bd-4925-a161-f17719ee1e06/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 5 ★ · 13 отзывов"
   },
   "hero": {
     "title": "Кедровые бани в Томске <em>под ключ</em>",
@@ -230,6 +231,32 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор бани",
+    "presets": [
+      {
+        "name": "Баня-бочка",
+        "params": {
+          "type": "barrel",
+          "length": 4,
+          "wood": "natural",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня с комнатой отдыха",
+        "params": {
+          "type": "house",
+          "length": 8,
+          "width": 5,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "timber",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

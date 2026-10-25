@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i2.photo.2gis.com/main/branch/1/70000001007270911/common",
       "https://ams2-cdn.2gis.com/previews/1252365305410224131/3a3a1cef-b3e6-4637-8301-c14deb33e65d/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 5 ★ · 80 отзывов"
   },
   "hero": {
     "title": "Кедровые бани в Новосибирске <em>под ключ</em>",
@@ -230,6 +231,44 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор бани",
+    "presets": [
+      {
+        "name": "Баня-бочка",
+        "params": {
+          "type": "barrel",
+          "length": 4,
+          "wood": "natural",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Модульная баня",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 3,
+          "roof": "shed",
+          "walls": "frame",
+          "panoramic": true,
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня с комнатой отдыха",
+        "params": {
+          "type": "house",
+          "length": 8,
+          "width": 5,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "timber",
+          "terrace": true
+        }
+      }
+    ]
   },
   "about": {
     "title": "Кедровая Делянка",

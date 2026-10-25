@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i8.photo.2gis.com/main/branch/1/70000001021269753/common",
       "https://ams2-cdn.2gis.com/previews/1216715333591629824/9125d096-846c-4b4e-b407-af9f77f4868d/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 4,5 ★ · 27 отзывов"
   },
   "hero": {
     "title": "Покраска домов и бань в Новосибирске <em>под ключ</em>",

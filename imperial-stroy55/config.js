@@ -14,7 +14,8 @@ window.SITE = {
     "logo": "https://ams2-cdn.2gis.com/previews/1055467804867690632/28672183-55ef-4e55-ba29-6c5548b6325d/1/ru/image.png",
     "photos": [
       "https://i3.photo.2gis.com/main/branch/2/70000001020820578/common"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 4,9 ★ · 288 отзывов"
   },
   "hero": {
     "title": "Ремонт квартир в Омске <em>под ключ</em>",

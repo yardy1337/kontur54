@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i2.photo.2gis.com/main/branch/2/70000001007152305/common",
       "https://ams2-cdn.2gis.com/previews/1095605813843591168/263b1ea2-92c1-44da-b0a3-15f67b2eb6b7/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 4,7 ★ · 98 отзывов"
   },
   "hero": {
     "title": "Строим дома в Омске <em>под ключ</em>",
@@ -235,6 +236,47 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор дома",
+    "presets": [
+      {
+        "name": "Каркасный дом",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 8,
+          "roof": "gable",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Дом с мансардой",
+        "params": {
+          "type": "house",
+          "length": 9,
+          "width": 8,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Барнхаус",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 7,
+          "roof": "barn",
+          "walls": "frame",
+          "panoramic": true,
+          "roofColor": "#2b2f33",
+          "terrace": true
+        }
+      }
+    ]
   },
   "about": {
     "title": "ДОМ 55",

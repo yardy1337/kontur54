@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i4.photo.2gis.com/main/branch/2/282003258973185/common",
       "https://ams2-cdn.2gis.com/previews/1053849068352045246/1bc8d996-1412-4ac6-ae6d-27fe6e53a2c3/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 4,8 ★ · 62 отзывов"
   },
   "hero": {
     "title": "Строим дома в Омске <em>под ключ</em>",
@@ -240,6 +241,58 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор дома",
+    "presets": [
+      {
+        "name": "Дом из газобетона",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 8,
+          "roof": "gable",
+          "walls": "gas",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Дом с мансардой",
+        "params": {
+          "type": "house",
+          "length": 9,
+          "width": 8,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "gas",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Барнхаус",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 7,
+          "roof": "barn",
+          "walls": "gas",
+          "panoramic": true,
+          "roofColor": "#2b2f33",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 4,
+          "roof": "gable",
+          "walls": "timber",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

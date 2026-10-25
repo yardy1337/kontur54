@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i8.photo.2gis.com/main/branch/11/70000001091415012/common",
       "https://ams2-cdn.2gis.com/previews/1201684530163875843/055387f4-6c36-46fc-9cb1-e8471cf956fd/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 5 ★ · 37 отзывов"
   },
   "hero": {
     "title": "Строим дома в Иркутске <em>под ключ</em>",
@@ -225,6 +226,69 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор дома",
+    "presets": [
+      {
+        "name": "Дачный домик",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 4,
+          "roof": "shed",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Каркасный дом",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 8,
+          "roof": "gable",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Дом с мансардой",
+        "params": {
+          "type": "house",
+          "length": 9,
+          "width": 8,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Барнхаус",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 7,
+          "roof": "barn",
+          "walls": "frame",
+          "panoramic": true,
+          "roofColor": "#2b2f33",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 4,
+          "roof": "gable",
+          "walls": "timber",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

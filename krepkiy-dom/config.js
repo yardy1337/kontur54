@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i1.photo.2gis.com/main/branch/3/70000001029346969/common",
       "https://ams2-cdn.2gis.com/previews/1245701861529354243/8c988cdb-aaf1-4445-9d75-c3b8b6f7e3fa/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 5 ★ · 118 отзывов"
   },
   "hero": {
     "title": "Строим дома в Томске <em>под ключ</em>",
@@ -235,6 +236,58 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор дома",
+    "presets": [
+      {
+        "name": "Каркасный дом",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 8,
+          "roof": "gable",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Дом с мансардой",
+        "params": {
+          "type": "house",
+          "length": 9,
+          "width": 8,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Барнхаус",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 7,
+          "roof": "barn",
+          "walls": "frame",
+          "panoramic": true,
+          "roofColor": "#2b2f33",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 4,
+          "roof": "gable",
+          "walls": "timber",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

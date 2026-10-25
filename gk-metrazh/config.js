@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i1.photo.2gis.com/main/branch/1/141265771711254/common",
       "https://ams2-cdn.2gis.com/previews/1135457325105020931/6d25dc1d-83e2-48ef-9e50-707ef46dbc6b/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 4,8 ★ · 57 отзывов"
   },
   "hero": {
     "title": "Ремонт квартир в Новосибирске <em>под ключ</em>",

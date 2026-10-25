@@ -14,7 +14,8 @@ window.SITE = {
     "logo": "https://ams2-cdn.2gis.com/previews/1254483603539099651/85de9fb6-379b-4285-99d0-26539ec19a4f/1/ru/image.png",
     "photos": [
       "https://i1.photo.2gis.com/main/branch/11/70000001078707326/common"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС"
   },
   "hero": {
     "title": "Модульные бани в Иркутске <em>под ключ</em>",
@@ -230,6 +231,44 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор бани",
+    "presets": [
+      {
+        "name": "Модульная баня",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 3,
+          "roof": "shed",
+          "walls": "frame",
+          "panoramic": true,
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня с комнатой отдыха",
+        "params": {
+          "type": "house",
+          "length": 8,
+          "width": 5,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "timber",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня-бочка",
+        "params": {
+          "type": "barrel",
+          "length": 4,
+          "wood": "natural",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

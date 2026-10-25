@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i7.photo.2gis.com/main/branch/3/70000001043690406/common",
       "https://ams2-cdn.2gis.com/previews/1236981623988158467/1c3ec2cb-a206-4527-8089-62daf44a4ddb/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 4,9 ★ · 39 отзывов"
   },
   "hero": {
     "title": "Модульные бани в Томске <em>под ключ</em>",
@@ -235,6 +236,44 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор бани",
+    "presets": [
+      {
+        "name": "Модульная баня",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 3,
+          "roof": "shed",
+          "walls": "frame",
+          "panoramic": true,
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня с комнатой отдыха",
+        "params": {
+          "type": "house",
+          "length": 8,
+          "width": 5,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "timber",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня-бочка",
+        "params": {
+          "type": "barrel",
+          "length": 4,
+          "wood": "natural",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

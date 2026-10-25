@@ -14,7 +14,8 @@ window.SITE = {
     "logo": "https://ams2-cdn.2gis.com/previews/1135041453840400387/bb9125de-ba7f-43fb-9c41-d703db9556a1/1/ru/image.png",
     "photos": [
       "https://i3.photo.2gis.com/main/branch/2/70000001019824507/common"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 4,8 ★ · 110 отзывов"
   },
   "hero": {
     "title": "Дачные домики, бани и хозблоки в Омске",
@@ -234,6 +235,58 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор дома",
+    "presets": [
+      {
+        "name": "Дачный домик",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 4,
+          "roof": "shed",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Дом из бруса",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 8,
+          "roof": "gable",
+          "walls": "timber",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Дом с мансардой",
+        "params": {
+          "type": "house",
+          "length": 9,
+          "width": 8,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "timber",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Барнхаус",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 7,
+          "roof": "barn",
+          "walls": "frame",
+          "panoramic": true,
+          "roofColor": "#2b2f33",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

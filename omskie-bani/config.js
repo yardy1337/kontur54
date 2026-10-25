@@ -14,7 +14,8 @@ window.SITE = {
     "logo": "https://ams2-cdn.2gis.com/previews/1193071322704379907/cfef7977-8acb-43a3-9359-4fa8a6997bdb/1/ru/image.png",
     "photos": [
       "https://i6.photo.2gis.com/main/branch/2/70000001083685940/common"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 5 ★ · 8 отзывов"
   },
   "hero": {
     "title": "Модульные бани в Омске <em>под ключ</em>",
@@ -234,6 +235,44 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор бани",
+    "presets": [
+      {
+        "name": "Модульная баня",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 3,
+          "roof": "shed",
+          "walls": "frame",
+          "panoramic": true,
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня с комнатой отдыха",
+        "params": {
+          "type": "house",
+          "length": 8,
+          "width": 5,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "timber",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня-бочка",
+        "params": {
+          "type": "barrel",
+          "length": 4,
+          "wood": "natural",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

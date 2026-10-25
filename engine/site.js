@@ -38,8 +38,26 @@
     view: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.5 14 5v6l-6 3.5L2 11V5z"/><path d="M2 5l6 3.5L14 5M8 8.5v6"/></svg>'
   };
 
-  // цвета фасада для конструктора: пустое значение — цвет шаблона
-  const FACADES = [["", "Графит"], ["#e9e6df", "Светлый"], ["#3f5b4c", "Хвойный"], ["#2f4a63", "Синий"], ["#7a3b32", "Кирпичный"]];
+  // палитры конструктора: пустое значение — цвет шаблона
+  const FACADES = [["", "Как в проекте"], ["#e9e6df", "Светлый"], ["#3a4247", "Графит"], ["#3f5b4c", "Хвойный"], ["#2f4a63", "Синий"], ["#7a3b32", "Кирпичный"]];
+  const ROOFS = [["", "Как в проекте"], ["#2b2f33", "Графит"], ["#5a3a28", "Шоколад"], ["#2f4f3a", "Зелёный"], ["#7c2f2a", "Вишня"], ["#2b3f5c", "Синий"]];
+  const TRIMS = [["", "Дерево"], ["#f2f0ea", "Белый"], ["#2d3236", "Графит"], ["#5b3a26", "Орех"]];
+  const DEFAULT_PRESETS = [
+    { name: "Одноэтажный дом", params: { type: "house", length: 10, width: 8, roof: "gable", floors: "one", walls: "frame", terrace: true } },
+    { name: "Дом с мансардой", params: { type: "house", length: 9, width: 8, roof: "gable", floors: "mansard", walls: "frame", terrace: true } },
+    { name: "Барнхаус", params: { type: "house", length: 10, width: 7, roof: "barn", floors: "one", walls: "frame", panoramic: true, roofColor: "#2b2f33", terrace: true } },
+    { name: "Модульный дом", params: { type: "house", length: 8, width: 3.5, roof: "flat", floors: "one", walls: "frame", panoramic: true, terrace: true } }
+  ];
+  const CFG = S.configurator === false ? null : Object.assign({ title: "Конструктор дома", presets: DEFAULT_PRESETS }, S.configurator || {});
+  const segRow = (name, label, items, forType) => `<fieldset class="cfg-row" data-for="${forType || ""}"><legend class="label">${label}</legend><div class="seg">${items.map(([v, n], i) => `<input type="radio" name="cfg-${name}" id="cfg-${name}-${v}" value="${v}"${i === 0 ? " checked" : ""}><label for="cfg-${name}-${v}">${n}</label>`).join("")}</div></fieldset>`;
+  const swatchRow = (name, label, items, forType) => `<fieldset class="cfg-row" data-for="${forType || ""}"><legend class="label">${label}</legend><div class="swatches">${items.map(([v, n], i) => `<input type="radio" name="cfg-${name}" id="cfg-${name}-${i}" value="${v}"${i === 0 ? " checked" : ""}><label for="cfg-${name}-${i}" title="${n}" style="--sw:${v || "conic-gradient(var(--c-border-strong) 0 25%, var(--c-surface) 0 50%, var(--c-border-strong) 0 75%, var(--c-surface) 0)"}"><span class="sr-only">${n}</span></label>`).join("")}</div></fieldset>`;
+  // фото из 2ГИС может не загрузиться: убираем кадр, а пустую галерею — целиком
+  window.photoFail = img => {
+    const a = img.closest(".ph"), g = a.parentElement;
+    a.remove();
+    g.className = "photos-grid n" + g.children.length;
+    if (!g.children.length) g.closest(".photos").remove();
+  };
   const c = S.company, h = S.hero;
   const P = c.photos || []; // реальные фото компании (из 2ГИС), первое — главное
   const touch = matchMedia("(pointer: coarse)").matches;
@@ -77,7 +95,6 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
     </div>
 
     <div class="stage-wrap">
-      ${P[0] ? `<figure class="hero-photo"><img src="${esc(P[0])}" alt="Объект компании ${esc(c.name)}" referrerpolicy="no-referrer" onerror="this.closest('figure').remove()"><figcaption>Наш объект · ${esc(c.cities[0])}</figcaption></figure>` : ""}
       <div class="scene" id="scene">
         <canvas id="c" tabindex="0" role="img" aria-label="3D-модель дома, который собирается по этапам строительства" aria-describedby="scene-keys"></canvas>
         <p class="sr-only" id="scene-keys">Стрелки поворачивают модель, плюс и минус приближают, цифры от 1 до 5 переключают этапы, пробел ставит сборку на паузу.</p>
@@ -96,30 +113,34 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
         <span class="term" id="st-term"></span>
         <p id="st-text"></p>
       </div>
-      ${S.configurator === false ? "" : `
+      ${P.length ? `
+      <section class="photos" aria-label="Фото компании">
+        <div class="photos-head"><span class="dim">Фото компании</span><span class="photos-meta">${esc(c.photoNote || "")}</span></div>
+        <div class="photos-grid n${P.length}">${P.map((u, i) => `<a class="ph" href="${esc(u)}" target="_blank" rel="noopener" aria-label="Открыть фото ${i + 1}"><img src="${esc(u)}" alt="Фото компании ${esc(c.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="photoFail(this)"></a>`).join("")}</div>
+      </section>` : ""}
+      ${CFG ? `
       <details class="config" id="config">
-        <summary><span><b>Конструктор дома</b><span class="muted"> · поменяйте размеры и посмотрите конструкцию</span></span><span class="cfg-area" id="cfg-area"></span></summary>
+        <summary><span><b>${esc(CFG.title)}</b><span class="muted"> · выберите тип и настройте под себя</span></span><span class="cfg-area" id="cfg-area"></span></summary>
         <div class="cfg-body">
-          <div class="cfg-row"><label class="label" for="cfg-len">Длина</label><input type="range" id="cfg-len" min="6" max="14" step="0.5" value="10"><output id="cfg-len-out">10 м</output></div>
-          <div class="cfg-row"><label class="label" for="cfg-wid">Ширина</label><input type="range" id="cfg-wid" min="6" max="10" step="0.5" value="8"><output id="cfg-wid-out">8 м</output></div>
-          <fieldset class="cfg-row"><legend class="label">Кровля</legend><div class="seg">
-            <input type="radio" name="cfg-roof" id="cfg-roof-low" value="low"><label for="cfg-roof-low">Пологая</label>
-            <input type="radio" name="cfg-roof" id="cfg-roof-classic" value="classic" checked><label for="cfg-roof-classic">Классика</label>
-            <input type="radio" name="cfg-roof" id="cfg-roof-mansard" value="mansard"><label for="cfg-roof-mansard">Мансарда</label></div></fieldset>
-          <fieldset class="cfg-row"><legend class="label">Стены</legend><div class="seg">
-            <input type="radio" name="cfg-walls" id="cfg-walls-frame" value="frame" checked><label for="cfg-walls-frame">Каркас</label>
-            <input type="radio" name="cfg-walls" id="cfg-walls-timber" value="timber"><label for="cfg-walls-timber">Брус</label>
-            <input type="radio" name="cfg-walls" id="cfg-walls-gas" value="gas"><label for="cfg-walls-gas">Газобетон</label></div></fieldset>
-          <fieldset class="cfg-row" id="cfg-facade"><legend class="label">Цвет фасада</legend><div class="swatches">
-            ${FACADES.map(([v, n], i) => `<input type="radio" name="cfg-facade" id="cfg-f${i}" value="${v}"${i === 0 ? " checked" : ""}><label for="cfg-f${i}" title="${n}" style="--sw:${v || "var(--house-wall)"}"><span class="sr-only">${n}</span></label>`).join("")}
-          </div></fieldset>
+          <fieldset class="cfg-row cfg-types"><legend class="label">Тип</legend><div class="seg">
+            ${CFG.presets.map((pr, i) => `<input type="radio" name="cfg-type" id="cfg-t${i}" value="${i}"${i === 0 ? " checked" : ""}><label for="cfg-t${i}">${esc(pr.name)}</label>`).join("")}</div></fieldset>
+          <div class="cfg-row"><label class="label" for="cfg-len">Длина</label><input type="range" id="cfg-len" min="6" max="14" step="0.5" value="10"><output id="cfg-len-out"></output></div>
+          <div class="cfg-row" data-for="house"><label class="label" for="cfg-wid">Ширина</label><input type="range" id="cfg-wid" min="3" max="10" step="0.5" value="8"><output id="cfg-wid-out"></output></div>
+          ${segRow("roof", "Кровля", [["gable", "Двускатная"], ["shed", "Односкатная"], ["flat", "Плоская"], ["barn", "Барнхаус"]], "house")}
+          ${segRow("floors", "Этажность", [["one", "1 этаж"], ["mansard", "С мансардой"]], "house")}
+          ${segRow("walls", "Стены", [["frame", "Каркас"], ["timber", "Брус"], ["gas", "Газобетон"]], "house")}
+          ${swatchRow("facade", "Цвет фасада", FACADES, "facade")}
+          ${segRow("wood", "Древесина", [["natural", "Натуральная"], ["light", "Светлая"], ["dark", "Тёмная"]], "wood")}
+          ${swatchRow("roofColor", "Кровля", ROOFS)}
+          ${swatchRow("trim", "Окна и отделка", TRIMS)}
           <div class="cfg-row cfg-toggles">
             <label class="check"><input type="checkbox" id="cfg-terrace" checked> Терраса</label>
-            <button class="btn" type="button" id="cfg-cut" aria-pressed="false">Показать стену в разрезе</button>
+            <label class="check"><input type="checkbox" id="cfg-panoramic"> Панорамные окна</label>
+            <button class="btn" type="button" id="cfg-cut" aria-pressed="false">Показать в разрезе</button>
           </div>
-          <div class="cfg-row cfg-go"><span id="cfg-sum"></span><a class="btn primary" href="#calc" id="cfg-calc">Посчитать этот дом</a></div>
+          <div class="cfg-row cfg-go"><span id="cfg-sum"></span><a class="btn primary" href="#calc" id="cfg-calc">Посчитать стоимость</a></div>
         </div>
-      </details>`}
+      </details>` : ""}
     </div>
   </div>
 </section>
@@ -130,24 +151,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
   </div>
 </section>
 
-${S.about && P[0] ? `
-<section class="about" aria-labelledby="about-h">
-  <div class="in about-grid">
-    <figure class="about-photo">
-      <img class="about-main" src="${esc(P[0])}" alt="Фото компании ${esc(c.name)}" loading="lazy" referrerpolicy="no-referrer"
-        onerror="this.closest('.about').classList.add('nophoto');this.closest('figure').remove()">
-      ${P[1] ? `<img class="about-inset" src="${esc(P[1])}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
-      <figcaption>${esc(S.about.caption || "Фото компании")}</figcaption>
-    </figure>
-    <div class="about-text">
-      <span class="dim">О компании</span>
-      <h2 id="about-h">${esc(S.about.title)}</h2>
-      <p>${esc(S.about.text)}</p>
-      <ul class="about-points">${S.about.points.map(x => `<li>${esc(x)}</li>`).join("")}</ul>
-      <div><a class="btn primary" href="#lead">Обсудить проект</a></div>
-    </div>
-  </div>
-</section>` : ""}
+
 
 <section class="block" id="services">
   <div class="in">
@@ -308,45 +312,64 @@ ${S.about && P[0] ? `
     /* ---------- Конструктор ---------- */
     const cfg = document.getElementById("config");
     if (cfg) {
-      const val = n => (cfg.querySelector(`input[name="${n}"]:checked`) || {}).value;
+      const val = n => (cfg.querySelector(`input[name="cfg-${n}"]:checked`) || {}).value;
+      const setVal = (n, v) => { const el = cfg.querySelector(`input[name="cfg-${n}"][value="${v}"]`); if (el) el.checked = true; };
       const len = document.getElementById("cfg-len"), wid = document.getElementById("cfg-wid");
-      const WALLS = { frame: "Каркас", timber: "Брус", gas: "Газобетон" };
-      let raf = 0;
+      const WALLS = { frame: "каркас", timber: "брус", gas: "газобетон" };
+      const RANGE = { house: [6, 14], barrel: [3, 6] };
+      let raf = 0, type = "house";
+      function applyPreset(i) {
+        const pr = Object.assign({ type: "house", roof: "gable", floors: "one", walls: "frame", facade: "", roofColor: "", trim: "", wood: "natural", panoramic: false, terrace: true }, CFG.presets[i].params);
+        type = pr.type;
+        const [mn, mx] = RANGE[type] || RANGE.house;
+        len.min = mn; len.max = mx; len.value = pr.length;
+        wid.value = pr.width || 8;
+        ["roof", "floors", "walls", "wood", "facade", "roofColor", "trim"].forEach(k => setVal(k, pr[k]));
+        document.getElementById("cfg-terrace").checked = !!pr.terrace;
+        document.getElementById("cfg-panoramic").checked = !!pr.panoramic;
+        sync();
+      }
       function sync() {
-        const params = { length: +len.value, width: +wid.value, roof: val("cfg-roof"), walls: val("cfg-walls"),
-          facade: val("cfg-facade") || "", terrace: document.getElementById("cfg-terrace").checked };
-        document.getElementById("cfg-len-out").textContent = String(params.length).replace(".", ",") + " м";
-        document.getElementById("cfg-wid-out").textContent = String(params.width).replace(".", ",") + " м";
-        // у бруса свой цвет дерева, фасад красить не предлагаем
-        document.getElementById("cfg-facade").disabled = params.walls === "timber";
+        const p = { type, length: +len.value, width: +wid.value, roof: val("roof"), floors: val("floors"), walls: val("walls"),
+          wood: val("wood"), facade: val("facade") || "", roofColor: val("roofColor") || "", trim: val("trim") || "",
+          terrace: document.getElementById("cfg-terrace").checked, panoramic: document.getElementById("cfg-panoramic").checked };
+        // показываем только те настройки, что имеют смысл для выбранного типа
+        const woody = type === "barrel" || p.walls === "timber";
+        cfg.querySelectorAll("[data-for]").forEach(el => {
+          const f = el.dataset.for;
+          el.hidden = (f === "house" && type !== "house") || (f === "facade" && (type !== "house" || p.walls === "timber")) || (f === "wood" && !woody);
+        });
+        document.getElementById("cfg-len-out").textContent = String(p.length).replace(".", ",") + " м";
+        document.getElementById("cfg-wid-out").textContent = String(p.width).replace(".", ",") + " м";
         cancelAnimationFrame(raf);
         raf = requestAnimationFrame(() => {
-          house.configure(params);
+          house.configure(p);
           const pr = house.params();
-          const text = `≈ ${pr.area} м² · ${WALLS[pr.walls]}${pr.roof === "mansard" ? " · с мансардой" : ""}`;
+          const what = type === "barrel" ? "баня-бочка" : WALLS[pr.walls] + (pr.floors === "mansard" && pr.roof !== "flat" ? ", с мансардой" : "");
+          const text = `≈ ${pr.area} м² · ${what}`;
           document.getElementById("cfg-area").textContent = text;
-          document.getElementById("cfg-sum").textContent = `Площадь ${text}`;
+          document.getElementById("cfg-sum").textContent = "Площадь " + text;
         });
       }
-      cfg.addEventListener("input", sync);
+      cfg.addEventListener("input", e => { if (e.target.name === "cfg-type") applyPreset(+e.target.value); else sync(); });
       const cut = document.getElementById("cfg-cut");
       cut.addEventListener("click", () => {
         const on = cut.getAttribute("aria-pressed") !== "true";
         cut.setAttribute("aria-pressed", String(on));
-        cut.textContent = on ? "Скрыть разрез" : "Показать стену в разрезе";
+        cut.textContent = on ? "Скрыть разрез" : "Показать в разрезе";
         house.setCut(on);
       });
-      // «Посчитать этот дом»: переносим площадь и материал в калькулятор
+      // «Посчитать стоимость»: площадь и материал из конструктора переходят в калькулятор
       document.getElementById("cfg-calc").addEventListener("click", () => {
         const pr = house.params();
         const ar = document.getElementById("area");
         ar.value = Math.max(+ar.min, Math.min(+ar.max, pr.area));
-        const m = document.getElementById("mat-" + pr.walls);
+        const m = document.getElementById("mat-" + (pr.type === "barrel" ? "cedar" : pr.walls)) || document.getElementById("mat-timber");
         if (m) m.checked = true;
         ar.dispatchEvent(new Event("input", { bubbles: true }));
       });
       if (matchMedia("(min-width: 901px)").matches) cfg.open = true;
-      sync();
+      applyPreset(0);
     }
     playBtn.addEventListener("click", () => house.toggle());
     document.getElementById("view-btn").addEventListener("click", () => house.resetView());

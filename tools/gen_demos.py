@@ -130,6 +130,43 @@ def brand_theme(color):
     return {"light": light, "dark": dark}
 
 
+# ---------- Конструктор: типы построек, которые делает компания ----------
+
+def configurator_for(seg, text):
+    """Набор пресетов для 3D-конструктора по тому, что компания строит (рубрики и слоган из 2ГИС)."""
+    P = []
+    add = lambda name, **params: P.append({"name": name, "params": params})
+    if seg == "Бани":
+        if has(text, "бочк", "кедр"):
+            add("Баня-бочка", type="barrel", length=4, wood="natural", terrace=True)
+        if has(text, "модульн"):
+            add("Модульная баня", type="house", length=6, width=3, roof="shed", walls="frame", panoramic=True, terrace=True)
+        if has(text, "брус", "бревн", "сруб") or not P:
+            add("Баня из бруса", type="house", length=6, width=4, roof="gable", walls="timber", terrace=True)
+        if has(text, "каркас"):
+            add("Каркасная баня", type="house", length=6, width=4, roof="gable", walls="frame", terrace=True)
+        add("Баня с комнатой отдыха", type="house", length=8, width=5, roof="gable", floors="mansard",
+            walls="frame" if has(text, "каркас") and not has(text, "брус") else "timber", terrace=True)
+        if not any(p["params"]["type"] == "barrel" for p in P):
+            add("Баня-бочка", type="barrel", length=4, wood="natural", terrace=True)
+        return {"title": "Конструктор бани", "presets": P[:5]}
+    walls = "timber" if has(text, "брус", "бревн", "деревян") else "gas" if has(text, "газобетон", "пеноблок", "камн", "камен", "кирпич") else "frame"
+    if has(text, "модульн"):
+        add("Модульный дом", type="house", length=8, width=3.5, roof="flat", walls="frame", panoramic=True, terrace=True)
+    if has(text, "бытовк", "хоз.блок", "хозблок", "дачн"):
+        add("Дачный домик", type="house", length=6, width=4, roof="shed", walls="frame", terrace=True)
+    name = {"timber": "Дом из бруса", "gas": "Дом из газобетона", "frame": "Каркасный дом"}[walls]
+    add(name, type="house", length=10, width=8, roof="gable", walls=walls, terrace=True)
+    if walls != "frame" and has(text, "каркас"):
+        add("Каркасный дом", type="house", length=10, width=8, roof="gable", walls="frame", terrace=True)
+    add("Дом с мансардой", type="house", length=9, width=8, roof="gable", floors="mansard", walls=walls, terrace=True)
+    add("Барнхаус", type="house", length=10, width=7, roof="barn", walls="frame" if walls == "timber" else walls,
+        panoramic=True, roofColor="#2b2f33", terrace=True)
+    if has(text, "бан"):
+        add("Баня", type="house", length=6, width=4, roof="gable", walls="timber", terrace=True)
+    return {"title": "Конструктор дома", "presets": P[:5]}
+
+
 # ---------- Сегменты ----------
 
 def house_materials(text, k):
@@ -422,8 +459,10 @@ def build(seed, raw):
         "lead": dict(d["lead"], lead="Оставьте телефон — перезвоним и ответим на вопросы.",
                      success="Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."),
     }
-    if seg in ("Ремонт квартир", "Другое"):  # конструктор дома нужен тем, кто строит
+    if seg in ("Ремонт квартир", "Другое"):  # конструктор нужен тем, кто строит
         cfg["configurator"] = False
+    else:
+        cfg["configurator"] = configurator_for(seg, text)
     opts = (raw.get("ads") or {}).get("options") or {}
     logo = (opts.get("logo") or {}).get("img_url")
     if logo:
@@ -434,8 +473,9 @@ def build(seed, raw):
     album = next((e for e in raw.get("external_content") or [] if e.get("type") == "photo_album" and e.get("main_photo_url")), None)
     photos = [album["main_photo_url"]] if album else []
     photos += [im.get("url") for im in (opts.get("images") or []) if im.get("url")][:1]
-    if photos:  # реальные фото: вставка на первом экране и блок «О компании»
+    if photos:  # реальные фото из карточки 2ГИС: галерея над конструктором
         cfg["company"]["photos"] = photos
+        cfg["company"]["photoNote"] = "из карточки 2ГИС" + (f" · {str(rating).replace('.', ',')} ★ · {reviews} отзывов" if rating and reviews >= 3 else "")
         created = ((raw.get("dates") or {}).get("created_at") or "")[:4]
         points = []
         if rating and reviews >= 3:

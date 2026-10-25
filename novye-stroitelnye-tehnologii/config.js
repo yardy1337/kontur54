@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i5.photo.2gis.com/main/branch/11/70000001066811413/common",
       "https://ams2-cdn.2gis.com/previews/1234666677216477184/fa2e832c-f2cd-43d6-a5f5-c11eb3afc8fe/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 4,1 ★ · 4 отзывов"
   },
   "hero": {
     "title": "Кедровые бани в Иркутске <em>под ключ</em>",
@@ -235,6 +236,32 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор бани",
+    "presets": [
+      {
+        "name": "Баня-бочка",
+        "params": {
+          "type": "barrel",
+          "length": 4,
+          "wood": "natural",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня с комнатой отдыха",
+        "params": {
+          "type": "house",
+          "length": 8,
+          "width": 5,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "timber",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

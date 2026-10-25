@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i3.photo.2gis.com/main/branch/3/70000001080762913/common",
       "https://ams2-cdn.2gis.com/previews/1179586476086657024/f2efb360-38bb-4f83-9c60-dcbfa0a50379/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 5 ★ · 45 отзывов"
   },
   "hero": {
     "title": "Ремонт квартир в Томске <em>под ключ</em>",

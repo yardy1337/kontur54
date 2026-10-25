@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i0.photo.2gis.com/main/branch/11/70000001102241465/common",
       "https://ams2-cdn.2gis.com/previews/1223464313214205952/6e031aca-1e5b-4dbb-b504-0352422b8dd3/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 5 ★ · 3 отзывов"
   },
   "hero": {
     "title": "Строительство и ремонт помещений в Иркутске",

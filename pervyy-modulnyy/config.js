@@ -15,7 +15,8 @@ window.SITE = {
     "photos": [
       "https://i3.photo.2gis.com/main/branch/1/70000001105988751/common",
       "https://ams2-cdn.2gis.com/previews/1233084032065994752/444ec724-19ab-466d-bd04-63c433547e79/3/ru/"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 5 ★ · 4 отзывов"
   },
   "hero": {
     "title": "Модульные дома и бани в Новосибирске <em>под ключ</em>",
@@ -225,6 +226,70 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор дома",
+    "presets": [
+      {
+        "name": "Модульный дом",
+        "params": {
+          "type": "house",
+          "length": 8,
+          "width": 3.5,
+          "roof": "flat",
+          "walls": "frame",
+          "panoramic": true,
+          "terrace": true
+        }
+      },
+      {
+        "name": "Каркасный дом",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 8,
+          "roof": "gable",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Дом с мансардой",
+        "params": {
+          "type": "house",
+          "length": 9,
+          "width": 8,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Барнхаус",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 7,
+          "roof": "barn",
+          "walls": "frame",
+          "panoramic": true,
+          "roofColor": "#2b2f33",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня",
+        "params": {
+          "type": "house",
+          "length": 6,
+          "width": 4,
+          "roof": "gable",
+          "walls": "timber",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

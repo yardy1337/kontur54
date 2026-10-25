@@ -14,7 +14,8 @@ window.SITE = {
     "logo": "https://ams2-cdn.2gis.com/previews/1234667150795341824/27988f1e-5b67-46f4-9085-5eebaffdccc3/1/ru/image.png",
     "photos": [
       "https://i6.photo.2gis.com/main/branch/1/70000001080218055/common"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС · 5 ★ · 25 отзывов"
   },
   "hero": {
     "title": "Кедровые бани в Новосибирске <em>под ключ</em>",
@@ -229,6 +230,32 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор бани",
+    "presets": [
+      {
+        "name": "Баня-бочка",
+        "params": {
+          "type": "barrel",
+          "length": 4,
+          "wood": "natural",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Баня с комнатой отдыха",
+        "params": {
+          "type": "house",
+          "length": 8,
+          "width": 5,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "timber",
+          "terrace": true
+        }
+      }
+    ]
   },
   "theme": {
     "light": {

@@ -220,74 +220,80 @@
       scene.add(im);
     });
 
-    /* ---------- Дом собирается из параметров (конструктор) ---------- */
-    // P: length (вдоль конька, м), width (м), roof: "low" | "classic" | "mansard",
-    //    walls: "frame" | "timber" | "gas", facade: css-цвет или "", terrace: bool
-    const DEFAULTS = { length: 10, width: 8, roof: "classic", walls: "frame", facade: "", terrace: true };
+    /* ---------- Постройка собирается из параметров (конструктор) ---------- */
+    // P.type: "house" | "barrel" (баня-бочка)
+    // P.length, P.width (м); P.roof: "gable" | "shed" | "flat" | "barn"; P.floors: "one" | "mansard"
+    // P.walls: "frame" | "timber" | "gas"; P.facade, P.roofColor, P.trim: css-цвет или "" (цвет шаблона)
+    // P.wood: "natural" | "light" | "dark"; P.panoramic, P.terrace: bool
+    const DEFAULTS = { type: "house", length: 10, width: 8, roof: "gable", floors: "one", walls: "frame",
+      facade: "", roofColor: "", trim: "", wood: "natural", panoramic: false, terrace: true };
+    const WOOD = { natural: "", light: "#d9b27c", dark: "#6b4529" };
     let P = Object.assign({}, DEFAULTS, opts.house || {});
-    const baseTokenMats = tokenMats.length; // материалы дома пересоздаются при каждой перестройке
+    const baseTokenMats = tokenMats.length; // материалы постройки пересоздаются при каждой перестройке
     let plan = null, ghost = null, planGeo = null, planMat = null, ghostMat = null, planCount = 0;
-    let cutPlane = new T.Plane(new T.Vector3(0, 0, -1), 1000); // разрез: отключён, пока constant огромный
-    const cutOn = () => cutPlane.constant < 999;
+    const cutPlane = new T.Plane(new T.Vector3(0, 0, -1), 1000); // разрез: включён, когда constant = 0
     mat.glass.clippingPlanes = [cutPlane];
     mat.door.clippingPlanes = [cutPlane];
+    let dims = { W: 10, D: 8 };
 
-    // Горизонтальный брус: та же текстура досок, повёрнутая на 90°
-    function timberMat(token, rx, ry, clips) {
-      const m = boardsMat(token, rx, ry, null);
+    // какой параметр конструктора перекрашивает материал
+    const tag = (m, key) => { m.userData.colorKey = key; return m; };
+    function override(key) {
+      if (key === "facade") return P.facade;
+      if (key === "roof") return P.roofColor;
+      if (key === "trim") return P.trim;
+      if (key === "wood") return WOOD[P.wood] || "";
+      return "";
+    }
+    function applyColors() {
+      const cs = getComputedStyle(document.documentElement);
+      for (const [m, token, prop] of tokenMats) {
+        const v = (prop === "color" && m.userData.colorKey && override(m.userData.colorKey)) || cs.getPropertyValue(token).trim();
+        if (v) m[prop].copy(lin(v));
+      }
+    }
+    // горизонтальный брус: та же текстура досок, повёрнутая на 90°
+    function timberMat(rx, ry, clips) {
+      const m = boardsMat("--house-timber", rx, ry, null);
       [m.map, m.bumpMap].forEach(t => { t.center.set(0.5, 0.5); t.rotation = Math.PI / 2; t.repeat.set(ry * 2.2, rx); });
       m.clippingPlanes = clips; m.clipShadows = true;
-      return m;
+      return tag(m, "wood");
     }
     function wallMat(len, h, clip) {
       const clips = [clip, cutPlane];
-      if (P.walls === "timber") return timberMat("--house-timber", len / BOARD, h / 0.9, clips);
-      if (P.walls === "gas") {
-        const m = M("--house-gas", { roughness: 0.95, clippingPlanes: clips, clipShadows: true });
-        return m;
-      }
+      if (P.walls === "timber") return timberMat(len / BOARD, h / 0.9, clips);
+      if (P.walls === "gas") return tag(M("--house-gas", { roughness: 0.95, clippingPlanes: clips, clipShadows: true }), "facade");
       const m = boardsMat("--house-wall", len / BOARD, 1, clip);
       m.clippingPlanes = clips;
-      return m;
+      return tag(m, "facade");
     }
     function disposeHouse() {
+      const keep = new Set(Object.values(mat));
       house.traverse(o => {
         if (o.geometry) o.geometry.dispose();
-        const ms = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : [];
-        ms.forEach(m => { if (Object.values(mat).includes(m)) return; if (m.map) m.map.dispose(); if (m.bumpMap) m.bumpMap.dispose(); m.dispose(); });
+        (o.material ? [].concat(o.material) : []).forEach(m => {
+          if (keep.has(m)) return;
+          if (m.map) m.map.dispose();
+          if (m.bumpMap) m.bumpMap.dispose();
+          m.dispose();
+        });
       });
       house.clear();
       [plan, ghost].forEach(o => { if (o) { scene.remove(o); o.geometry.dispose(); o.material.dispose(); } });
       timeline.length = 0;
       tokenMats.length = baseTokenMats;
     }
-
-    let dims = {};
-    function buildHouse() {
-      disposeHouse();
-      const W = P.length, D = P.width;
-      const mansard = P.roof === "mansard";
-      const y0 = 0.5, H = mansard ? 3.1 : 2.8;
-      const wz = D / 2 + 0.11, wx = W / 2 + 0.11;
-      const half = D / 2;
-      const rise = D * ({ low: 0.18, classic: 0.3, mansard: 0.5 }[P.roof] || 0.3);
-      const th = Math.atan2(rise, half);
-      const L = Math.hypot(half, rise) + 0.75;
-      const ridgeY = y0 + H + rise + 0.09;
-      const roofW = W + 1.2;
-      const top = y0 + H;
-      dims = { W, D, H, rise, top };
-
-      // материал каркаса и утеплителя виден в разрезе
-      const frameMat = M("--house-frame", { roughness: 0.75, clippingPlanes: [cutPlane], clipShadows: true });
-      const woolMat = M("--house-wool", { roughness: 1, clippingPlanes: [cutPlane], clipShadows: true });
-      const roofMat = M("--house-roof", { roughness: 0.38, metalness: 0.55, clippingPlanes: [cutPlane], clipShadows: true });
-      const glassMat = mat.glass;
-
-      /* чертёж на снегу и призрачный контур */
-      const seg = [];
-      const ln = (a, b) => seg.push(...a, ...b);
-      const gy = 0.03;
+    function lines(segs, opacity) {
+      const g = new T.BufferGeometry();
+      g.setAttribute("position", new T.Float32BufferAttribute(segs, 3));
+      const m = lineMat(opacity);
+      const o = new T.LineSegments(g, m);
+      scene.add(o);
+      return [o, g, m];
+    }
+    // чертёж на снегу: контур, оси и размерные линии с засечками
+    function drawPlan(W, D) {
+      const seg = [], ln = (a, b) => seg.push(...a, ...b), gy = 0.03;
       const ox = W / 2 + 0.3, oz = D / 2 + 0.3;
       ln([-ox, gy, -oz], [ox, gy, -oz]); ln([ox, gy, -oz], [ox, gy, oz]); ln([ox, gy, oz], [-ox, gy, oz]); ln([-ox, gy, oz], [-ox, gy, -oz]);
       for (let x = -W / 2; x <= W / 2 + 0.01; x += W / 4) ln([x, gy, -oz - 1.2], [x, gy, oz + 1.2]);
@@ -297,38 +303,70 @@
       ln([-ox, gy, oz], [-ox, gy, dz + 0.4]); ln([ox, gy, oz], [ox, gy, dz + 0.4]);
       ln([dx, gy, -oz], [dx, gy, oz]); ln([dx - tk, gy, -oz - tk], [dx + tk, gy, -oz + tk]); ln([dx - tk, gy, oz - tk], [dx + tk, gy, oz + tk]);
       ln([ox, gy, -oz], [dx + 0.4, gy, -oz]); ln([ox, gy, oz], [dx + 0.4, gy, oz]);
-      planGeo = new T.BufferGeometry();
-      planGeo.setAttribute("position", new T.Float32BufferAttribute(seg, 3));
-      planMat = lineMat(0.9);
-      plan = new T.LineSegments(planGeo, planMat);
-      scene.add(plan);
+      [plan, planGeo, planMat] = lines(seg, 0.9);
       planCount = seg.length / 3;
+    }
 
-      const gs = [];
-      const gl = (a, b) => gs.push(...a, ...b);
+    function buildHouse() {
+      disposeHouse();
+      if (P.type === "barrel") buildBarrel(); else buildFramed();
+      applyColors();
+    }
+
+    /* ---------- Дом или баня с кровлей ---------- */
+    function buildFramed() {
+      const W = P.length, D = P.width, roof = P.roof;
+      const mansard = P.floors === "mansard" && roof !== "flat";
+      const y0 = 0.5, H = mansard ? 3.1 : 2.8, top = y0 + H, half = D / 2;
+      const wz = D / 2 + 0.11, wx = W / 2 + 0.11;
+      const single = roof === "shed" || roof === "flat";
+      const rise = roof === "flat" ? 0.35 : roof === "shed" ? D * (mansard ? 0.45 : 0.28)
+        : roof === "barn" ? D * 0.62 : D * (mansard ? 0.5 : 0.3);
+      const ov = roof === "barn" ? 0.12 : 0.7;          // свес кровли
+      const roofW = W + (roof === "barn" ? 0.14 : 1.2);
+      dims = { W, D };
+
+      const frameMat = M("--house-frame", { roughness: 0.75, clippingPlanes: [cutPlane], clipShadows: true });
+      const woolMat = M("--house-wool", { roughness: 1, clipShadows: true });
+      const roofMat = tag(M("--house-roof", { roughness: 0.38, metalness: 0.55, clippingPlanes: [cutPlane], clipShadows: true }), "roof");
+      const trimMat = tag(M("--house-trim", { roughness: 0.6, clippingPlanes: [cutPlane] }), "trim");
+      const capSnow = M("--scene-snow", { roughness: 1, clippingPlanes: [cutPlane] });
+
+      // скаты: [центр y, центр z, наклон, длина]; высота кровли в точке z — для трубы и контура
+      const planes = [];
+      if (single) {
+        const th = Math.atan2(rise, D);
+        const b = [-half - 0.3 * Math.cos(th), top + rise + 0.09 + 0.3 * Math.sin(th)];
+        const f = [half + ov * Math.cos(th), top + 0.09 - ov * Math.sin(th)];
+        planes.push({ y: (b[1] + f[1]) / 2, z: (b[0] + f[0]) / 2, rx: th, L: Math.hypot(f[0] - b[0], f[1] - b[1]) });
+      } else {
+        const th = Math.atan2(rise, half), L = Math.hypot(half, rise) + ov, ridge = top + rise + 0.09;
+        [1, -1].forEach(s => planes.push({ y: ridge - Math.sin(th) * L / 2, z: s * Math.cos(th) * L / 2, rx: s * th, L }));
+      }
+      const roofAt = z => single ? top + 0.09 + rise * (half - z) / D : top + rise + 0.09 - Math.abs(z) * rise / half;
+
+      drawPlan(W, D);
+      // призрачный контур: коробка стен и рёбра скатов
+      const gs = [], gl = (a, b) => gs.push(...a, ...b);
       const bx = W / 2 + 0.22, bz = D / 2 + 0.22;
       [[-bx, -bz], [bx, -bz], [bx, bz], [-bx, bz]].forEach(([x, z], i, a) => {
         const [nx, nz] = a[(i + 1) % 4];
         gl([x, y0, z], [nx, y0, nz]); gl([x, top, z], [nx, top, nz]); gl([x, y0, z], [x, top, z]);
       });
-      [-bx, bx].forEach(x => { gl([x, top, -bz], [x, top + rise, 0]); gl([x, top, bz], [x, top + rise, 0]); });
-      const ey = ridgeY - Math.sin(th) * L, ez = Math.cos(th) * L, rx2 = roofW / 2;
-      gl([-rx2, ridgeY, 0], [rx2, ridgeY, 0]);
-      [1, -1].forEach(s => { gl([-rx2, ey, s * ez], [rx2, ey, s * ez]); gl([-rx2, ridgeY, 0], [-rx2, ey, s * ez]); gl([rx2, ridgeY, 0], [rx2, ey, s * ez]); });
-      const ghostGeo = new T.BufferGeometry();
-      ghostGeo.setAttribute("position", new T.Float32BufferAttribute(gs, 3));
-      ghostMat = lineMat(0.35);
-      ghost = new T.LineSegments(ghostGeo, ghostMat);
-      scene.add(ghost);
+      planes.forEach(pl => {
+        const u = [0, -Math.sin(pl.rx) * pl.L / 2, Math.cos(pl.rx) * pl.L / 2];
+        const c = [[-roofW / 2, -1], [roofW / 2, -1], [roofW / 2, 1], [-roofW / 2, 1]].map(([x, k]) => [x, pl.y + k * u[1], pl.z + k * u[2]]);
+        c.forEach((p0, i) => gl(p0, c[(i + 1) % 4]));
+      });
+      [ghost, , ghostMat] = lines(gs, 0.35);
 
       /* Этап 1. Фундамент */
       grow(box(W + 1.0, 0.3, D + 1.0, mat.insulation, 0, 0, 0, "bottom"), "y", 0.3, 0.35);
       grow(box(W + 0.6, 0.22, D + 0.6, mat.slab, 0, 0.28, 0, "bottom"), "y", 0.55, 0.4);
 
-      /* Этап 2. Каркас (для бруса и газобетона — первые венцы/ряды, но логика та же) */
+      /* Этап 2. Каркас: обвязка, стойки волной по периметру, верхняя обвязка */
       [[W, 0, D / 2 - 0.1, "x"], [W, 0, -D / 2 + 0.1, "x"], [D, W / 2 - 0.05, 0, "z"], [D, -W / 2 + 0.05, 0, "z"]].forEach(([len, x, z, ax], i) => {
-        const o = ax === "x" ? box(len, 0.08, 0.18, frameMat, x, y0 + 0.04, z) : box(0.18, 0.08, len, frameMat, x, y0 + 0.04, z);
-        grow(o, ax, 1.0 + i * 0.04, 0.2);
+        grow(ax === "x" ? box(len, 0.08, 0.18, frameMat, x, y0 + 0.04, z) : box(0.18, 0.08, len, frameMat, x, y0 + 0.04, z), ax, 1.0 + i * 0.04, 0.2);
       });
       const studPos = [];
       for (let x = -W / 2 + 0.05; x <= W / 2; x += 0.6) studPos.push([x, D / 2 - 0.1, 0], [x, -D / 2 + 0.1, 0]);
@@ -350,11 +388,10 @@
         });
       });
       [[W, 0, D / 2 - 0.1, false], [W, 0, -D / 2 + 0.1, false], [D, W / 2 - 0.05, 0, true], [D, -W / 2 + 0.05, 0, true]].forEach(([len, x, z, side], i) => {
-        const o = side ? box(0.18, 0.08, len, frameMat, x, y0 + H, z) : box(len, 0.08, 0.18, frameMat, x, y0 + H, z);
-        drop(o, 0.8, 1.72 + i * 0.05, 0.22);
+        drop(side ? box(0.18, 0.08, len, frameMat, x, top, z) : box(len, 0.08, 0.18, frameMat, x, top, z), 0.8, 1.72 + i * 0.05, 0.22);
       });
 
-      /* Этап 3. Утеплитель между стойками, затем обшивка заполняется снизу вверх */
+      /* Этап 3. Утеплитель между стойками, затем обшивка снизу вверх, окна въезжают снаружи */
       const woolClip = new T.Plane(new T.Vector3(0, -1, 0), y0);
       woolMat.clippingPlanes = [woolClip, cutPlane];
       const wool = [
@@ -365,96 +402,173 @@
       on(1.95, 0.45, (e, t) => { wool.forEach(o => show(o, t)); woolClip.constant = y0 + H * e + 0.001; });
 
       const wallClip = new T.Plane(new T.Vector3(0, -1, 0), y0);
-      const wallFront = wallMat(W + 0.44, H, wallClip);
-      const wallSide = wallMat(D, H, wallClip);
+      const backH = single ? H + rise : H; // у односкатной кровли задняя стена выше
+      const wallFront = wallMat(W + 0.44, H, wallClip), wallBack = wallMat(W + 0.44, backH, wallClip), wallSide = wallMat(D, H, wallClip);
       const walls = [
-        box(W + 0.44, H, 0.22, wallFront, 0, y0 + H / 2, wz), box(W + 0.44, H, 0.22, wallFront, 0, y0 + H / 2, -wz),
+        box(W + 0.44, H, 0.22, wallFront, 0, y0 + H / 2, wz), box(W + 0.44, backH, 0.22, wallBack, 0, y0 + backH / 2, -wz),
         box(0.22, H, D, wallSide, wx, y0 + H / 2, 0), box(0.22, H, D, wallSide, -wx, y0 + H / 2, 0)
       ];
       walls.forEach(w => house.add(w));
-      on(2.25, 0.6, (e, t) => { walls.forEach(w => show(w, t)); wallClip.constant = y0 + H * e + 0.001; });
+      on(2.25, 0.6, (e, t) => { walls.forEach(w => show(w, t)); wallClip.constant = y0 + backH * e + 0.001; });
 
-      const trimMat = M("--house-trim", { roughness: 0.6, clippingPlanes: [cutPlane] });
       function win(x, y, z, w, h, axis, st) {
         const g = new T.Group();
         const n = axis === "x" ? [0, Math.sign(z)] : [Math.sign(x), 0];
         g.add(box(...(axis === "x" ? [w + 0.2, h + 0.2, 0.05] : [0.05, h + 0.2, w + 0.2]), trimMat, n[0] * 0.13, 0, n[1] * 0.13));
-        g.add(box(...(axis === "x" ? [w, h, 0.04] : [0.04, h, w]), glassMat, n[0] * 0.16, 0, n[1] * 0.16));
+        g.add(box(...(axis === "x" ? [w, h, 0.04] : [0.04, h, w]), mat.glass, n[0] * 0.16, 0, n[1] * 0.16));
         g.position.set(x, y, z);
         slide(g, n[0] * 1.6, n[1] * 1.6, st, 0.3);
       }
-      // окна раскладываются по длине фасада, а не по жёстким координатам
-      const big = Math.min(3.4, W * 0.34);
-      win(-W * 0.24, y0 + 1.45, wz, big, 2.1, "x", 2.6);
-      win(W * 0.31, y0 + 1.6, wz + 0.04, 1.2, 1.4, "x", 2.66);
-      const backN = Math.max(2, Math.round(W / 4.5));
-      for (let i = 0; i < backN; i++) win(-W / 2 + (W / backN) * (i + 0.5), y0 + 1.6, -wz, 1.5, 1.3, "x", 2.7 + i * 0.03);
-      win(wx, y0 + 1.6, -D * 0.19, 1.4, 1.4, "z", 2.78);
-      win(-wx, y0 + 1.6, D * 0.18, 1.4, 1.4, "z", 2.82);
+      const doorX = W * 0.06;
+      if (P.panoramic) {
+        // панорамное остекление на фасад: окна в пол по обе стороны от двери
+        const left = (doorX - 0.7) - (-W / 2 + 0.6), right = (W / 2 - 0.6) - (doorX + 0.7);
+        if (left > 1) win(-W / 2 + 0.6 + left / 2, y0 + 1.25, wz, left, 2.3, "x", 2.6);
+        if (right > 1) win(doorX + 0.7 + right / 2, y0 + 1.25, wz, right, 2.3, "x", 2.64);
+      } else {
+        win(-W * 0.24, y0 + 1.45, wz, Math.min(3.4, W * 0.34), 2.1, "x", 2.6);
+        if (W >= 7) win(W * 0.31, y0 + 1.6, wz + (P.walls === "frame" ? 0.04 : 0), 1.2, 1.4, "x", 2.66);
+      }
+      const backN = Math.max(1, Math.round(W / 4.5));
+      for (let i = 0; i < backN; i++) win(-W / 2 + (W / backN) * (i + 0.5), y0 + 1.6, -wz, 1.4, 1.3, "x", 2.7 + i * 0.03);
+      if (D >= 5) { win(wx, y0 + 1.6, -D * 0.19, 1.3, 1.4, "z", 2.78); win(-wx, y0 + 1.6, D * 0.18, 1.3, 1.4, "z", 2.82); }
 
       /* Этап 4. Фронтоны и кровля */
       const gableClip = new T.Plane(new T.Vector3(0, -1, 0), top);
       const gable = new T.Shape();
-      gable.moveTo(-half - 0.11, 0); gable.lineTo(half + 0.11, 0); gable.lineTo(0, rise + 0.07); gable.closePath();
+      // форма в координатах (z, y); после поворота x формы смотрит в −z, поэтому высокая сторона односкатной — справа
+      if (single) { gable.moveTo(-half - 0.11, 0); gable.lineTo(half + 0.11, 0); gable.lineTo(half + 0.11, rise + 0.07); }
+      else { gable.moveTo(-half - 0.11, 0); gable.lineTo(half + 0.11, 0); gable.lineTo(0, rise + 0.07); }
+      gable.closePath();
       const gGeo = new T.ExtrudeGeometry(gable, { depth: 0.22, bevelEnabled: false });
       gGeo.translate(0, 0, -0.11); gGeo.rotateY(Math.PI / 2);
-      const gMat = P.walls === "gas" ? M("--house-gas", { roughness: 0.95, clippingPlanes: [gableClip, cutPlane] })
-        : P.walls === "timber" ? timberMat("--house-timber", 1 / BOARD, 1 / 0.9, [gableClip, cutPlane])
-        : (() => { const m = boardsMat("--house-wall", 1 / BOARD, 1 / H, gableClip); m.clippingPlanes = [gableClip, cutPlane]; return m; })();
+      const gMat = P.walls === "gas" ? tag(M("--house-gas", { roughness: 0.95, clippingPlanes: [gableClip, cutPlane] }), "facade")
+        : P.walls === "timber" ? timberMat(1 / BOARD, 1 / 0.9, [gableClip, cutPlane])
+        : (() => { const m = boardsMat("--house-wall", 1 / BOARD, 1 / H, gableClip); m.clippingPlanes = [gableClip, cutPlane]; return tag(m, "facade"); })();
       const gables = [wx, -wx].map(x => { const g = shadowy(new T.Mesh(gGeo, gMat)); g.position.set(x, top, 0); house.add(g); return g; });
       on(3.0, 0.35, (e, t) => { gables.forEach(g => show(g, t)); gableClip.constant = top + (rise + 0.1) * e + 0.001; });
-      if (rise > 1.6) win(wx, top + rise * 0.38, 0, 0.8, 0.8, "z", 3.3);
-      if (mansard) win(-wx, top + rise * 0.38, 0, 1.0, 1.0, "z", 3.32);
+      if (!single && rise > 1.6) win(wx, top + rise * 0.36, 0, P.panoramic || roof === "barn" ? 1.6 : 0.8, P.panoramic || roof === "barn" ? 1.4 : 0.8, "z", 3.3);
+      if (!single && mansard) win(-wx, top + rise * 0.36, 0, 1.0, 1.0, "z", 3.32);
 
-      const seamGeo = new T.BoxGeometry(0.035, 0.045, L);
+      const seamGeo = new T.BoxGeometry(0.035, 0.045, 1);
       const seamCount = Math.floor(roofW / 0.5);
-      [1, -1].forEach((s, i) => {
-        const fx = { y: ridgeY - Math.sin(th) * L / 2, z: s * Math.cos(th) * L / 2 };
-        const r = box(roofW, 0.14, L, roofMat, 0, fx.y, fx.z);
-        const seams = shadowy(new T.InstancedMesh(seamGeo, roofMat, seamCount));
+      planes.forEach((pl, i) => {
+        const r = box(roofW, 0.14, pl.L, roofMat, 0, pl.y, pl.z);
+        const seams = shadowy(new T.InstancedMesh(seamGeo, roofMat, seamCount)); // фальцы
         for (let k = 0; k < seamCount; k++) {
-          dummy.position.set(-roofW / 2 + 0.25 + k * 0.5, 0.09, 0); dummy.rotation.set(0, 0, 0); dummy.scale.setScalar(1);
+          dummy.position.set(-roofW / 2 + 0.25 + k * 0.5, 0.09, 0); dummy.rotation.set(0, 0, 0); dummy.scale.set(1, 1, pl.L);
           dummy.updateMatrix(); seams.setMatrixAt(k, dummy.matrix);
         }
         r.add(seams);
         house.add(r);
         on(3.35 + i * 0.15, 0.45, (e, t) => {
           show(r, t);
-          r.rotation.x = s * th * (0.15 + 0.85 * e);
-          r.position.y = fx.y + (1 - e) * 2.4;
-          r.position.z = fx.z * (0.4 + 0.6 * e);
+          r.rotation.x = pl.rx * (0.15 + 0.85 * e); // из почти горизонтали в уклон
+          r.position.y = pl.y + (1 - e) * 2.4;
+          r.position.z = pl.z * (0.4 + 0.6 * e);
         });
+        const n = [0, Math.cos(pl.rx), Math.sin(pl.rx)];
+        const cap = box(roofW - 0.4, 0.1, pl.L - 0.5, capSnow, 0, pl.y + n[1] * 0.14, pl.z + n[2] * 0.14);
+        cap.rotation.x = pl.rx;
+        drop(cap, 1.0, 4.55 + i * 0.1, 0.35);
       });
-      // труба: стоит на скате, высота считается от кровли в точке трубы
-      const cz = -D * 0.19, cx = -W * 0.26;
-      const roofAt = ridgeY - Math.abs(cz) * Math.tan(th);
-      grow(box(0.65, ridgeY + 0.9 - roofAt + 0.3, 0.65, mat.slab, cx, roofAt - 0.3, cz, "bottom"), "y", 3.85, 0.2);
+      if (roof !== "flat") {
+        const cx = -W * 0.26, cz = single ? -D * 0.1 : -D * 0.19, ra = roofAt(cz), topY = Math.max(ra + 0.9, single ? ra + 0.9 : top + rise + 0.9);
+        grow(box(0.6, topY - ra + 0.3, 0.6, mat.slab, cx, ra - 0.3, cz, "bottom"), "y", 3.85, 0.2);
+      }
 
       /* Этап 5. Под ключ */
-      if (P.walls === "frame") grow(box(Math.min(3.0, W * 0.3), H - 0.1, 0.04, boardsMat("--house-trim", 3.0 / BOARD, 1), W * 0.31, y0 + 0.05, wz + 0.13, "bottom"), "y", 4.0, 0.3);
-      slide(box(1.0, 2.2, 0.06, mat.door, W * 0.06, y0 + 1.1, wz + 0.14), 1.1, 0, 4.1, 0.25);
+      if (P.walls === "frame" && !P.panoramic && W >= 7)
+        grow(box(Math.min(3.0, W * 0.3), H - 0.1, 0.04, tag(boardsMat("--house-trim", 3.0 / BOARD, 1), "trim"), W * 0.31, y0 + 0.05, wz + 0.13, "bottom"), "y", 4.0, 0.3);
+      slide(box(1.0, 2.2, 0.06, mat.door, doorX, y0 + 1.1, wz + 0.14), 1.1, 0, 4.1, 0.25);
       if (P.terrace) {
         const tw = Math.min(6, W * 0.6), tx = -W / 2 + tw / 2 + 0.3;
-        grow(box(tw, 0.18, 2.6, boardsMat("--house-trim", tw / BOARD, 1), tx, 0.36, D / 2 + 0.3, "back"), "z", 4.2, 0.3);
-        [tx - tw / 2 + 0.3, tx, tx + tw / 2 - 0.3].forEach((x, i) => grow(box(0.14, 2.6, 0.14, mat.trim, x, 0.45, D / 2 + 2.75, "bottom"), "y", 4.4 + i * 0.05, 0.2));
+        const deck = tag(boardsMat("--house-trim", tw / BOARD, 1), "wood");
+        grow(box(tw, 0.18, 2.4, deck, tx, 0.36, D / 2 + 0.3, "back"), "z", 4.2, 0.3);
+        [tx - tw / 2 + 0.3, tx, tx + tw / 2 - 0.3].forEach((x, i) => grow(box(0.14, 2.5, 0.14, trimMat, x, 0.45, D / 2 + 2.55, "bottom"), "y", 4.4 + i * 0.05, 0.2));
       }
-      const capSnow = M("--scene-snow", { roughness: 1, clippingPlanes: [cutPlane] });
-      [1, -1].forEach((s, i) => {
-        const r = box(roofW - 0.4, 0.1, L - 0.5, capSnow, 0, 0, 0);
-        r.position.set(0, ridgeY - Math.sin(th) * L / 2 + Math.cos(th) * 0.14, s * Math.cos(th) * L / 2 + s * Math.sin(th) * 0.14);
-        r.rotation.x = s * th;
-        drop(r, 1.0, 4.55 + i * 0.1, 0.35);
-      });
-      if (P.facade) tokenMats.forEach(([m, token]) => { if (token === "--house-wall" || token === "--house-gas") m.userData.facade = true; });
-      applyColors();
     }
-    // цвета дома: токены страницы + цвет фасада из конструктора
-    function applyColors() {
-      const cs = getComputedStyle(document.documentElement);
-      for (const [m, token, prop] of tokenMats) {
-        const v = (m.userData.facade && P.facade) ? P.facade : cs.getPropertyValue(token).trim();
-        if (v) m[prop].copy(lin(v));
+
+    /* ---------- Баня-бочка ---------- */
+    function buildBarrel() {
+      const Lb = P.length, R = 1.15, cy = 0.4 + R;
+      dims = { W: Lb + 1, D: 2.4 };
+      const woodMat = (rx, clip) => { const m = boardsMat("--house-timber", rx, 1, clip); m.side = T.DoubleSide; m.clippingPlanes = [clip, cutPlane].filter(Boolean); return tag(m, "wood"); };
+      const hoopMat = tag(M("--house-roof", { roughness: 0.35, metalness: 0.6, clippingPlanes: [cutPlane] }), "roof");
+      const trimMat = tag(M("--house-trim", { roughness: 0.6, clippingPlanes: [cutPlane] }), "trim");
+      const frameMat = M("--house-frame", { roughness: 0.75, clippingPlanes: [cutPlane] });
+      const capSnow = M("--scene-snow", { roughness: 1, clippingPlanes: [cutPlane] });
+
+      drawPlan(Lb, 2.4);
+      const gs = [], gl = (a, b) => gs.push(...a, ...b);
+      [-Lb / 2, Lb / 2].forEach(x => { for (let i = 0; i < 32; i++) { const a = i / 32 * Math.PI * 2, b = (i + 1) / 32 * Math.PI * 2; gl([x, cy + Math.sin(a) * R, Math.cos(a) * R], [x, cy + Math.sin(b) * R, Math.cos(b) * R]); } });
+      [0, Math.PI / 2, Math.PI, Math.PI * 1.5].forEach(a => gl([-Lb / 2, cy + Math.sin(a) * R, Math.cos(a) * R], [Lb / 2, cy + Math.sin(a) * R, Math.cos(a) * R]));
+      [ghost, , ghostMat] = lines(gs, 0.35);
+
+      /* Этап 1. Основание: щебёночная подушка и опоры-ложементы */
+      grow(box(Lb + 1.2, 0.12, 3.0, mat.insulation, 0, 0, 0, "bottom"), "y", 0.3, 0.3);
+      const cradles = Math.max(2, Math.round(Lb / 1.6));
+      for (let i = 0; i < cradles; i++) grow(box(0.22, 0.42, 2.0, mat.slab, -Lb / 2 + 0.4 + (Lb - 0.8) * i / (cradles - 1), 0.1, 0, "bottom"), "y", 0.5 + i * 0.08, 0.3);
+
+      /* Этап 2. Кольца-шпангоуты */
+      const ringGeo = new T.TorusGeometry(R - 0.06, 0.05, 6, 40);
+      ringGeo.rotateY(Math.PI / 2);
+      const rings = Math.max(3, Math.round(Lb / 0.9));
+      for (let i = 0; i < rings; i++) {
+        const r = shadowy(new T.Mesh(ringGeo, frameMat));
+        r.position.set(-Lb / 2 + 0.1 + (Lb - 0.2) * i / (rings - 1), cy, 0);
+        house.add(r);
+        on(1.1 + 0.6 * i / rings, 0.25, (e, t) => { show(r, t); r.scale.setScalar(Math.max(0.001, e)); });
       }
+      const bench = box(Lb * 0.8, 0.08, 0.5, frameMat, 0, cy - 0.35, -0.45);
+      grow(bench, "x", 1.8, 0.2);
+
+      /* Этап 3. Обшивка ламелями снизу вверх */
+      const wallClip = new T.Plane(new T.Vector3(0, -1, 0), 0.4);
+      const shellGeo = new T.CylinderGeometry(R, R, Lb, 56, 1, true);
+      shellGeo.rotateZ(Math.PI / 2);
+      const shell = shadowy(new T.Mesh(shellGeo, woodMat(2 * Math.PI * R / 1.1, wallClip)));
+      shell.position.y = cy;
+      house.add(shell);
+      on(2.0, 0.8, (e, t) => { show(shell, t); wallClip.constant = 0.4 + 2 * R * e + 0.001; });
+
+      /* Этап 4. Торцы, дверь, окно, стяжные обручи, труба */
+      const endGeo = new T.CylinderGeometry(R - 0.02, R - 0.02, 0.1, 56);
+      endGeo.rotateZ(Math.PI / 2);
+      const endMat = woodMat(2 * Math.PI * R / 1.6, null);
+      [Lb / 2 - 0.05, -Lb / 2 + 0.05].forEach((x, i) => {
+        const e = shadowy(new T.Mesh(endGeo, endMat));
+        e.position.set(x, cy, 0);
+        slide(e, i ? -1.2 : 1.2, 0, 3.0 + i * 0.1, 0.3);
+      });
+      const hoopGeo = new T.TorusGeometry(R + 0.02, 0.025, 6, 48);
+      hoopGeo.rotateY(Math.PI / 2);
+      [-Lb / 2 + 0.35, 0, Lb / 2 - 0.35].forEach((x, i) => {
+        const h = shadowy(new T.Mesh(hoopGeo, hoopMat));
+        h.position.set(x, cy, 0);
+        drop(h, 1.5, 3.3 + i * 0.08, 0.3);
+      });
+      const winGeo = new T.CylinderGeometry(0.28, 0.28, 0.06, 28);
+      winGeo.rotateZ(Math.PI / 2);
+      const rw = new T.Mesh(winGeo, mat.glass);
+      rw.position.set(-Lb / 2 - 0.02, cy + 0.15, 0);
+      slide(rw, -1.2, 0, 3.4, 0.25);
+      if (P.panoramic) { const pw = box(0.06, 1.5, 1.4, mat.glass, Lb / 2 + 0.02, cy - 0.05, -0.45); slide(pw, 1.2, 0, 3.45, 0.25); }
+      const pipe = shadowy(new T.Mesh(new T.CylinderGeometry(0.09, 0.09, 1.3, 16), hoopMat));
+      pipe.position.set(-Lb / 4, cy + R + 0.3, 0);
+      drop(pipe, 1.5, 3.8, 0.2);
+
+      /* Этап 5. Дверь, терраса, снег на крыше */
+      slide(box(0.06, 1.7, 0.75, mat.door, Lb / 2 + 0.03, cy - 0.15, P.panoramic ? 0.45 : 0), 1.0, 0, 4.1, 0.25);
+      if (P.terrace) {
+        const deck = box(1.6, 0.12, 2.4, tag(boardsMat("--house-trim", 1.6 / BOARD, 1), "wood"), Lb / 2 + 0.85, 0.38, 0);
+        grow(deck, "x", 4.2, 0.3);
+      }
+      const snowGeo = new T.CylinderGeometry(R + 0.06, R + 0.06, Lb * 0.92, 24, 1, true, Math.PI / 2 - 0.75, 1.5);
+      snowGeo.rotateZ(Math.PI / 2);
+      const snowCap = new T.Mesh(snowGeo, capSnow);
+      snowCap.position.y = cy;
+      drop(snowCap, 1.0, 4.55, 0.35);
     }
     buildHouse();
 
@@ -685,7 +799,7 @@
       // в покое (только снег и облёт) достаточно 30 кадров в секунду
       if (!active && !dirty && !(ambient && now - lastRender >= 33)) return;
 
-      const d = cam.dist * distScale * Math.max(1, dims.W / 10, dims.D / 8);
+      const d = cam.dist * distScale * Math.min(1.5, Math.max(0.45, dims.W / 10, dims.D / 8)); // камера ближе к маленьким постройкам
       camera.position.set(
         LOOK.x + Math.sin(cam.yaw) * Math.cos(cam.pitch) * d,
         LOOK.y + Math.sin(cam.pitch) * d,
@@ -739,7 +853,10 @@
         if (on) setGoal({ yaw: 0.35, pitch: 0.42, dist: 21 });
         shadowDirty = true; dirty = true;
       },
-      params() { return Object.assign({}, P, { area: Math.round(P.length * P.width * (P.roof === "mansard" ? 1.6 : 1)) }); }
+      params() {
+        const area = P.type === "barrel" ? P.length * 2.3 : P.length * P.width * (P.floors === "mansard" && P.roof !== "flat" ? 1.6 : 1);
+        return Object.assign({}, P, { area: Math.round(area) });
+      }
     };
 
     apply();

@@ -13,7 +13,8 @@ window.SITE = {
     "demoNote": "Концепт сайта для «Домой» от студии Yardy Project. Цены и тексты примерные, финальные согласуем с вами.",
     "photos": [
       "https://i6.photo.2gis.com/main/branch/11/70000001111778666/common"
-    ]
+    ],
+    "photoNote": "из карточки 2ГИС"
   },
   "hero": {
     "title": "Строим дома в Иркутске <em>под ключ</em>",
@@ -224,6 +225,47 @@ window.SITE = {
     ],
     "lead": "Оставьте телефон — перезвоним и ответим на вопросы.",
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
+  },
+  "configurator": {
+    "title": "Конструктор дома",
+    "presets": [
+      {
+        "name": "Каркасный дом",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 8,
+          "roof": "gable",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Дом с мансардой",
+        "params": {
+          "type": "house",
+          "length": 9,
+          "width": 8,
+          "roof": "gable",
+          "floors": "mansard",
+          "walls": "frame",
+          "terrace": true
+        }
+      },
+      {
+        "name": "Барнхаус",
+        "params": {
+          "type": "house",
+          "length": 10,
+          "width": 7,
+          "roof": "barn",
+          "walls": "frame",
+          "panoramic": true,
+          "roofColor": "#2b2f33",
+          "terrace": true
+        }
+      }
+    ]
   },
   "about": {
     "title": "Домой",
