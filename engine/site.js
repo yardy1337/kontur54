@@ -51,15 +51,40 @@
   const CFG = S.configurator === false ? null : Object.assign({ title: "Конструктор дома", presets: DEFAULT_PRESETS }, S.configurator || {});
   const segRow = (name, label, items, forType) => `<fieldset class="cfg-row" data-for="${forType || ""}"><legend class="label">${label}</legend><div class="seg">${items.map(([v, n], i) => `<input type="radio" name="cfg-${name}" id="cfg-${name}-${v}" value="${v}"${i === 0 ? " checked" : ""}><label for="cfg-${name}-${v}">${n}</label>`).join("")}</div></fieldset>`;
   const swatchRow = (name, label, items, forType) => `<fieldset class="cfg-row" data-for="${forType || ""}"><legend class="label">${label}</legend><div class="swatches">${items.map(([v, n], i) => `<input type="radio" name="cfg-${name}" id="cfg-${name}-${i}" value="${v}"${i === 0 ? " checked" : ""}><label for="cfg-${name}-${i}" title="${n}" style="--sw:${v || "conic-gradient(var(--c-border-strong) 0 25%, var(--c-surface) 0 50%, var(--c-border-strong) 0 75%, var(--c-surface) 0)"}"><span class="sr-only">${n}</span></label>`).join("")}</div></fieldset>`;
-  // фото из 2ГИС может не загрузиться: убираем кадр, а пустую галерею — целиком
+  // Реальные фото: общий набор из 2ГИС и, если есть, отдельные наборы под тип постройки (photoSets[ключ пресета])
+  let photoList = [], photoIdx = 0; // заполняется после чтения конфига
+  function setPhoto(i) {
+    const img = document.getElementById("rp-img");
+    if (!img || !photoList.length) return;
+    photoIdx = (i + photoList.length) % photoList.length;
+    const url = photoList[photoIdx];
+    img.classList.add("fading");
+    setTimeout(() => {
+      img.src = url;
+      document.getElementById("rp-link").href = url;
+      img.classList.remove("fading");
+    }, 180);
+    document.querySelectorAll("#rp-thumbs button").forEach((b, k) => b.setAttribute("aria-pressed", String(k === photoIdx)));
+  }
+  function showPhotos(key, label) {
+    const fig = document.getElementById("real-photo");
+    if (!fig) return;
+    const set = (c.photoSets || {})[key];
+    photoList = set && set.length ? set : P.slice();
+    document.getElementById("rp-cap").textContent = set && set.length ? `${label} · фото компании` : (c.photoNote || "фото компании");
+    document.getElementById("rp-thumbs").innerHTML = photoList.length > 1
+      ? photoList.map((u, k) => `<button type="button" aria-label="Фото ${k + 1}" aria-pressed="${k === 0}" style="background-image:url('${esc(u)}')"></button>`).join("") : "";
+    fig.hidden = false;
+    setPhoto(0);
+  }
   window.photoFail = img => {
-    const a = img.closest(".ph"), g = a.parentElement;
-    a.remove();
-    g.className = "photos-grid n" + g.children.length;
-    if (!g.children.length) g.closest(".photos").remove();
+    // битую ссылку убираем из набора; если фото не осталось — прячем карточку
+    photoList = photoList.filter(u => u !== img.getAttribute("src"));
+    if (photoList.length) setPhoto(0); else document.getElementById("real-photo").hidden = true;
   };
   const c = S.company, h = S.hero;
   const P = c.photos || []; // реальные фото компании (из 2ГИС), первое — главное
+  photoList = P.slice();
   const touch = matchMedia("(pointer: coarse)").matches;
 
   app.innerHTML = `
@@ -92,6 +117,14 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
         <a class="btn" href="${esc(h.secondary.href)}">${esc(h.secondary.text)}</a>
       </div>
       <div class="cities label">${c.cities.map(x => `<span>${esc(x)}</span>`).join("")}</div>
+      ${P.length ? `
+      <figure class="real-photo" id="real-photo">
+        <a class="rp-frame" id="rp-link" href="${esc(P[0])}" target="_blank" rel="noopener">
+          <img id="rp-img" src="${esc(P[0])}" alt="Реальный объект компании ${esc(c.name)}" referrerpolicy="no-referrer" onerror="photoFail(this)">
+        </a>
+        <figcaption><span class="dim">Реальный объект</span><span class="rp-cap" id="rp-cap">${esc(c.photoNote || "фото компании")}</span></figcaption>
+        <div class="rp-thumbs" id="rp-thumbs"></div>
+      </figure>` : ""}
     </div>
 
     <div class="stage-wrap">
@@ -113,11 +146,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
         <span class="term" id="st-term"></span>
         <p id="st-text"></p>
       </div>
-      ${P.length ? `
-      <section class="photos" aria-label="Фото компании">
-        <div class="photos-head"><span class="dim">Фото компании</span><span class="photos-meta">${esc(c.photoNote || "")}</span></div>
-        <div class="photos-grid n${P.length}">${P.map((u, i) => `<a class="ph" href="${esc(u)}" target="_blank" rel="noopener" aria-label="Открыть фото ${i + 1}"><img src="${esc(u)}" alt="Фото компании ${esc(c.name)}" loading="lazy" referrerpolicy="no-referrer" onerror="photoFail(this)"></a>`).join("")}</div>
-      </section>` : ""}
+
       ${CFG ? `
       <details class="config" id="config">
         <summary><span><b>${esc(CFG.title)}</b><span class="muted"> · выберите тип и настройте под себя</span></span><span class="cfg-area" id="cfg-area"></span></summary>
@@ -309,6 +338,11 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
 
   if (house) {
     btns.forEach((b, i) => b.addEventListener("click", () => house.goTo(i)));
+    const thumbs = document.getElementById("rp-thumbs");
+    if (thumbs) thumbs.addEventListener("click", e => {
+      const b = e.target.closest("button");
+      if (b) setPhoto([...thumbs.children].indexOf(b));
+    });
     /* ---------- Конструктор ---------- */
     const cfg = document.getElementById("config");
     if (cfg) {
@@ -321,6 +355,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
       function applyPreset(i) {
         const pr = Object.assign({ type: "house", roof: "gable", floors: "one", walls: "frame", facade: "", roofColor: "", trim: "", wood: "natural", panoramic: false, terrace: true }, CFG.presets[i].params);
         type = pr.type;
+        showPhotos(CFG.presets[i].key, CFG.presets[i].name);
         const [mn, mx] = RANGE[type] || RANGE.house;
         len.min = mn; len.max = mx; len.value = pr.length;
         wid.value = pr.width || 8;

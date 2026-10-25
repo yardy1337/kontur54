@@ -249,7 +249,8 @@ window.SITE = {
           "walls": "frame",
           "panoramic": true,
           "terrace": true
-        }
+        },
+        "key": "dacha"
       },
       {
         "name": "Баня с комнатой отдыха",
@@ -261,7 +262,8 @@ window.SITE = {
           "floors": "mansard",
           "walls": "timber",
           "terrace": true
-        }
+        },
+        "key": "mansarda"
       },
       {
         "name": "Баня-бочка",
@@ -270,7 +272,8 @@ window.SITE = {
           "length": 4,
           "wood": "natural",
           "terrace": true
-        }
+        },
+        "key": "barrel"
       }
     ]
   },

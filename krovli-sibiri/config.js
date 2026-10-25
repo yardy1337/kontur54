@@ -253,7 +253,8 @@ window.SITE = {
           "roof": "gable",
           "walls": "timber",
           "terrace": true
-        }
+        },
+        "key": "banya-brus"
       },
       {
         "name": "Каркасная баня",
@@ -264,7 +265,8 @@ window.SITE = {
           "roof": "gable",
           "walls": "frame",
           "terrace": true
-        }
+        },
+        "key": "banya-karkas"
       },
       {
         "name": "Баня с комнатой отдыха",
@@ -276,7 +278,8 @@ window.SITE = {
           "floors": "mansard",
           "walls": "timber",
           "terrace": true
-        }
+        },
+        "key": "mansarda"
       },
       {
         "name": "Баня-бочка",
@@ -285,7 +288,8 @@ window.SITE = {
           "length": 4,
           "wood": "natural",
           "terrace": true
-        }
+        },
+        "key": "barrel"
       }
     ]
   },

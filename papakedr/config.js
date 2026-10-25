@@ -241,7 +241,8 @@ window.SITE = {
           "length": 4,
           "wood": "natural",
           "terrace": true
-        }
+        },
+        "key": "barrel"
       },
       {
         "name": "Баня с комнатой отдыха",
@@ -253,7 +254,8 @@ window.SITE = {
           "floors": "mansard",
           "walls": "timber",
           "terrace": true
-        }
+        },
+        "key": "mansarda"
       }
     ]
   },

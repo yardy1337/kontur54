@@ -235,7 +235,8 @@ window.SITE = {
           "walls": "frame",
           "panoramic": true,
           "terrace": true
-        }
+        },
+        "key": "modul"
       },
       {
         "name": "Каркасный дом",
@@ -246,7 +247,8 @@ window.SITE = {
           "roof": "gable",
           "walls": "frame",
           "terrace": true
-        }
+        },
+        "key": "karkas"
       },
       {
         "name": "Дом с мансардой",
@@ -258,7 +260,8 @@ window.SITE = {
           "floors": "mansard",
           "walls": "frame",
           "terrace": true
-        }
+        },
+        "key": "mansarda"
       },
       {
         "name": "Барнхаус",
@@ -271,7 +274,8 @@ window.SITE = {
           "panoramic": true,
           "roofColor": "#2b2f33",
           "terrace": true
-        }
+        },
+        "key": "barnhaus"
       },
       {
         "name": "Баня",
@@ -282,7 +286,8 @@ window.SITE = {
           "roof": "gable",
           "walls": "timber",
           "terrace": true
-        }
+        },
+        "key": "banya-brus"
       }
     ]
   },

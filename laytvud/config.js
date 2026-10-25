@@ -233,7 +233,8 @@ window.SITE = {
           "roof": "gable",
           "walls": "timber",
           "terrace": true
-        }
+        },
+        "key": "brus"
       },
       {
         "name": "Дом с мансардой",
@@ -245,7 +246,8 @@ window.SITE = {
           "floors": "mansard",
           "walls": "timber",
           "terrace": true
-        }
+        },
+        "key": "mansarda"
       },
       {
         "name": "Барнхаус",
@@ -258,7 +260,8 @@ window.SITE = {
           "panoramic": true,
           "roofColor": "#2b2f33",
           "terrace": true
-        }
+        },
+        "key": "barnhaus"
       }
     ]
   },

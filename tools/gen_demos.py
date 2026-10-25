@@ -167,6 +167,23 @@ def configurator_for(seg, text):
     return {"title": "Конструктор дома", "presets": P[:5]}
 
 
+def preset_key(params):
+    """Ключ набора фото для пресета: barrel, barnhaus, modul, dacha, mansarda, banya-brus, brus, gazobeton, karkas."""
+    if params.get("type") == "barrel":
+        return "barrel"
+    if params.get("roof") == "barn":
+        return "barnhaus"
+    if params.get("roof") == "flat":
+        return "modul"
+    if params.get("roof") == "shed":
+        return "dacha"
+    if params.get("floors") == "mansard":
+        return "mansarda"
+    if params.get("length", 10) <= 6:
+        return "banya-brus" if params.get("walls") == "timber" else "banya-karkas"
+    return {"timber": "brus", "gas": "gazobeton"}.get(params.get("walls"), "karkas")
+
+
 # ---------- Сегменты ----------
 
 def house_materials(text, k):
@@ -530,6 +547,20 @@ def main():
         # концепты не должны попадать в поиск по названию чужой компании
         html = html.replace("<title>", '<meta name="robots" content="noindex, nofollow">\n<title>', 1)
         (d / "index.html").write_text(html, encoding="utf-8")
+        # фото по типам: <slug>/photos/<ключ>/*.jpg|png|webp → photoSets[ключ]
+        conf = cfg.get("configurator")
+        if conf:
+            for pr in conf["presets"]:
+                pr["key"] = preset_key(pr["params"])
+            sets = {}
+            pdir = d / "photos"
+            if pdir.is_dir():
+                for sub in sorted(x for x in pdir.iterdir() if x.is_dir()):
+                    files = sorted(f"photos/{sub.name}/{f.name}" for f in sub.iterdir() if f.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp"))
+                    if files:
+                        sets[sub.name] = files
+            if sets:
+                cfg["company"]["photoSets"] = sets
         (d / "config.js").write_text(
             f"// Концепт для «{seed['name']}» ({seed['city']}). Сгенерирован tools/gen_demos.py из карточки 2ГИС.\n"
             f"// Цены и сроки — примерные. Правьте этот файл, движок общий: ../engine/\n"
