@@ -82,13 +82,16 @@
     photoList = photoList.filter(u => u !== img.getAttribute("src"));
     if (photoList.length) setPhoto(0); else document.getElementById("real-photo").hidden = true;
   };
+  // ссылка на сайт студии на всех демо
+  const STUDIO_URL = "https://yardyproject.ru/";
+  const STUDIO_LINK = `<a class="studio-link" href="${STUDIO_URL}" title="Сайт студии Yardy Project"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="13" fill="#f2a33a"/> <path transform="translate(14.63 51.00) scale(0.0543 -0.0543)" fill="#0a1626" d="M236 0V210H151L13 700H192L277 355H363L448 700H627L489 210H404V0Z"/></svg><span>Сайт студии Yardy Project</span><span aria-hidden="true">→</span></a>`;
   const c = S.company, h = S.hero;
   const P = c.photos || []; // реальные фото компании (из 2ГИС), первое — главное
   photoList = P.slice();
   const touch = matchMedia("(pointer: coarse)").matches;
 
   app.innerHTML = `
-${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></div>` : ""}
+${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</span>${STUDIO_LINK}</div></div>` : ""}
 <header class="top">
   <div class="in">
     <a class="logo" href="#top" id="top">
@@ -289,7 +292,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in">${esc(c.demoNote)}</div></
 <footer>
   <div class="in">
     <span>${esc(c.name)} · ${c.cities.map(esc).join(", ")}</span>
-    ${c.demoNote ? `<span>${esc(c.footerNote || "Демо-шаблон. Данные вымышлены.")}</span>` : ""}
+    ${c.demoNote ? `<a class="studio-foot" href="${STUDIO_URL}">${esc(c.footerNote || "Демо-шаблон от Yardy Project")}</a>` : ""}
   </div>
 </footer>
 <div class="mbar">
