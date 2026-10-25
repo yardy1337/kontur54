@@ -12,9 +12,9 @@
     "manifest_version": 1,
     "app_version": "1.0",
     "layout": {
-      "logo": "/assets/tableau-logo.png",
+      "logo": "https://yardyproject.ru/assets/tableau-logo.png",
       "color": "#f2a33a",
-      "show_title": false
+      "show_title": true
     }
   }
 }
