@@ -14,7 +14,12 @@ window.SITE = {
     "photos": [
       "https://i7.photo.2gis.com/main/branch/4/70000001083871665/common"
     ],
-    "photoNote": "из карточки 2ГИС · 4,9 ★ · 3 отзывов"
+    "photoNote": "из карточки 2ГИС · 4,9 ★ · 3 отзывов",
+    "photoSets": {
+      "banya-brus": [
+        "photos/banya-brus/1.jpg"
+      ]
+    }
   },
   "hero": {
     "title": "Бани в Барнауле <em>для сибирской зимы</em>",
