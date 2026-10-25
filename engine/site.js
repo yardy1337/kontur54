@@ -141,10 +141,6 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
         </div>
         <div class="fallback">3D-модель не поддерживается этим браузером. Этапы стройки описаны ниже.</div>
       </div>
-      <div class="stages" role="group" aria-label="Этапы строительства">
-        ${S.stages.map((s, i) => `<button class="stage-btn" type="button" data-stage="${i}" aria-pressed="${i === 0}"><span class="bar"><span class="fill"></span></span><span class="n">0${i + 1}</span><span class="t">${esc(s.name)}</span></button>`).join("")}
-      </div>
-
       ${CFG ? `
       <details class="config" id="config">
         <summary><span><b>${esc(CFG.title)}</b><span class="muted"> · выберите тип и настройте под себя</span></span><span class="cfg-area" id="cfg-area"></span></summary>
@@ -168,6 +164,10 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
           <div class="cfg-row cfg-go"><span id="cfg-sum"></span><a class="btn primary" href="#calc" id="cfg-calc">Посчитать стоимость</a></div>
         </div>
       </details>` : ""}
+      <div class="stages" role="group" aria-label="Этапы строительства">
+        ${S.stages.map((s, i) => `<button class="stage-btn" type="button" data-stage="${i}" aria-pressed="${i === 0}"><span class="bar"><span class="fill"></span></span><span class="n">0${i + 1}</span><span class="t">${esc(s.name)}</span></button>`).join("")}
+      </div>
+
       <div class="stage-info" aria-live="polite">
         <h3 id="st-title"></h3>
         <span class="term" id="st-term"></span>
