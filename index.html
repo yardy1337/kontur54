@@ -89,6 +89,10 @@ section.block .in { padding-block: 80px; display: grid; gap: 36px; }
 .shot:hover img { transform: scale(1.02); }
 .shot .tag { position: absolute; left: 12px; top: 12px; background: var(--bg); padding: 6px 10px; border-radius: 3px; color: var(--ink); }
 .work-text { display: grid; gap: 16px; }
+.works { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 32px 28px; margin-bottom: 28px; }
+.work-card { display: grid; gap: 14px; align-content: start; justify-items: start; }
+.work-card .shot { width: 100%; }
+.work-card ul { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 6px; }
 .work-text ul { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 6px; }
 .next { border: 1px dashed var(--line); padding: 22px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; color: var(--muted); }
 
@@ -158,7 +162,7 @@ footer .in { padding-block: 28px 36px; display: flex; flex-wrap: wrap; justify-c
 <section class="hero">
   <div class="in">
     <div class="hero-text">
-      <span class="label">Студия веб-разработки · Сибирь</span>
+      <span class="label">Студия веб-разработки · Россия</span>
       <h1>Сайты с 3D, которые <span>продают</span></h1>
       <p class="lead">Пишем сайты, лендинги и веб-приложения с 3D-графикой. Клиент складывает первое впечатление о бизнесе по сайту. Сделаем так, чтобы он выбрал вас.</p>
       <div class="chips">
@@ -168,7 +172,7 @@ footer .in { padding-block: 28px 36px; display: flex; flex-wrap: wrap; justify-c
       </div>
       <div class="cta">
         <a class="btn primary" href="#contact">Получить демо своего сайта</a>
-        <a class="btn" href="kontur54/">Посмотреть пример</a>
+        <a class="btn" href="#works">Наши работы</a>
       </div>
     </div>
     <div class="scene" id="scene">
@@ -196,23 +200,33 @@ footer .in { padding-block: 28px 36px; display: flex; flex-wrap: wrap; justify-c
   <div class="in">
     <div class="head">
       <span class="label">Работы</span>
-      <h2>Пример: сайт стройкомпании</h2>
+      <h2>Сайты для разных сфер</h2>
     </div>
-    <div class="work">
-      <a class="shot" href="kontur54/">
-        <img src="assets/kontur54.jpg" alt="Первый экран демо-сайта Контур-54 с 3D-моделью дома" width="1440" height="900" loading="lazy">
-        <span class="tag label">Демо-проект</span>
-      </a>
-      <div class="work-text">
-        <h3>Контур-54, Новосибирск</h3>
+    <div class="works">
+      <article class="work-card">
+        <a class="shot" href="kontur54/">
+          <img src="assets/kontur54.jpg" alt="Первый экран демо-сайта Контур-54 с 3D-моделью дома" width="1440" height="900" loading="lazy">
+          <span class="tag label">Строительство</span>
+        </a>
+        <h3>Контур-54 · стройкомпания</h3>
         <ul>
-          <li>3D-дом собирается по этапам стройки: от фундамента до отделки</li>
-          <li>Калькулятор стоимости дома</li>
-          <li>Форма заявки и все направления компании</li>
-          <li>Тёмная и светлая тема, телефон и компьютер</li>
+          <li>3D-дом собирается по этапам стройки, конструктор дома</li>
+          <li>Калькулятор стоимости и форма заявки</li>
         </ul>
-        <div><a class="btn primary" href="kontur54/">Открыть сайт</a></div>
-      </div>
+        <a class="btn primary" href="kontur54/">Открыть сайт</a>
+      </article>
+      <article class="work-card">
+        <a class="shot" href="chub/">
+          <img src="assets/chub.jpg" alt="Экраны сайта барбершопа Чуб: услуги, выбор барбера и времени, журнал записей" width="1440" height="900" loading="lazy">
+          <span class="tag label">Барбершоп</span>
+        </a>
+        <h3>Чуб · барбершоп</h3>
+        <ul>
+          <li>Онлайн-запись: услуга, барбер, свободное время</li>
+          <li>Журнал записей и выручка для владельца</li>
+        </ul>
+        <a class="btn primary" href="chub/">Открыть сайт</a>
+      </article>
     </div>
     <div class="next">
       <span>Следующим здесь может быть ваш сайт.</span>
@@ -285,7 +299,7 @@ footer .in { padding-block: 28px 36px; display: flex; flex-wrap: wrap; justify-c
 <footer>
   <div class="in">
     <span>© 2026 Yardy Project</span>
-    <span>Новосибирск · Томск · Барнаул · Красноярск · Омск</span>
+    <span>Россия</span>
   </div>
 </footer>
 
