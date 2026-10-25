@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://yardyproject.ru/sitemap.xml
