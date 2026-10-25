@@ -1,0 +1,20 @@
+{
+  "name": "Yardy Project",
+  "short_name": "Yardy",
+  "icons": [
+    { "src": "/assets/logo-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/assets/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
+  ],
+  "theme_color": "#f2a33a",
+  "background_color": "#f2a33a",
+  "display": "browser",
+  "yandex": {
+    "manifest_version": 1,
+    "app_version": "1.0",
+    "layout": {
+      "logo": "/assets/tableau-logo.png",
+      "color": "#f2a33a",
+      "show_title": false
+    }
+  }
+}
