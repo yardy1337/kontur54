@@ -89,7 +89,7 @@
   const P = c.photos || []; // реальные фото компании (из 2ГИС), первое — главное
   photoList = P.slice();
   const touch = matchMedia("(pointer: coarse)").matches;
-  const C0 = S.calc, GH = C0.kind === "greenhouse"; // калькулятор теплиц: цена по прайсу, а не за м²
+  const C0 = S.calc || null, GH = !!C0 && C0.kind === "greenhouse"; // калькулятор теплиц: цена по прайсу, а не за м²
 
   app.innerHTML = `
 ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</span>${STUDIO_LINK}</div></div>` : ""}
@@ -102,7 +102,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
     </a>
     <nav class="nav" aria-label="Разделы">
       <a href="#services">${esc(S.services.label)}</a>
-      <a href="#calc">Калькулятор</a>
+      ${C0 ? `<a href="#calc">Калькулятор</a>` : ""}
       <a href="#works">${esc(S.works.label || "Объекты")}</a>
       <a href="#lead">Заявка</a>
     </nav>
@@ -165,7 +165,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
             <label class="check" data-for="build"><input type="checkbox" id="cfg-panoramic"> Панорамные окна</label>
             <button class="btn" type="button" id="cfg-cut" aria-pressed="false">Показать в разрезе</button>
           </div>
-          <div class="cfg-row cfg-go"><span id="cfg-sum"></span><a class="btn primary" href="#calc" id="cfg-calc">Посчитать стоимость</a></div>
+          <div class="cfg-row cfg-go"><span id="cfg-sum"></span><a class="btn primary" href="${esc(CFG.cta ? CFG.cta.href : "#calc")}" id="cfg-calc">${esc(CFG.cta ? CFG.cta.text : "Посчитать стоимость")}</a></div>
         </div>
       </details>` : ""}
       <div class="stages" role="group" aria-label="Этапы строительства">
@@ -202,7 +202,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
   </div>
 </section>
 
-<section class="block calc-band" id="calc">
+${C0 ? `<section class="block calc-band" id="calc">
   <div class="in">
     <div class="head">
       <span class="dim">Калькулятор</span>
@@ -281,7 +281,7 @@ ${GH ? `    <div class="calc">
       </div>
     </div>
   </div>
-</section>
+</section>` : ""}
 
 <section class="block" id="works">
   <div class="in">
@@ -291,14 +291,16 @@ ${GH ? `    <div class="calc">
       <p>${esc(S.works.lead)}</p>
     </div>
     <div class="works">
-      ${S.works.items.map(w => `
-      <article class="work">
+      ${S.works.items.map((w, i) => `
+      <article class="work${w.detail ? " has-detail" : ""}">
+        ${w.detail ? `<button class="work-hit" type="button" data-work="${i}" aria-label="Подробнее: ${esc(w.title)}"></button>` : ""}
         <div class="pic">${w.tag ? `<span class="label">${esc(w.tag)}</span>` : ""}
           <svg viewBox="0 0 240 150" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${ICONS[w.icon] || ICONS.house}</svg>
           ${w.photo ? `<img src="${esc(w.photo)}" alt="${esc(w.title)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ""}
         </div>
         <h3>${esc(w.title)}</h3>
         <dl>${w.specs.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>
+        ${w.detail ? `<span class="work-more" aria-hidden="true">Подробнее →</span>` : ""}
       </article>`).join("")}
     </div>
   </div>
@@ -331,6 +333,7 @@ ${GH ? `    <div class="calc">
     ${c.demoNote ? `<a class="studio-foot" href="${STUDIO_URL}"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="13" fill="#f2a33a"/> <path transform="translate(14.63 51.00) scale(0.0543 -0.0543)" fill="#0a1626" d="M236 0V210H151L13 700H192L277 355H363L448 700H627L489 210H404V0Z"/></svg>${esc(c.footerNote || "Демо-шаблон от Yardy Project")}</a>` : ""}
   </div>
 </footer>
+<dialog class="wd" id="wd" aria-labelledby="wd-title"><div class="wd-body" id="wd-body"></div></dialog>
 <div class="mbar">
   <a class="btn primary" href="${esc(h.primary.href)}">${esc(h.primary.short || h.primary.text)}</a>
   <a class="btn" href="${phoneHref(c.phone)}">Позвонить</a>
@@ -445,6 +448,7 @@ ${GH ? `    <div class="calc">
       // «Посчитать стоимость»: площадь и материал из конструктора переходят в калькулятор
       document.getElementById("cfg-calc").addEventListener("click", () => {
         const pr = house.params();
+        if (!C0) { const msg = document.getElementById("f-msg"); if (msg) msg.value = document.getElementById("cfg-sum").textContent; return; }
         if (pr.type === "greenhouse" && GH) { ghFrom(pr); return; }
         const ar = document.getElementById("area");
         ar.value = Math.max(+ar.min, Math.min(+ar.max, pr.area));
@@ -519,8 +523,59 @@ ${GH ? `    <div class="calc">
     document.getElementById("weeks").textContent = w + " " + weeksWord(w);
     document.getElementById("incl").innerHTML = C.include[k].map(s => "<li>" + esc(s) + "</li>").join("");
   }
-  app.querySelectorAll(".controls input").forEach(i => i.addEventListener("input", calc));
-  calc();
+  if (C0) {
+    app.querySelectorAll(".controls input").forEach(i => i.addEventListener("input", calc));
+    calc();
+  }
+
+  /* ---------- Карточка товара: фото, описание, цены, быстрый заказ ---------- */
+  const wd = document.getElementById("wd"), wdBody = document.getElementById("wd-body");
+  function openWork(i) {
+    const w = S.works.items[i], d = w.detail;
+    const photos = [w.photo].concat(d.photos || []).filter(Boolean);
+    wdBody.innerHTML = `
+      <button class="wd-close" type="button" aria-label="Закрыть">×</button>
+      <div class="wd-media">
+        <img id="wd-img" src="${esc(photos[0] || "")}" alt="${esc(w.title)}">
+        ${photos.length > 1 ? `<div class="wd-thumbs">${photos.map((u, k) => `<button type="button" aria-label="Фото ${k + 1}" aria-pressed="${k === 0}" style="background-image:url('${esc(u)}')" data-src="${esc(u)}"></button>`).join("")}</div>` : ""}
+      </div>
+      <div class="wd-info">
+        ${w.tag ? `<span class="dim">${esc(w.tag)}</span>` : ""}
+        <h2 id="wd-title">${esc(w.title)}</h2>
+        ${d.price ? `<p class="wd-price">${esc(d.price)}</p>` : ""}
+        ${(d.text || []).map(t => `<p>${esc(t)}</p>`).join("")}
+        ${d.list && d.list.length ? `<h3 class="wd-sub">${esc(d.listTitle || "Краткое описание")}</h3><ul class="wd-list">${d.list.map(t => `<li>${esc(t)}</li>`).join("")}</ul>` : ""}
+        ${d.table ? `<table class="wd-table"><thead><tr>${d.table.head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead>
+          <tbody>${d.table.rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>` : ""}
+        ${d.note ? `<p class="note">${esc(d.note)}</p>` : ""}
+        <form class="wd-order" novalidate>
+          <label class="sr-only" for="wd-phone">Телефон</label>
+          <input id="wd-phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (900) 000-00-00">
+          <button class="btn primary" type="submit">${esc(d.cta || "Заказать")}</button>
+          <p class="form-status" role="status"></p>
+        </form>
+      </div>`;
+    wd.showModal();
+    try { history.replaceState(null, "", "#t" + (i + 1)); } catch (e) {}
+  }
+  if (wd) {
+    app.addEventListener("click", e => { const b = e.target.closest("[data-work]"); if (b) openWork(+b.dataset.work); });
+    wd.addEventListener("click", e => {
+      if (e.target === wd || e.target.closest(".wd-close")) { wd.close(); return; }
+      const t = e.target.closest(".wd-thumbs button");
+      if (t) { document.getElementById("wd-img").src = t.dataset.src; wd.querySelectorAll(".wd-thumbs button").forEach(b => b.setAttribute("aria-pressed", String(b === t))); }
+    });
+    wd.addEventListener("close", () => { try { history.replaceState(null, "", location.pathname); } catch (e) {} });
+    wd.addEventListener("input", e => { if (e.target.id === "wd-phone") e.target.value = formatPhone(e.target.value); });
+    wd.addEventListener("submit", e => {
+      e.preventDefault();
+      const ph = document.getElementById("wd-phone"), st = wd.querySelector(".form-status");
+      if (ph.value.replace(/\D/g, "").length !== 11) { st.className = "form-status"; st.textContent = "Укажите номер полностью: +7 (900) 000-00-00"; ph.focus(); return; }
+      st.className = "form-status ok"; st.textContent = S.lead.success;
+    });
+    const m = /^#t(\d+)$/.exec(location.hash);
+    if (m && S.works.items[+m[1] - 1] && S.works.items[+m[1] - 1].detail) openWork(+m[1] - 1);
+  }
 
   /* ---------- Заявка ---------- */
   const form = document.getElementById("lead-form");

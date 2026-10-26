@@ -393,3 +393,39 @@ footer .in { padding-block: var(--s-6) var(--s-7); display: flex; flex-wrap: wra
 
 .cfg-types .seg { gap: 6px; }
 .cfg-row[hidden] { display: none !important; }
+
+/* ---------- Карточка товара во всплывающем окне ---------- */
+.work.has-detail { position: relative; cursor: pointer; }
+.work.has-detail:hover h3 { color: var(--c-accent); }
+.work-hit { position: absolute; inset: 0; z-index: 2; background: none; border: 0; padding: 0; cursor: pointer; border-radius: var(--r-lg); }
+.work-hit:focus-visible { outline: 2px solid var(--c-focus); outline-offset: 4px; }
+.work-more { font-size: 14px; font-weight: 600; color: var(--c-accent); }
+.wd { width: min(1040px, calc(100% - 24px)); max-height: calc(100% - 24px); padding: 0; border: 1px solid var(--c-border); border-radius: var(--r-lg); background: var(--c-surface); color: var(--c-text); box-shadow: var(--shadow-2); }
+.wd::backdrop { background: rgb(8 14 18 / .6); }
+.wd-body { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: var(--s-6); padding: var(--s-6); position: relative; }
+.wd-close { position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; border: 0; background: var(--c-sunken); color: var(--c-text); border-radius: 50%; font-size: 26px; line-height: 1; cursor: pointer; z-index: 1; }
+.wd-close:focus-visible { outline: 2px solid var(--c-focus); }
+.wd-media img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: var(--r-md, 8px); background: var(--c-sunken); }
+.wd-thumbs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.wd-thumbs button { width: 64px; height: 48px; border: 2px solid transparent; border-radius: 6px; background: center / cover; cursor: pointer; }
+.wd-thumbs button[aria-pressed="true"] { border-color: var(--c-accent); }
+.wd-info { display: grid; gap: var(--s-3); align-content: start; padding-right: 36px; }
+.wd-info h2 { font-size: clamp(22px, 3vw, 30px); }
+.wd-price { font-size: 26px; font-weight: 600; color: var(--c-accent); }
+.wd-info p { color: var(--c-text-2); }
+.wd-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.wd-table th { text-align: left; font-weight: 600; background: var(--c-sunken); }
+.wd-table th, .wd-table td { padding: 8px 10px; border-bottom: 1px solid var(--c-divider); }
+.wd-table td:last-child, .wd-table th:last-child { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.wd-order { padding: 0; border: 0; background: none; box-shadow: none; display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.wd-order input { flex: 1 1 200px; min-height: 48px; padding: 0 14px; font: inherit; border: 1px solid var(--c-border-strong); border-radius: var(--r-sm); background: var(--c-surface); color: var(--c-text); }
+.wd-order .form-status { flex-basis: 100%; margin: 0; }
+@media (max-width: 760px) {
+  .wd-body { grid-template-columns: minmax(0, 1fr); padding: var(--s-4); gap: var(--s-4); }
+  .wd-info { padding-right: 0; }
+  .wd-table th, .wd-table td { padding: 7px 6px; font-size: 13px; }
+}
+.wd-sub { font-size: 17px; margin-top: var(--s-2); }
+.wd-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; color: var(--c-text-2); font-size: 15px; }
+.wd-list li { position: relative; padding-left: 26px; }
+.wd-list li::before { content: ""; position: absolute; left: 2px; top: 5px; width: 14px; height: 8px; border-left: 2.5px solid var(--c-accent); border-bottom: 2.5px solid var(--c-accent); transform: rotate(-45deg); }
