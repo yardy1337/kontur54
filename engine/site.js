@@ -227,6 +227,10 @@ ${GH ? `    <div class="calc">
           <legend class="label">Профиль</legend>
           <div class="seg">${C0.profiles.map((v, i) => `<input type="radio" name="gprof" id="gprof-${i}" value="${esc(v.id)}"${i === 0 ? " checked" : ""}><label for="gprof-${i}">${esc(v.name)}</label>`).join("")}</div>
         </fieldset>
+        ${C0.densities ? `<fieldset>
+          <legend class="label">${esc(C0.densityLabel || "Поликарбонат")}</legend>
+          <div class="seg">${C0.densities.map((v, i) => `<input type="radio" name="gden" id="gden-${i}" value="${i}"${i === 0 ? " checked" : ""}><label for="gden-${i}">${esc(v)}</label>`).join("")}</div>
+        </fieldset>` : ""}
         <fieldset>
           <legend class="label">${esc(C0.kitLabel || "Установка")}</legend>
           <div class="seg">
@@ -465,16 +469,20 @@ ${GH ? `    <div class="calc">
   const weeksWord = n => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? "неделя" : a >= 2 && a <= 4 && (b < 12 || b > 14) ? "недели" : "недель"; };
   const area = document.getElementById("area");
   const picked = name => app.querySelector(`input[name="${name}"]:checked`).value;
-  // Теплицы: цены из прайса по длине (линейно между известными размерами, дальше — по последнему шагу)
-  function ghPrice(arc, prof, len, width, col) {
-    const at = rows => {
+  // Теплицы: цена из прайса по длине (линейно между известными размерами, дальше — по последнему шагу).
+  // prices[ключ][длина] = [цена для каждой плотности поликарбоната]; install[ключ][длина] = надбавка за установку.
+  // Ключ — шаг дуг или особый профиль (у некоторых производителей усиленный профиль идёт только с одним шагом).
+  function ghKey(arc, prof) { return prof !== C0.profiles[0].id && C0.prices[prof] ? prof : arc; }
+  function ghPrice(key, len, width, di, install) {
+    const at = tab => {
+      const rows = Object.keys(tab).map(Number).sort((x, y) => x - y).map(l => [l, [].concat(tab[l])]);
       let i = rows.findIndex(r => r[0] >= len);
       if (i < 0) i = rows.length - 1; else if (i === 0) i = 1;
-      const [l0, ...a] = rows[i - 1], [l1, ...b] = rows[i];
-      return a[col] + (b[col] - a[col]) * (len - l0) / (l1 - l0);
+      const [l0, a] = rows[i - 1], [l1, b] = rows[i];
+      const k = Math.min(di, a.length - 1);
+      return a[k] + (b[k] - a[k]) * (len - l0) / (l1 - l0);
     };
-    let v = at(C0.prices[arc]);
-    if (prof !== C0.profiles[0].id) { const k = C0.profileBase || arc; v += at(C0.prices[k + "|" + prof]) - at(C0.prices[k]); }
+    let v = at(C0.prices[key]) + (install ? at(C0.install[key]) : 0);
     if (width < (C0.widths || [3])[0]) v *= C0.narrowK || 0.9;
     return Math.round(v / 500) * 500;
   }
@@ -486,8 +494,12 @@ ${GH ? `    <div class="calc">
     g.dispatchEvent(new Event("input", { bubbles: true }));
   }
   function calcGh() {
-    const len = C0.lengths[+document.getElementById("glen").value], w = +picked("gwc"), arc = picked("garc"), prof = picked("gprof"), k = picked("kit");
-    const no = ghPrice(arc, prof, len, w, 0), yes = ghPrice(arc, prof, len, w, 1);
+    const prof = picked("gprof"), fixed = (C0.profileArc || {})[prof];
+    // профиль, который делают только с одним шагом дуг: шаг выставляется сам, остальные недоступны
+    app.querySelectorAll('input[name="garc"]').forEach(r => { r.disabled = !!fixed && r.value !== fixed; if (fixed && r.value === fixed) r.checked = true; });
+    const len = C0.lengths[+document.getElementById("glen").value], w = +picked("gwc"), arc = picked("garc"), k = picked("kit");
+    const di = C0.densities ? +picked("gden") : 0, key = ghKey(arc, prof);
+    const no = ghPrice(key, len, w, di, false), yes = ghPrice(key, len, w, di, true);
     document.getElementById("glen-out").textContent = len + " м";
     document.getElementById("sum").textContent = "от " + fmt(k === "turn" ? yes : no);
     document.getElementById("per-m").textContent = "от " + fmt(no);

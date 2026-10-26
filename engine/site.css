@@ -308,6 +308,8 @@ legend { padding: 0; margin-bottom: var(--s-3); }
 .seg label:hover { background: var(--c-sunken); }
 .seg input:checked + label { border-color: var(--c-primary); background: var(--c-primary); color: var(--c-on-primary); }
 .seg input:focus-visible + label { outline: 2px solid var(--c-focus); outline-offset: 2px; }
+.seg input:disabled + label { opacity: .45; cursor: not-allowed; border-style: dashed; }
+.seg input:disabled + label:hover { background: var(--c-surface); }
 .range-row { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); }
 .range-row output { font: 500 22px/1 var(--font-mono); font-variant-numeric: tabular-nums; }
 input[type="range"] { width: 100%; accent-color: var(--c-secondary); min-height: 32px; }
