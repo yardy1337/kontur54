@@ -588,6 +588,7 @@ ${GH ? `    <div class="calc">
       e.preventDefault();
       const ph = document.getElementById("wd-phone"), st = wd.querySelector(".form-status");
       if (ph.value.replace(/\D/g, "").length !== 11) { st.className = "form-status"; st.textContent = "Укажите номер полностью: +7 (900) 000-00-00"; ph.focus(); return; }
+      sendLead(`Хочу заказать: ${S.works.items[+(location.hash.match(/\d+/) || [1])[0] - 1].title}. Мой телефон: ${ph.value}`);
       st.className = "form-status ok"; st.textContent = S.lead.success;
     });
     const m = /^#t(\d+)$/.exec(location.hash);
@@ -623,9 +624,16 @@ ${GH ? `    <div class="calc">
     if (phone.getAttribute("aria-invalid") === "true" && phoneOk()) showPhoneError(false);
   });
   phone.addEventListener("blur", () => { if (phone.value) showPhoneError(!phoneOk()); });
+  // Заявка уходит в WhatsApp компании готовым сообщением (lead.whatsapp: номер без «+»), сервер не нужен
+  function sendLead(text) {
+    if (!S.lead.whatsapp) return;
+    window.open(`https://wa.me/${S.lead.whatsapp}?text=${encodeURIComponent(text)}`, "_blank", "noopener");
+  }
   form.addEventListener("submit", e => {
     e.preventDefault();
     if (!phoneOk()) { showPhoneError(true); phone.focus(); return; }
+    sendLead(["Заявка с сайта", "Имя: " + (form.elements.name.value || "—"), "Телефон: " + phone.value,
+      (S.lead.typeLabel || "Что строим") + ": " + form.elements.type.value, form.elements.msg.value ? "Комментарий: " + form.elements.msg.value : ""].filter(Boolean).join("\n"));
     const btn = form.querySelector('button[type="submit"]');
     btn.disabled = true;
     btn.textContent = "Отправляем…";
