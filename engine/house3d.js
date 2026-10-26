@@ -221,7 +221,7 @@
     });
 
     /* ---------- Постройка собирается из параметров (конструктор) ---------- */
-    // P.type: "house" | "barrel" (баня-бочка)
+    // P.type: "house" | "barrel" (баня-бочка) | "greenhouse" (арочная теплица: P.arc — шаг дуг, м; P.profile: "20x20" | "20x30")
     // P.length, P.width (м); P.roof: "gable" | "shed" | "flat" | "barn"; P.floors: "one" | "mansard"
     // P.walls: "frame" | "timber" | "gas"; P.facade, P.roofColor, P.trim: css-цвет или "" (цвет шаблона)
     // P.wood: "natural" | "light" | "dark"; P.panoramic, P.terrace: bool
@@ -309,7 +309,8 @@
 
     function buildHouse() {
       disposeHouse();
-      if (P.type === "barrel") buildBarrel(); else buildFramed();
+      LOOK.y = P.type === "greenhouse" ? 1.1 : 2.3;
+      if (P.type === "barrel") buildBarrel(); else if (P.type === "greenhouse") buildGreenhouse(); else buildFramed();
       applyColors();
     }
 
@@ -582,6 +583,153 @@
       snowCap.position.y = cy;
       drop(snowCap, 1.0, 4.55, 0.35);
     }
+
+    /* ---------- Арочная теплица из поликарбоната ---------- */
+    // Этапы: основание → дуги → связи и торцы → поликарбонат → двери, форточка, грядки
+    class ArcCurve extends T.Curve {
+      constructor(half, h, y0) { super(); this.half = half; this.h = h; this.y0 = y0; }
+      getPoint(u, out = new T.Vector3()) { const t = Math.PI * u; return out.set(0, this.y0 + this.h * Math.sin(t), this.half * Math.cos(t)); }
+    }
+    function buildGreenhouse() {
+      const L = P.length, W = P.width, step = +P.arc || 0.65, thick = P.profile === "20x30";
+      const half = W / 2, H = W < 2.8 ? 2.0 : 2.1, y0 = 0.12, tubeR = thick ? 0.03 : 0.022;
+      const arcY = z => y0 + H * Math.sqrt(Math.max(0, 1 - (z / half) * (z / half)));
+      dims = { W: L * 0.6 + 1, D: 4.4 }; // камера ближе: теплица ниже и уже дома
+      const steel = M("--house-steel", { roughness: 0.3, metalness: 0.75, clippingPlanes: [cutPlane] });
+      const polyMat = () => M("--house-poly", { roughness: 0.1, metalness: 0, transparent: true, opacity: 0.42, side: T.DoubleSide, depthWrite: false, envMapIntensity: 1.6 });
+      const poly = polyMat(); poly.clippingPlanes = [cutPlane];
+      const soil = M("--house-soil", { roughness: 1, clippingPlanes: [cutPlane] });
+      const leaf = M("--house-plant", { roughness: 0.8, flatShading: true, clippingPlanes: [cutPlane] });
+      const fruit = M("--house-fruit", { roughness: 0.35, clippingPlanes: [cutPlane] });
+
+      drawPlan(L, W);
+      const gs = [], gl = (a, b) => gs.push(...a, ...b);
+      [-L / 2, L / 2].forEach(x => { for (let i = 0; i < 24; i++) { const a = Math.PI * i / 24, b = Math.PI * (i + 1) / 24; gl([x, y0 + H * Math.sin(a), half * Math.cos(a)], [x, y0 + H * Math.sin(b), half * Math.cos(b)]); } });
+      [0, Math.PI / 2, Math.PI].forEach(a => gl([-L / 2, y0 + H * Math.sin(a), half * Math.cos(a)], [L / 2, y0 + H * Math.sin(a), half * Math.cos(a)]));
+      [ghost, , ghostMat] = lines(gs, 0.35);
+
+      /* Этап 1. Подготовленная площадка и оцинкованное основание */
+      grow(box(L + 1.0, 0.05, W + 1.0, soil, 0, 0, 0, "bottom"), "y", 0.3, 0.3);
+      [[L, 0.1, 0.05, 0, half, "x"], [L, 0.1, 0.05, 0, -half, "x"], [0.05, 0.1, W, L / 2, 0, "z"], [0.05, 0.1, W, -L / 2, 0, "z"]].forEach(([w, h, d, x, z, ax], i) =>
+        grow(box(w, h, d, steel, x, 0.05, z, "bottom"), ax, 0.55 + i * 0.06, 0.3));
+      for (let x = -L / 2; x <= L / 2 + 0.01; x += 2) [half, -half].forEach((z, k) => grow(box(0.04, 0.35, 0.04, steel, x, -0.2, z, "bottom"), "y", 0.75 + k * 0.03, 0.2));
+
+      /* Этап 2. Дуги встают одна за другой с выбранным шагом */
+      const n = Math.max(1, Math.round(L / step));
+      for (let i = 0; i <= n; i++) {
+        const g = new T.TubeGeometry(new ArcCurve(half, H, y0), 40, tubeR, 4, false);
+        const m = shadowy(new T.Mesh(g, steel));
+        m.position.x = -L / 2 + L * i / n;
+        house.add(m);
+        const total = g.index.count;
+        on(1.0 + 0.75 * i / (n + 1), 0.28, (e, t) => { show(m, t); g.setDrawRange(0, Math.ceil(total * e / 6) * 6); });
+      }
+
+      /* Этап 3. Продольные связи и каркас торцов: стойки, дверной проём, форточка */
+      [0.32, 0.95, Math.PI / 2, Math.PI - 0.95, Math.PI - 0.32].forEach((a, k) => {
+        const r = box(L, 0.024, 0.024, steel, 0, y0 + (H - tubeR) * Math.sin(a), (half - tubeR) * Math.cos(a));
+        r.rotation.x = -a;
+        grow(r, "x", 2.0 + k * 0.08, 0.3);
+      });
+      const dz = 0.42, doorTop = y0 + 1.65;
+      [L / 2, -L / 2].forEach((x, e) => {
+        [dz, -dz, half * 0.62, -half * 0.62].forEach((z, k) => {
+          const h = arcY(z) - y0;
+          grow(box(0.035, h, 0.035, steel, x, y0, z, "bottom"), "y", 2.3 + e * 0.1 + k * 0.03, 0.25);
+        });
+        [doorTop, doorTop + 0.07].forEach((y, k) => grow(box(0.035, 0.035, dz * 2, steel, x, y, 0), "z", 2.55 + e * 0.1 + k * 0.04, 0.2));
+      });
+
+      /* Этап 4. Поликарбонат: листы ложатся вдоль теплицы, затем закрываются торцы */
+      const o = tubeR + 0.006, SEGS = 48;
+      const pos = [], idx = [];
+      for (let i = 0; i <= SEGS; i++) {
+        const t = Math.PI * i / SEGS, z = (half + o) * Math.cos(t), y = y0 + (H + o) * Math.sin(t);
+        pos.push(-L / 2, y, z, L / 2, y, z);
+        if (i < SEGS) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+      }
+      const skinGeo = new T.BufferGeometry();
+      skinGeo.setAttribute("position", new T.Float32BufferAttribute(pos, 3));
+      skinGeo.setIndex(idx);
+      skinGeo.computeVertexNormals();
+      const skinClip = new T.Plane(new T.Vector3(-1, 0, 0), -L / 2);
+      const skinMat = polyMat(); skinMat.clippingPlanes = [skinClip, cutPlane];
+      const skin = new T.Mesh(skinGeo, skinMat);
+      skin.renderOrder = 2;
+      house.add(skin);
+      on(2.9, 0.8, (e, t) => { show(skin, t); skinClip.constant = -L / 2 + (L + 0.2) * e; });
+      // торцы с проёмами под дверь и форточку
+      const endShape = new T.Shape();
+      endShape.moveTo(half + o, y0);
+      for (let i = 1; i <= SEGS; i++) { const t = Math.PI * i / SEGS; endShape.lineTo((half + o) * Math.cos(t), y0 + (H + o) * Math.sin(t)); }
+      endShape.closePath();
+      const hole = (x0, x1, ya, yb) => { const hp = new T.Path(); hp.moveTo(x0, ya); hp.lineTo(x1, ya); hp.lineTo(x1, yb); hp.lineTo(x0, yb); hp.closePath(); return hp; };
+      endShape.holes.push(hole(-dz, dz, y0 + 0.02, doorTop), hole(-dz, dz, doorTop + 0.09, arcY(dz) - 0.08));
+      const endGeo = new T.ShapeGeometry(endShape, 2);
+      endGeo.rotateY(Math.PI / 2);
+      [L / 2 + 0.02, -L / 2 - 0.02].forEach((x, i) => {
+        const m = new T.Mesh(endGeo, poly);
+        m.position.x = x; m.renderOrder = 2;
+        grow(m, "y", 3.55 + i * 0.12, 0.3);
+      });
+
+      /* Этап 5. Двери (передняя приоткрыта), форточки, грядки и рассада */
+      [L / 2 + 0.03, -L / 2 - 0.03].forEach((x, i) => {
+        const pivot = new T.Group();
+        pivot.position.set(x, y0, -dz);
+        const door = new T.Group();
+        const dh = doorTop - y0 - 0.03;
+        door.add(box(0.03, dh, dz * 2, poly, 0, dh / 2, dz));
+        [[0.035, dh, 0.03, 0, dh / 2, 0.015], [0.035, dh, 0.03, 0, dh / 2, dz * 2 - 0.015], [0.035, 0.03, dz * 2, 0, 0.015, dz], [0.035, 0.03, dz * 2, 0, dh - 0.015, dz], [0.035, 0.03, dz * 2, 0, dh * 0.5, dz]]
+          .forEach(([w, h, d, bx, by, bz]) => door.add(box(w, h, d, steel, bx, by, bz)));
+        pivot.add(door);
+        house.add(pivot);
+        const out = i ? -1 : 1;
+        on(4.0 + i * 0.08, 0.3, (e, t) => {
+          show(pivot, t);
+          pivot.position.x = x + out * (1 - e) * 0.5;
+          pivot.rotation.y = i ? 0 : -out * 1.05 * span(e, 0.6, 1); // передняя дверь открывается наружу
+        });
+        const vent = box(0.03, arcY(dz) - doorTop - 0.17, dz * 2 - 0.04, poly, x, (doorTop + 0.09 + arcY(dz) - 0.08) / 2, 0);
+        slide(vent, out * 0.4, 0, 4.12 + i * 0.08, 0.25);
+      });
+      const path = 0.6, bw = Math.max(0.45, (W - path) / 2 - 0.2), bl = L - 0.6, bh = 0.28;
+      const bedWood = timberMat(bl / 1.2, bh / 0.9, [cutPlane]);
+      const plants = [];
+      [1, -1].forEach((sgn, k) => {
+        const z = sgn * (path / 2 + bw / 2);
+        const bed = new T.Group();
+        bed.add(box(bl, bh, 0.04, bedWood, 0, bh / 2, bw / 2), box(bl, bh, 0.04, bedWood, 0, bh / 2, -bw / 2),
+          box(0.04, bh, bw, bedWood, bl / 2, bh / 2, 0), box(0.04, bh, bw, bedWood, -bl / 2, bh / 2, 0),
+          box(bl - 0.04, 0.04, bw - 0.04, soil, 0, bh - 0.05, 0));
+        bed.position.set(0, y0, z);
+        grow(bed, "x", 4.1 + k * 0.08, 0.3);
+        for (let x = -bl / 2 + 0.35; x <= bl / 2 - 0.3; x += 0.5) plants.push([x, z]);
+      });
+      const leafGeo = new T.IcosahedronGeometry(0.17, 0);
+      const fruitGeo = new T.SphereGeometry(0.045, 10, 8);
+      const leaves = shadowy(new T.InstancedMesh(leafGeo, leaf, plants.length * 2));
+      const fruits = new T.InstancedMesh(fruitGeo, fruit, plants.length * 2);
+      house.add(leaves, fruits);
+      on(4.35, 0.5, e => {
+        plants.forEach(([x, z], i) => {
+          const s = clamp01(e * 1.6 - (i % 7) * 0.08);
+          [[0, 0.22, 1], [0.05, 0.48, 0.8]].forEach(([dx, dy, k], j) => {
+            dummy.position.set(x + dx, y0 + bh + dy * s, z);
+            dummy.rotation.set(0, i * 1.3 + j, 0);
+            dummy.scale.set(s * k, s * k * 1.25, s * k);
+            dummy.updateMatrix();
+            leaves.setMatrixAt(i * 2 + j, dummy.matrix);
+            const f = clamp01(s * 2 - 1);
+            dummy.position.set(x + (j ? 0.12 : -0.1), y0 + bh + (j ? 0.38 : 0.2) * s, z + (j ? -0.1 : 0.11));
+            dummy.scale.setScalar(Math.max(0.001, f));
+            dummy.updateMatrix();
+            fruits.setMatrixAt(i * 2 + j, dummy.matrix);
+          });
+        });
+        leaves.instanceMatrix.needsUpdate = fruits.instanceMatrix.needsUpdate = true;
+      });
+    }
     buildHouse();
 
     /* ---------- Снег (считает GPU) ---------- */
@@ -611,6 +759,7 @@
     });
     const snow = new T.Points(fGeo, snowMat);
     snow.frustumCulled = false;
+    snow.visible = !opts.summer; // летняя сцена (теплицы, сады) — без снегопада
     scene.add(snow);
 
     /* ---------- Тема: все цвета сцены — из CSS-токенов ---------- */
@@ -866,7 +1015,7 @@
         shadowDirty = true; dirty = true;
       },
       params() {
-        const area = P.type === "barrel" ? P.length * 2.3 : P.length * P.width * (P.floors === "mansard" && P.roof !== "flat" ? 1.6 : 1);
+        const area = P.type === "barrel" ? P.length * 2.3 : P.type === "greenhouse" ? P.length * P.width : P.length * P.width * (P.floors === "mansard" && P.roof !== "flat" ? 1.6 : 1);
         return Object.assign({}, P, { area: Math.round(area) });
       }
     };

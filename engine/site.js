@@ -89,6 +89,7 @@
   const P = c.photos || []; // реальные фото компании (из 2ГИС), первое — главное
   photoList = P.slice();
   const touch = matchMedia("(pointer: coarse)").matches;
+  const C0 = S.calc, GH = C0.kind === "greenhouse"; // калькулятор теплиц: цена по прайсу, а не за м²
 
   app.innerHTML = `
 ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</span>${STUDIO_LINK}</div></div>` : ""}
@@ -102,7 +103,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
     <nav class="nav" aria-label="Разделы">
       <a href="#services">${esc(S.services.label)}</a>
       <a href="#calc">Калькулятор</a>
-      <a href="#works">Объекты</a>
+      <a href="#works">${esc(S.works.label || "Объекты")}</a>
       <a href="#lead">Заявка</a>
     </nav>
     <a class="phone" href="${phoneHref(c.phone)}">${esc(c.phone)}</a>
@@ -145,20 +146,23 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
       <details class="config" id="config">
         <summary><span><b>${esc(CFG.title)}</b><span class="muted"> · выберите тип и настройте под себя</span></span><span class="cfg-area" id="cfg-area"></span></summary>
         <div class="cfg-body">
-          <fieldset class="cfg-row cfg-types"><legend class="label">Тип</legend><div class="seg">
+          <fieldset class="cfg-row cfg-types"${CFG.presets.length < 2 ? " hidden" : ""}><legend class="label">Тип</legend><div class="seg">
             ${CFG.presets.map((pr, i) => `<input type="radio" name="cfg-type" id="cfg-t${i}" value="${i}"${i === 0 ? " checked" : ""}><label for="cfg-t${i}">${esc(pr.name)}</label>`).join("")}</div></fieldset>
           <div class="cfg-row"><label class="label" for="cfg-len">Длина</label><input type="range" id="cfg-len" min="6" max="14" step="0.5" value="10"><output id="cfg-len-out"></output></div>
           <div class="cfg-row" data-for="house"><label class="label" for="cfg-wid">Ширина</label><input type="range" id="cfg-wid" min="3" max="10" step="0.5" value="8"><output id="cfg-wid-out"></output></div>
+          ${segRow("gw", "Ширина", [["3", "3 м"], ["2.5", "2,5 м"]], "greenhouse")}
+          ${segRow("arc", "Шаг дуг", [["0.65", "0,65 м"], ["1", "1 м"], ["0.5", "0,5 м"]], "greenhouse")}
+          ${segRow("prof", "Профиль", [["20x20", "20×20"], ["20x30", "20×30, усиленный"]], "greenhouse")}
           ${segRow("roof", "Кровля", [["gable", "Двускатная"], ["shed", "Односкатная"], ["flat", "Плоская"], ["barn", "Барнхаус"]], "house")}
           ${segRow("floors", "Этажность", [["one", "1 этаж"], ["mansard", "С мансардой"]], "house")}
           ${segRow("walls", "Стены", [["frame", "Каркас"], ["timber", "Брус"], ["gas", "Газобетон"]], "house")}
           ${swatchRow("facade", "Цвет фасада", FACADES, "facade")}
           ${segRow("wood", "Древесина", [["natural", "Натуральная"], ["light", "Светлая"], ["dark", "Тёмная"]], "wood")}
-          ${swatchRow("roofColor", "Кровля", ROOFS)}
-          ${swatchRow("trim", "Окна и отделка", TRIMS)}
+          ${swatchRow("roofColor", "Кровля", ROOFS, "build")}
+          ${swatchRow("trim", "Окна и отделка", TRIMS, "build")}
           <div class="cfg-row cfg-toggles">
-            <label class="check"><input type="checkbox" id="cfg-terrace" checked> Терраса</label>
-            <label class="check"><input type="checkbox" id="cfg-panoramic"> Панорамные окна</label>
+            <label class="check" data-for="build"><input type="checkbox" id="cfg-terrace" checked> Терраса</label>
+            <label class="check" data-for="build"><input type="checkbox" id="cfg-panoramic"> Панорамные окна</label>
             <button class="btn" type="button" id="cfg-cut" aria-pressed="false">Показать в разрезе</button>
           </div>
           <div class="cfg-row cfg-go"><span id="cfg-sum"></span><a class="btn primary" href="#calc" id="cfg-calc">Посчитать стоимость</a></div>
@@ -205,7 +209,33 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
       <h2>${esc(S.calc.title)}</h2>
       <p>${esc(S.calc.lead)}</p>
     </div>
-    <div class="calc">
+${GH ? `    <div class="calc">
+      <div class="controls">
+        <fieldset>
+          <legend class="label">Ширина</legend>
+          <div class="seg">${(C0.widths || [3]).map((w, i) => `<input type="radio" name="gwc" id="gwc-${i}" value="${w}"${i === 0 ? " checked" : ""}><label for="gwc-${i}">${String(w).replace(".", ",")} м</label>`).join("")}</div>
+        </fieldset>
+        <fieldset>
+          <div class="range-row"><label class="label" for="glen">Длина</label><output id="glen-out" for="glen"></output></div>
+          <input type="range" id="glen" min="0" max="${(C0.lengths || [4]).length - 1}" step="1" value="${Math.max(0, (C0.lengths || []).indexOf(6))}">
+        </fieldset>
+        <fieldset>
+          <legend class="label">Шаг дуг</legend>
+          <div class="seg">${C0.variants.map((v, i) => `<input type="radio" name="garc" id="garc-${i}" value="${esc(v.id)}"${i === 0 ? " checked" : ""}><label for="garc-${i}">${esc(v.name)}</label>`).join("")}</div>
+        </fieldset>
+        <fieldset>
+          <legend class="label">Профиль</legend>
+          <div class="seg">${C0.profiles.map((v, i) => `<input type="radio" name="gprof" id="gprof-${i}" value="${esc(v.id)}"${i === 0 ? " checked" : ""}><label for="gprof-${i}">${esc(v.name)}</label>`).join("")}</div>
+        </fieldset>
+        <fieldset>
+          <legend class="label">${esc(C0.kitLabel || "Установка")}</legend>
+          <div class="seg">
+            <input type="radio" name="kit" id="kit-shell" value="shell"><label for="kit-shell">${esc((C0.kits || [])[0] || "Без установки")}</label>
+            <input type="radio" name="kit" id="kit-turn" value="turn" checked><label for="kit-turn">${esc((C0.kits || [])[1] || "С установкой")}</label>
+          </div>
+        </fieldset>
+      </div>
+` : `    <div class="calc">
       <div class="controls">
         <fieldset>
           <legend class="label">${esc(S.calc.typeLabel || "Технология")}</legend>
@@ -232,15 +262,17 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
           <input type="range" id="area" min="${S.calc.area.min}" max="${S.calc.area.max}" step="${S.calc.area.step}" value="${S.calc.area.value}">
         </fieldset>
       </div>
+`}
       <div class="result" aria-live="polite">
         <span class="label">Примерная стоимость</span>
         <div class="sum" id="sum"></div>
         <dl>
-          <dt>Цена за м²</dt><dd id="per-m"></dd>
-          <dt>${esc(S.calc.termLabel || "Срок строительства")}</dt><dd id="weeks"></dd>
+          <dt>${GH ? esc((C0.kits || [])[0] || "Без установки") : "Цена за м²"}</dt><dd id="per-m"></dd>
+          <dt>${GH ? esc((C0.kits || [])[1] || "С установкой") : esc(S.calc.termLabel || "Срок строительства")}</dt><dd id="weeks"></dd>
+          ${GH && C0.term ? `<dt>${esc(C0.term[0])}</dt><dd>${esc(C0.term[1])}</dd>` : ""}
         </dl>
         <ul id="incl"></ul>
-        <a class="btn primary" href="#lead">Получить точную смету</a>
+        <a class="btn primary" href="#lead">${esc(C0.cta || "Получить точную смету")}</a>
         ${S.calc.note ? `<p class="note">${esc(S.calc.note)}</p>` : ""}
       </div>
     </div>
@@ -250,7 +282,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
 <section class="block" id="works">
   <div class="in">
     <div class="head">
-      <span class="dim">Объекты</span>
+      <span class="dim">${esc(S.works.label || "Объекты")}</span>
       <h2>${esc(S.works.title)}</h2>
       <p>${esc(S.works.lead)}</p>
     </div>
@@ -279,7 +311,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
     <form id="lead-form" novalidate>
       <div class="field"><label for="f-name">Имя</label><input id="f-name" name="name" autocomplete="name" placeholder="Андрей"></div>
       <div class="field"><label for="f-phone">Телефон</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 (900) 000-00-00" aria-describedby="f-phone-err"><span class="err" id="f-phone-err"></span></div>
-      <div class="field wide"><label for="f-type">Что строим</label>
+      <div class="field wide"><label for="f-type">${esc(S.lead.typeLabel || "Что строим")}</label>
         <select id="f-type" name="type">${S.lead.types.map(t => `<option>${esc(t)}</option>`).join("")}</select>
       </div>
       <div class="field wide"><label for="f-msg">Комментарий</label><textarea id="f-msg" name="msg" placeholder="${esc(S.lead.placeholder)}"></textarea></div>
@@ -331,6 +363,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
   }
 
   const house = window.House3D && window.House3D.mount(document.getElementById("scene"), {
+    summer: S.season === "summer",
     onProgress(p) {
       fills.forEach((f, i) => { f.style.width = (Math.max(0, Math.min(1, p - i)) * 100).toFixed(1) + "%"; });
       showStage(Math.min(4, Math.floor(Math.max(0, p - 0.001))));
@@ -353,29 +386,36 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
       const setVal = (n, v) => { const el = cfg.querySelector(`input[name="cfg-${n}"][value="${v}"]`); if (el) el.checked = true; };
       const len = document.getElementById("cfg-len"), wid = document.getElementById("cfg-wid");
       const WALLS = { frame: "каркас", timber: "брус", gas: "газобетон" };
-      const RANGE = { house: [3, 14], barrel: [3, 6] }; // от маленькой бани 3×4 до большого дома
+      const RANGE = { house: [3, 14], barrel: [3, 6], greenhouse: [4, 18] }; // от маленькой бани 3×4 до большого дома
+      const GH_LEN = [4, 5, 6, 7, 8, 10, 12, 14, 16, 18]; // длины теплиц: модули по 1 и 2 м
+      const snapLen = v => GH_LEN.reduce((a, b) => Math.abs(b - v) < Math.abs(a - v) ? b : a);
       let raf = 0, type = "house";
       function applyPreset(i) {
-        const pr = Object.assign({ type: "house", roof: "gable", floors: "one", walls: "frame", facade: "", roofColor: "", trim: "", wood: "natural", panoramic: false, terrace: true }, CFG.presets[i].params);
+        const pr = Object.assign({ type: "house", roof: "gable", floors: "one", walls: "frame", facade: "", roofColor: "", trim: "", wood: "natural", panoramic: false, terrace: true, arc: "0.65", profile: "20x20" }, CFG.presets[i].params);
         type = pr.type;
         showPhotos(CFG.presets[i].key, CFG.presets[i].name);
         const [mn, mx] = RANGE[type] || RANGE.house;
-        len.min = mn; len.max = mx; len.value = pr.length;
+        len.min = mn; len.max = mx; len.step = type === "greenhouse" ? 1 : 0.5; len.value = pr.length;
         wid.value = pr.width || 8;
         ["roof", "floors", "walls", "wood", "facade", "roofColor", "trim"].forEach(k => setVal(k, pr[k]));
+        setVal("gw", String(pr.width || 3)); setVal("arc", String(pr.arc)); setVal("prof", pr.profile);
         document.getElementById("cfg-terrace").checked = !!pr.terrace;
         document.getElementById("cfg-panoramic").checked = !!pr.panoramic;
         sync();
       }
       function sync() {
-        const p = { type, length: +len.value, width: +wid.value, roof: val("roof"), floors: val("floors"), walls: val("walls"),
+        const gh = type === "greenhouse";
+        if (gh) len.value = snapLen(+len.value);
+        const p = { type, length: +len.value, width: gh ? +val("gw") : +wid.value, roof: val("roof"), floors: val("floors"), walls: val("walls"),
           wood: val("wood"), facade: val("facade") || "", roofColor: val("roofColor") || "", trim: val("trim") || "",
-          terrace: document.getElementById("cfg-terrace").checked, panoramic: document.getElementById("cfg-panoramic").checked };
+          terrace: document.getElementById("cfg-terrace").checked, panoramic: document.getElementById("cfg-panoramic").checked,
+          arc: val("arc"), profile: val("prof") };
         // показываем только те настройки, что имеют смысл для выбранного типа
         const woody = type === "barrel" || p.walls === "timber";
         cfg.querySelectorAll("[data-for]").forEach(el => {
           const f = el.dataset.for;
-          el.hidden = (f === "house" && type !== "house") || (f === "facade" && (type !== "house" || p.walls === "timber")) || (f === "wood" && !woody);
+          el.hidden = (f === "house" && type !== "house") || (f === "facade" && (type !== "house" || p.walls === "timber")) || (f === "wood" && !woody) ||
+            (f === "greenhouse" && !gh) || (f === "build" && gh);
         });
         document.getElementById("cfg-len-out").textContent = String(p.length).replace(".", ",") + " м";
         document.getElementById("cfg-wid-out").textContent = String(p.width).replace(".", ",") + " м";
@@ -383,10 +423,11 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
         raf = requestAnimationFrame(() => {
           house.configure(p);
           const pr = house.params();
+          const num = v => String(v).replace(".", ",");
           const what = type === "barrel" ? "баня-бочка" : WALLS[pr.walls] + (pr.floors === "mansard" && pr.roof !== "flat" ? ", с мансардой" : "");
-          const text = `≈ ${pr.area} м² · ${what}`;
+          const text = gh ? `${num(pr.width)} × ${pr.length} м · шаг ${num(pr.arc)} м · ${pr.profile.replace("x", "×")}` : `≈ ${pr.area} м² · ${what}`;
           document.getElementById("cfg-area").textContent = text;
-          document.getElementById("cfg-sum").textContent = "Площадь " + text;
+          document.getElementById("cfg-sum").textContent = (gh ? "Теплица " : "Площадь ") + text;
         });
       }
       cfg.addEventListener("input", e => { if (e.target.name === "cfg-type") applyPreset(+e.target.value); else sync(); });
@@ -400,6 +441,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
       // «Посчитать стоимость»: площадь и материал из конструктора переходят в калькулятор
       document.getElementById("cfg-calc").addEventListener("click", () => {
         const pr = house.params();
+        if (pr.type === "greenhouse" && GH) { ghFrom(pr); return; }
         const ar = document.getElementById("area");
         ar.value = Math.max(+ar.min, Math.min(+ar.max, pr.area));
         const m = document.getElementById("mat-" + (pr.type === "barrel" ? "cedar" : pr.walls)) || document.getElementById("mat-timber");
@@ -423,7 +465,37 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
   const weeksWord = n => { const a = n % 10, b = n % 100; return a === 1 && b !== 11 ? "неделя" : a >= 2 && a <= 4 && (b < 12 || b > 14) ? "недели" : "недель"; };
   const area = document.getElementById("area");
   const picked = name => app.querySelector(`input[name="${name}"]:checked`).value;
+  // Теплицы: цены из прайса по длине (линейно между известными размерами, дальше — по последнему шагу)
+  function ghPrice(arc, prof, len, width, col) {
+    const at = rows => {
+      let i = rows.findIndex(r => r[0] >= len);
+      if (i < 0) i = rows.length - 1; else if (i === 0) i = 1;
+      const [l0, ...a] = rows[i - 1], [l1, ...b] = rows[i];
+      return a[col] + (b[col] - a[col]) * (len - l0) / (l1 - l0);
+    };
+    let v = at(C0.prices[arc]);
+    if (prof !== C0.profiles[0].id) { const k = C0.profileBase || arc; v += at(C0.prices[k + "|" + prof]) - at(C0.prices[k]); }
+    if (width < (C0.widths || [3])[0]) v *= C0.narrowK || 0.9;
+    return Math.round(v / 500) * 500;
+  }
+  function ghFrom(pr) {
+    const set = (n, v) => { const el = app.querySelector(`input[name="${n}"][value="${v}"]`); if (el) el.checked = true; };
+    set("gwc", pr.width); set("garc", pr.arc); set("gprof", pr.profile);
+    const g = document.getElementById("glen"), i = C0.lengths.indexOf(pr.length);
+    if (i >= 0) g.value = i;
+    g.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  function calcGh() {
+    const len = C0.lengths[+document.getElementById("glen").value], w = +picked("gwc"), arc = picked("garc"), prof = picked("gprof"), k = picked("kit");
+    const no = ghPrice(arc, prof, len, w, 0), yes = ghPrice(arc, prof, len, w, 1);
+    document.getElementById("glen-out").textContent = len + " м";
+    document.getElementById("sum").textContent = "от " + fmt(k === "turn" ? yes : no);
+    document.getElementById("per-m").textContent = "от " + fmt(no);
+    document.getElementById("weeks").textContent = "от " + fmt(yes);
+    document.getElementById("incl").innerHTML = C0.include[k].map(s => "<li>" + esc(s) + "</li>").join("");
+  }
   function calc() {
+    if (GH) return calcGh();
     const a = +area.value, m = C.materials.find(x => x.id === picked("mat")), k = picked("kit"), two = picked("fl") === "2";
     const per = Math.round(m[k] * (two ? 1 - C.twoFloorDiscount : 1) / 100) * 100;
     const total = Math.round(per * a / 10000) * 10000;
