@@ -336,7 +336,7 @@ ${GH ? `    <div class="calc">
 
 <footer>
   <div class="in">
-    <span>${esc(c.name)} · ${c.cities.map(esc).join(", ")}</span>
+    <span>${esc(c.name)} · ${c.cities.map(esc).join(", ")}${c.legal ? `<br>${esc(c.legal)}` : ""}</span>
     ${c.demoNote ? `<a class="studio-foot" href="${STUDIO_URL}"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="13" fill="#f2a33a"/> <path transform="translate(14.63 51.00) scale(0.0543 -0.0543)" fill="#0a1626" d="M236 0V210H151L13 700H192L277 355H363L448 700H627L489 210H404V0Z"/></svg>${esc(c.footerNote || "Демо-шаблон от Yardy Project")}</a>` : ""}
   </div>
 </footer>
