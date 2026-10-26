@@ -429,3 +429,6 @@ footer .in { padding-block: var(--s-6) var(--s-7); display: flex; flex-wrap: wra
 .wd-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; color: var(--c-text-2); font-size: 15px; }
 .wd-list li { position: relative; padding-left: 26px; }
 .wd-list li::before { content: ""; position: absolute; left: 2px; top: 5px; width: 14px; height: 8px; border-left: 2.5px solid var(--c-accent); border-bottom: 2.5px solid var(--c-accent); transform: rotate(-45deg); }
+.hero-photo { width: 100%; }
+.hero-photo .real-photo { margin: 0; }
+.hero-photo .rp-frame img { aspect-ratio: 4 / 3; }

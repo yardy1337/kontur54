@@ -953,25 +953,7 @@ window.SITE = {
     ],
     "success": "Заявка принята. Это концепт, поэтому заявка никуда не отправлена. На вашем сайте она придёт в WhatsApp или Telegram."
   },
-  "configurator": {
-    "title": "Конструктор теплицы",
-    "presets": [
-      {
-        "name": "Теплица",
-        "params": {
-          "type": "greenhouse",
-          "length": 6,
-          "width": 3,
-          "arc": "0.65",
-          "profile": "20x20"
-        }
-      }
-    ],
-    "cta": {
-      "text": "Заказать такую теплицу",
-      "href": "#lead"
-    }
-  },
+  "configurator": false,
   "theme": {
     "light": {
       "--c-accent": "#2a7552",
@@ -1002,5 +984,6 @@ window.SITE = {
       "--c-focus": "#6cc79b",
       "--scene-snow": "#1f3020"
     }
-  }
+  },
+  "no3d": true
 };

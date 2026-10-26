@@ -121,17 +121,24 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
         <a class="btn" href="${esc(h.secondary.href)}">${esc(h.secondary.text)}</a>
       </div>
       <div class="cities label">${c.cities.map(x => `<span>${esc(x)}</span>`).join("")}</div>
-      ${P.length ? `
+${S.no3d ? "" : `      ${P.length ? `
       <figure class="real-photo" id="real-photo">
         <a class="rp-frame" id="rp-link" href="${esc(P[0])}" target="_blank" rel="noopener">
           <img id="rp-img" src="${esc(P[0])}" alt="Реальный объект компании ${esc(c.name)}" referrerpolicy="no-referrer" onerror="photoFail(this)">
         </a>
         <figcaption><span class="dim">Реальный объект</span><span class="rp-cap" id="rp-cap">${esc(c.photoNote || "фото компании")}</span></figcaption>
         <div class="rp-thumbs" id="rp-thumbs"></div>
-      </figure>` : ""}
+      </figure>` : ""}`}
     </div>
 
-    <div class="stage-wrap">
+${S.no3d ? `<div class="hero-photo">      ${P.length ? `
+      <figure class="real-photo" id="real-photo">
+        <a class="rp-frame" id="rp-link" href="${esc(P[0])}" target="_blank" rel="noopener">
+          <img id="rp-img" src="${esc(P[0])}" alt="Реальный объект компании ${esc(c.name)}" referrerpolicy="no-referrer" onerror="photoFail(this)">
+        </a>
+        <figcaption><span class="dim">Реальный объект</span><span class="rp-cap" id="rp-cap">${esc(c.photoNote || "фото компании")}</span></figcaption>
+        <div class="rp-thumbs" id="rp-thumbs"></div>
+      </figure>` : ""}</div>` : `    <div class="stage-wrap">
       <div class="scene" id="scene">
         <canvas id="c" tabindex="0" role="img" aria-label="3D-модель дома, который собирается по этапам строительства" aria-describedby="scene-keys"></canvas>
         <p class="sr-only" id="scene-keys">Стрелки поворачивают модель, плюс и минус приближают, цифры от 1 до 5 переключают этапы, пробел ставит сборку на паузу.</p>
@@ -177,7 +184,7 @@ ${c.demoNote ? `<div class="demo-bar"><div class="in"><span>${esc(c.demoNote)}</
         <span class="term" id="st-term"></span>
         <p id="st-text"></p>
       </div>
-    </div>
+    </div>`}
   </div>
 </section>
 
@@ -340,6 +347,7 @@ ${GH ? `    <div class="calc">
 </div>`;
 
   /* ---------- Этапы и 3D ---------- */
+  if (!S.no3d) {
   const btns = [...app.querySelectorAll(".stage-btn")];
   const fills = btns.map(b => b.querySelector(".fill"));
   const stTitle = document.getElementById("st-title");
@@ -465,6 +473,15 @@ ${GH ? `    <div class="calc">
     document.getElementById("scene").classList.add("no3d");
     fills.forEach(f => { f.style.width = "100%"; });
     btns.forEach((b, i) => b.addEventListener("click", () => showStage(i)));
+  }
+
+  } else if (document.getElementById("real-photo")) {
+    // без 3D: фото компании с миниатюрами во второй колонке героя
+    showPhotos("", "");
+    document.getElementById("rp-thumbs").addEventListener("click", e => {
+      const b = e.target.closest("button");
+      if (b) setPhoto([...b.parentNode.children].indexOf(b));
+    });
   }
 
   /* ---------- Калькулятор ---------- */
